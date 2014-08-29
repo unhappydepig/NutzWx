@@ -100,7 +100,7 @@ public class FileAction extends BaseAction {
         String filename = tmpFile.getMeta().getFileLocalName();
         File file = tmpFile.getFile();
         String suffixname = Files.getSuffixName(file).toLowerCase();
-        String ss = FileType.getSuffixname(upload, filetype);
+        String ss = FileType.getSuffixname(filetype);
         if (!ss.contains(suffixname)) {
             if (ueditor) {
                 js.put("state", "错误：不允许的文件扩展名，允许：" + ss);
@@ -145,11 +145,11 @@ public class FileAction extends BaseAction {
         if (ueditor) {
             js.put("state", "SUCCESS");
             js.put("original", filename);
-            js.put("url", "/upload/" + FileType.getFileType(upload, suffixname) + "/" + date + "/" + fname);
+            js.put("url", "/upload/" + FileType.getFileType(suffixname) + "/" + date + "/" + fname);
             js.put("title", title);
         } else {
             fs.put("filename", filename);
-            fs.put("filepath", "/upload/" + FileType.getFileType(upload, suffixname) + "/" + date + "/" + fname);
+            fs.put("filepath", "/upload/" + FileType.getFileType(suffixname) + "/" + date + "/" + fname);
             fs.put("filesize", getFileSize(len, 2));
             js.put("error", "");
             js.put("msg", fs);
@@ -160,12 +160,12 @@ public class FileAction extends BaseAction {
 
     public String webPath(String date, String fname, String suffixname) {
         String newfilepath = Mvcs.getServletContext().getRealPath(
-                "/upload/" + FileType.getFileType(upload, suffixname) + "/" + date
+                "/upload/" + FileType.getFileType(suffixname) + "/" + date
                         + "/");
         String file=newfilepath+"/"+fname;
         String savepath = Strings.sNull(Globals.SYS_CONFIG.get("file_savepath"));
         if (!Strings.isBlank(savepath)) {
-            newfilepath = savepath + "/upload/" + FileType.getFileType(upload, suffixname) + "/" + date
+            newfilepath = savepath + "/upload/" + FileType.getFileType(suffixname) + "/" + date
                     + "/";
             file=newfilepath+fname;
         }

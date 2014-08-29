@@ -127,9 +127,9 @@ public class Weixin_contentAction extends BaseAction {
         req.setAttribute("pid", pid);
         req.setAttribute("channel_id", channel_id);
         req.setAttribute("allow_size", upload.getContext().getMaxFileSize());
-        req.setAttribute("allow_images", fileTypeExts(FileType.getSuffixname(upload, "images")));
-        req.setAttribute("allow_video", fileTypeExts(FileType.getSuffixname(upload, "video")));
-        req.setAttribute("allow_other", fileTypeExts(FileType.getSuffixname(upload, "other")));
+        req.setAttribute("allow_images", fileTypeExts(FileType.getSuffixname("images")));
+        req.setAttribute("allow_video", fileTypeExts(FileType.getSuffixname("video")));
+        req.setAttribute("allow_other", fileTypeExts(FileType.getSuffixname("other")));
         req.setAttribute("timenow", DateUtil.getCurDateTime());
         req.setAttribute("file_username", Globals.SYS_CONFIG.get("file_username"));
         req.setAttribute("file_password", DecodeUtil.Encrypt(Globals.SYS_CONFIG.get("file_password"), "file"));
