@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow:hidden">
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- 框架 -->
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/cms.css" rel="stylesheet" type="text/css"/>
+
+    <script type='text/javascript'>
+        var CONTEXTPATH = '${base}';
+    </script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+    <script type="text/javascript">
+        var temp=0;
+        var temp1=0;
+        var temp2=0;
+        function getProvince(){
+            jQuery.ajax({
+                type: 'POST',
+                url : "${base}/private/user/info/getCity" ,
+                data : {"zipcode":""},
+                success : function (res) {
+                    var json = jQuery.parseJSON(res);
+                    var selector = $("#province");
+                    selector.empty();
+                    selector.append("<option value=''>无</option>");
+                    jQuery.each(json, function(index, obj) {
+                        selector.append("<option value='"+obj.dkey+"'>"+obj.dval+"</option>");
+                    });
+                    if(temp==0){
+                        temp=1;
+                        #if("$!obj.province"!="")
+                            $("#province").val("$!obj.province");
+                        getCity();
+                        #end
+                    }
+                    return false;
+                },
+                fail : function(res) {
+                    Dialog.alert("系统错误?!");
+                }
+            });
+        }
+        function getCity(){
+            if(temp==1&&$("#province").val()==""){
+                $("#city").empty();
+                $("#city").append("<option value=''>无</option>");
+                $("#area").empty();
+                $("#area").append("<option value=''>无</option>");
+                return;
+            }
+            jQuery.ajax({
+                type: 'POST',
+                url : "${base}/private/user/info/getCity" ,
+                data : {"zipcode":$("#province").val()},
+                success : function (res) {
+                    var json = jQuery.parseJSON(res);
+                    var selector = $("#city");
+                    selector.empty();
+                    selector.append("<option value=''>无</option>");
+                    jQuery.each(json, function(index, obj) {
+                        selector.append("<option value='"+obj.dkey+"'>"+obj.dval+"</option>");
+                    });
+                    if(temp1==0){
+                        temp1=1;
+                        #if("$!obj.city"!="")
+                            $("#city").val("$!obj.city");
+                        getArea();
+                        #end
+                    }
+                    return false;
+                },
+                fail : function(res) {
+                    Dialog.alert("系统错误?!");
+                }
+            });
+        }
+        function getArea(){
+            if(temp1==1&&$("#city").val()==""){
+                $("#area").empty();
+                $("#area").append("<option value=''>无</option>");
+                return;
+            }
+            jQuery.ajax({
+                type: 'POST',
+                url : "${base}/private/user/info/getCity" ,
+                data : {"zipcode":$("#city").val()},
+                success : function (res) {
+                    var json = jQuery.parseJSON(res);
+                    var selector = $("#area");
+                    selector.empty();
+                    selector.append("<option value=''>无</option>");
+                    jQuery.each(json, function(index, obj) {
+                        selector.append("<option value='"+obj.dkey+"'>"+obj.dval+"</option>");
+                    });
+                    if(temp2==0){
+                        temp2=1;
+                        #if("$!obj.area"!="")
+                            $("#area").val("$!obj.area");
+                        #end
+                    }
+                    return false;
+                },
+                fail : function(res) {
+                    Dialog.alert("系统错误?!");
+                }
+            });
+        }
+        function jf(id){
+            var d = new Dialog("Add");
+            d.Width = 650;
+            d.Height = 420;
+            d.Title = "积分详情";
+            d.URL = "${base}/private/user/score/indexChang?uid=" + id;
+            d.OKEvent = function() {
+                if ($DW.Verify.hasError()) {
+                    return;
+                }
+
+            };
+            d.onLoad = function() {
+            };
+            d.show();
+            d.OKButton.hide();
+            d.CancelButton.value="关闭";
+        }
+        function tab(id){
+            for(var i=1;i<4;i++){
+                if(id==i){
+                    $("#tab_"+i).show();
+                }else{
+                    $("#tab_"+i).hide();
+                }
+            }
+        }
+        Page.onLoad(function(){
+            getProvince();
+        });
+    </script>
+</head>
+<body class="dialogBody">
+<form name='form1' id="form1" method='post'>
+    <input name="info.uid" type="hidden" value="$!obj.uid">
+    <input name="info.pid" type="hidden" value="$!obj.pid">
+    <input name="acc.uid" type="hidden" value="$!acc.uid">
+    <input name="acc.pid" type="hidden" value="$!acc.pid">
+    <table width="100%" height="100%" align="left" cellpadding="0" cellspacing="0">
+    <tr>
+        <td height="2">
+            <div class="z-toolbar" id="Toolbar">
+                <div class="z-toolbar-ct">
+                    <div class="z-toolbar-overflow">
+                        <div class="z-toolbar-nowrap" id="Toolbar_body" style="float: right">
+
+                            <a
+                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                    hidefocus='true' tabindex='1' onselectstart='return false' onClick="tab(1)"><img
+                                    src="${base}/images/icons/icon_board.gif"
+                                    width="20" height="20" /><b>用户帐号&nbsp;</b></a>
+                            <a
+                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                    hidefocus='true' tabindex='2' onselectstart='return false' onClick="tab(2)"><img
+                                    src="${base}/images/icons/icon_board.gif"
+                                    width="20" height="20" /><b>用户资料&nbsp;</b></a>
+                            <a
+                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                    hidefocus='true' tabindex='2' onselectstart='return false' onClick="tab(3)"><img
+                                    src="${base}/images/icons/icon_board.gif"
+                                    width="20" height="20" /><b>用户积分&nbsp;</b></a>
+                        </div></div></div></div>
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+    <td width="100%" valign="top" align="left">
+        <div id="_DivContainer" style="overflow: auto; width: 100%; position: relative; height: 400px;">
+            <div id="tab_1">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="120" align="right" height="30">登陆帐号：</td>
+                        <td>&nbsp;</td>
+                        <td >
+                            $!acc.loginname
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">登陆邮箱：</td>
+                        <td>&nbsp;</td>
+                        <td >
+                            $!acc.email
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">邮箱验证：</td>
+                        <td>&nbsp;</td>
+                        <td >
+                            #if($acc.email&&$acc.email_status==1)已验证#else 未验证#end
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">注册方式：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            $!acc.reg_type
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">注册时间：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            $!acc.reg_time
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">登陆时间：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            $!acc.login_time
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">帐号密码：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input name="acc.password" id="pass" value="" type="text" readonly>
+                            <input name="chpass" id="chpass" type="checkbox" value="1" onclick="if(this.checked){$('#pass').attr('readonly',false);}else{$('#pass').val();$('#pass').attr('readonly',true);}">修改
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">帐号状态：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="radio" value="0" #if($acc.status==0)checked#end name="acc.status"> 启用
+                            <input type="radio" value="1" #if($acc.status==1)checked#end name="acc.status"> 禁用
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">微信Openid：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            $!wx.openid
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">微信昵称：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            $!wx.wx_nickname
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">微信性别：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            #if($wx) #if($wx.wx_sex==0)未填#elseif($wx.wx_sex==1)男#else女#end #end
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">微信地区：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            #if("$wx.wx_country"!="") $!wx.wx_country #end
+                            #if("$!wx.wx_province"!="") - $!wx.wx_province #end
+                            #if("$wx.wx_city"!="") - $!wx.wx_city #end
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="tab_2" style="display: none;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="120" align="right" height="30">姓名：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.name" value="$!obj.name">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">昵称：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.nickname" value="$!obj.nickname">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">用户等级：</td>
+                        <td>&nbsp;</td>
+                        <td>
+
+                            <select name="info.user_level">
+                                #foreach($o in $level)
+                                <option value="$!o.dkey">$!o.dval  -- $!o</option>
+                                #end
+                            </select>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">性别：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="radio" name="info.sex" value="0" #if("$!obj.sex"=="0")checked#end>未填
+                            <input type="radio" name="info.sex" value="1" #if("$!obj.sex"=="1")checked#end>男
+                            <input type="radio" name="info.sex" value="2" #if("$!obj.sex"=="2")checked#end>女
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">出生年份：</td>
+                        <td>&nbsp;</td>
+                        <td >
+                            <input type="text" name="info.birth_year" id="ubirth_year"  maxlength="4" value="$!obj.birth_year" >*例如：1980
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">出生日期：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.birth_date" id="ubirth_date" maxlength="4" value="$!obj.birth_date" >*例如：0216
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">手机号码：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.mobile" id="mobile" maxlength="20" value="$!obj.mobile" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">省份：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <select name="info.province" id="province" onchange="getCity()">
+                                <option value="">无</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">城市：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <select type="text" name="info.city" id="city" onchange="getArea()">
+                                <option value="">无</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">县区：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <select type="text" name="info.area" id="area">
+                                <option value="">无</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">详细地址：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.address" id="address" size="30" maxlength="200" value="$!obj.address" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">QQ：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.qq" id="qq" maxlength="11" value="$!obj.qq" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">联系EMAIL：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.mail" id="mail" maxlength="100" value="$!obj.mail" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">固定电话：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input type="text" name="info.phone" id="phone" maxlength="100" value="$!obj.phone" >
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="tab_3" style="display: none;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="120" width="120" align="right" height="30">总积分：</td>
+                        <td>$!jf.score
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">上年积分：</td>
+                        <td>
+                            $!jf.p_score
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30">本年积分：</td>
+                        <td>
+                            $!jf.b_score
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="30"></td>
+                        <td >
+                            <input type="button" onclick="jf($!obj.uid)" value="积分详情">
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </td>
+    </tr>
+    </table>
+</form>
+</body>
+</html>

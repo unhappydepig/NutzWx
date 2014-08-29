@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+
+    <title>$!app_name</title>
+     
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/cms.css" rel="stylesheet" type="text/css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+    <script src="${base}/include/controls/uploadify/jquery.uploadify.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/include/controls/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/include/controls/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/include/controls/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+    <script type="text/javascript">
+        function getTxt(){
+            $("#content").val(editor.getContent());
+        }
+        function initEditor(){
+            var w = (window.document.body.clientWidth)-30;
+
+            editor=UE.getEditor('editor', {
+                initialFrameWidth:w,
+                initialFrameHeight:300//初始化高度
+            });
+        }
+        function fileError(file, errorCode, errorMsg){
+            switch(errorCode) {
+                case -100:
+                    alert("上传的文件数量已经超出系统限制！");
+                    break;
+                case -110:
+                    alert("文件 ["+file.name+"] 大小超出系统限制！");
+                    break;
+                case -120:
+                    alert("文件 ["+file.name+"] 大小异常！");
+                    break;
+                case -130:
+                    alert("文件 ["+file.name+"] 类型不正确！");
+                    break;
+            }
+        }
+        function initImgUpload(){
+            $('#title_img_upload').uploadify({
+                'formData'     : {
+                    'appid':$("#appid").val(),
+                    'type':'thumb'
+                },
+                'swf'      : '${base}/include/controls/uploadify/uploadify.swf',
+                'uploader' : '${base}/private/wx/file/upload',
+                //在浏览窗口底部的文件类型下拉菜单中显示的文本
+                'buttonCursor':'hand',
+                'buttonImage':'${base}/include/controls/uploadify/button_images.png','width':99,'height':25,
+                'fileTypeExts':'*.jpg;',
+                //上传文件的大小限制
+                'fileSizeLimit':'64KB',
+                //上传数量
+                'multi':false,
+                'queueSizeLimit' : 1,
+                //返回一个错误，选择文件的时候触发
+                'onSelectError':fileError,
+                //检测FLASH失败调用
+                'onFallback':function(){
+                    Dialog.alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
+                },
+                //上传到服务器，服务器返回相应信息到data里
+                'onUploadSuccess':function(file, data, response){
+                    var obj=jQuery.parseJSON(data);
+                    if(obj.error&&obj.error!=""){
+                        Dialog.alert(jQuery.parseJSON(data).error);
+                    }else{
+                        $("#thumb_media_id").val(obj.thumb_media_id);
+                    }
+                }
+            });
+        }
+        Page.onLoad(function(){
+            initImgUpload();
+            initEditor();
+        });
+    </script>
+</head>
+<body class="dialogBody">
+<form name='form1' id="form1" method='post'>
+    <input type="hidden" name="pid" id="pid" value="$!pid">
+    <input type="hidden" name="appid" id="appid" value="$!appid">
+    <textarea  style="display:none" name="content" id="content"></textarea>
+       <table width="100%" height="100%" align="left" cellpadding="0" cellspacing="0">
+        <tr>
+            <td height="2">
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td width="100%" valign="top" align="center">
+                <div id="tab_1">
+
+
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="90" height="30" align="right">标题：</td>
+                                <td>
+                                    <input type="text" name="title" id="title" maxlength="100" size="50" verify="标题|NotNull">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="30" align="right">作者：</td>
+                                <td>
+                                    <input type="text" name="author" id="author" maxlength="50" size="20">
+                                </td>
+                            </tr>
+                            </tr>
+                            <tr>
+                                <td height="30" align="right">原文地址：</td>
+                                <td>
+                                    <input type="text" name="content_source_url" id="content_source_url" maxlength="200" size="50" >*留空则自动生成，“阅读原文”
+                                </td>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td height="30" align="right">缩略图：</td>
+                                <td>
+                                    <input type="text" id="thumb_media_id" name="thumb_media_id" size="50" verify="缩略图|NotNull"/>64KB，支持JPG格式
+                                    <input type="text" id="title_img_upload" name="title_img_upload" style="width:273px"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="30" align="right">描述：</td>
+                                <td>
+                                   <textarea name="digest" id="digest" rows="3" cols="40"></textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td height="30" align="right">内容：</td>
+                                <td>
+
+                                </td>
+                            </tr>
+                            </table>
+                   <table width="98%" border="0" cellpadding="0" cellspacing="0">
+                        <tr><td colspan="2">
+                            <div>
+                                <script type="text/plain" id="editor"></script>
+                                <div class="con-split"></div>
+                            </div>
+
+                        </td></tr>
+                    </table>
+                    </div>
+
+            </td>
+            </tr>
+            </table>
+      </form>
+
+</body>
+</html>

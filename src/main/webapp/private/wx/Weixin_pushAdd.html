@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+
+    <title>$!app_name</title>
+     
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/cms.css" rel="stylesheet" type="text/css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+    <script src="${base}/include/controls/uploadify/jquery.uploadify.min.js"></script>
+
+    <script type="text/javascript">
+        var num=500;
+        var num2=255;
+        function countNum(){
+            if($("#push_text").val().length>=num){
+                $("#push_text").val($("#push_text").val().substring(0,num));
+            }
+            $("#tip").html("还可以输入<span style='color: red'>"+(num-$("#push_text").val().length)+"</span>字");
+        }
+        function countNum2(){
+            if($("#push_description").val().length>=num2){
+                $("#push_description").val($("#push_description").val().substring(0,num2));
+            }
+            $("#tip2").html("还可以输入<span style='color: red'>"+(num2-$("#push_description").val().length)+"</span>字");
+        }
+        function openContent()
+        {
+            if($("input[name='appid']:checked").val()==undefined||$("input[name='appid']:checked").val()==""){
+                Dialog.alert("请选择一个接口帐号！");
+                return;
+            }
+            var d = new Dialog("Content");
+            d.Width = 750;
+            d.Height = 480;
+            d.Title = "编辑内容";
+            d.URL = "${base}/private/wx/push/content?pid="+$("#pid").val()+"&appid="+$("input[name='appid']:checked").val()+"&contentids="+$("#contentids").val();
+            d.OKEvent = function() {
+                 if($DW.getIds()){
+                     $D.close();
+                     $("#contentids").val($DW.getIds());
+                     Dialog.alert("选择成功，请继续完成操作。");
+                 }
+            };
+            d.onLoad = function() {
+
+            };
+            d.show();
+        }
+        function getProvince(){
+            jQuery.ajax({
+                type: 'POST',
+                url : "${base}/private/wx/push/getCity" ,
+                data : {"zipcode":""},
+                success : function (res) {
+                    var json = jQuery.parseJSON(res);
+                    var selector = $("#push_province");
+                    selector.empty();
+                    selector.append("<option value=''>无</option>");
+                    jQuery.each(json, function(index, obj) {
+                        selector.append("<option value='"+obj.wx_province+"'>"+obj.wx_province+"</option>");
+                    });
+                    return false;
+                },
+                fail : function(res) {
+                    Dialog.alert("系统错误?!");
+                }
+            });
+        }
+        function getCity(){
+            if($("#push_province").val()==""){
+                $("#push_city").empty();
+                $("#push_city").append("<option value=''>无</option>");
+                return;
+            }
+            jQuery.ajax({
+                type: 'POST',
+                url : "${base}/private/wx/push/getCity" ,
+                data : {"zipcode":$("#push_province").val()},
+                success : function (res) {
+                    var json = jQuery.parseJSON(res);
+                    var selector = $("#push_city");
+                    selector.empty();
+                    selector.append("<option value=''>无</option>");
+                    jQuery.each(json, function(index, obj) {
+                        selector.append("<option value='"+obj.wx_city+"'>"+obj.wx_city+"</option>");
+                    });
+                    return false;
+                },
+                fail : function(res) {
+                    Dialog.alert("系统错误?!");
+                }
+            });
+        }
+        function changePushType(){
+            var val=$("#push_type").val();
+            if(val==0){
+                $("#tr_1").hide();
+                $("#tr_3").hide();
+                $("#tr_4").hide();
+                $("#tr_5").hide();
+                $("#tr_6").hide();
+
+                $("#sp_province").val("");
+                $("#sp_city").empty();
+
+            }else if(val==1){
+            }else if(val==2){
+                $("#tr_1").hide();
+                $("#tr_3").show();
+                $("#tr_4").show();
+                $("#tr_5").show();
+                $("#tr_6").hide();
+            }else if(val==3){
+                $("#tr_1").hide();
+                $("#tr_3").hide();
+                $("#tr_4").hide();
+                $("#tr_5").hide();
+                $("#tr_6").show();
+                $("#sp_province").val("");
+                $("#sp_city").empty();
+            }
+        }
+        function changeType(){
+            $("#type_mpnews").hide();
+            $("#type_text").hide();
+            $("#type_voice").hide();
+            $("#type_image").hide();
+            $("#type_video1").hide();
+            $("#type_video2").hide();
+            $("#type_video3").hide();
+            if($("#type").val()=="mpnews"){
+                $("#type_mpnews").show();
+            }
+            if($("#type").val()=="text"){
+                $("#type_text").show();
+            }
+            if($("#type").val()=="voice"){
+                $("#type_voice").show();
+                initVoiceUpload();
+            }
+            if($("#type").val()=="image"){
+                $("#type_image").show();
+                initImageUpload();
+            }
+            if($("#type").val()=="mpvideo"){
+                $("#type_video1").show();
+                $("#type_video2").show();
+                $("#type_video3").show();
+                initVideoUpload();
+            }
+        }
+        function fileError(file, errorCode, errorMsg){
+            switch(errorCode) {
+                case -100:
+                    alert("上传的文件数量已经超出系统限制！");
+                    break;
+                case -110:
+                    alert("文件 ["+file.name+"] 大小超出系统限制！");
+                    break;
+                case -120:
+                    alert("文件 ["+file.name+"] 大小异常！");
+                    break;
+                case -130:
+                    alert("文件 ["+file.name+"] 类型不正确！");
+                    break;
+            }
+        }
+        function initVoiceUpload(){
+            $('#voice_upload').uploadify({
+                'formData'     : {
+                    'appid':$("input[name='appid']:checked").val(),
+                    'type':'voice'
+                },
+                'swf'      : '${base}/include/controls/uploadify/uploadify.swf',
+                'uploader' : '${base}/private/wx/file/upload',
+                //在浏览窗口底部的文件类型下拉菜单中显示的文本
+                'buttonCursor':'hand',
+                'buttonImage':'${base}/include/controls/uploadify/button_file.png','width':99,'height':25,
+                'fileTypeExts':'*.mp3;*.amr;',
+                //上传文件的大小限制
+                'fileSizeLimit':'256KB',
+                //上传数量
+                'multi':false,
+                'queueSizeLimit' : 1,
+                //返回一个错误，选择文件的时候触发
+                'onSelectError':fileError,
+                //检测FLASH失败调用
+                'onFallback':function(){
+                    Dialog.alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
+                },
+                //上传到服务器，服务器返回相应信息到data里
+                'onUploadSuccess':function(file, data, response){
+                    var obj=jQuery.parseJSON(data);
+                    if(obj.error&&obj.error!=""){
+                        Dialog.alert(jQuery.parseJSON(data).error);
+                    }else{
+                        $("#voice_media_id").val(obj.media_id);
+                    }
+                }
+            });
+        }
+        function initVideoUpload(){
+            $('#video_upload').uploadify({
+                'formData'     : {
+                    'appid':$("input[name='appid']:checked").val(),
+                    'type':'video'
+                },
+                'swf'      : '${base}/include/controls/uploadify/uploadify.swf',
+                'uploader' : '${base}/private/wx/file/upload',
+                //在浏览窗口底部的文件类型下拉菜单中显示的文本
+                'buttonCursor':'hand',
+                'buttonImage':'${base}/include/controls/uploadify/button_file.png','width':99,'height':25,
+                'fileTypeExts':'*.mp4;',
+                //上传文件的大小限制
+                'fileSizeLimit':'1MB',
+                //上传数量
+                'multi':false,
+                'queueSizeLimit' : 1,
+                //返回一个错误，选择文件的时候触发
+                'onSelectError':fileError,
+                //检测FLASH失败调用
+                'onFallback':function(){
+                    Dialog.alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
+                },
+                //上传到服务器，服务器返回相应信息到data里
+                'onUploadSuccess':function(file, data, response){
+                    var obj=jQuery.parseJSON(data);
+                    if(obj.error&&obj.error!=""){
+                        Dialog.alert(jQuery.parseJSON(data).error);
+                    }else{
+                        $("#video_media_id").val(obj.media_id);
+                    }
+                }
+            });
+        }
+        function initImageUpload(){
+            $('#image_upload').uploadify({
+                'formData'     : {
+                    'appid':$("input[name='appid']:checked").val(),
+                    'type':'image'
+                },
+                'swf'      : '${base}/include/controls/uploadify/uploadify.swf',
+                'uploader' : '${base}/private/wx/file/upload',
+                //在浏览窗口底部的文件类型下拉菜单中显示的文本
+                'buttonCursor':'hand',
+                'buttonImage':'${base}/include/controls/uploadify/button_images.png','width':99,'height':25,
+                'fileTypeExts':'*.jpg;',
+                //上传文件的大小限制
+                'fileSizeLimit':'128KB',
+                //上传数量
+                'multi':false,
+                'queueSizeLimit' : 1,
+                //返回一个错误，选择文件的时候触发
+                'onSelectError':fileError,
+                //检测FLASH失败调用
+                'onFallback':function(){
+                    Dialog.alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
+                },
+                //上传到服务器，服务器返回相应信息到data里
+                'onUploadSuccess':function(file, data, response){
+                    var obj=jQuery.parseJSON(data);
+                    if(obj.error&&obj.error!=""){
+                        Dialog.alert(jQuery.parseJSON(data).error);
+                    }else{
+                        $("#image_media_id").val(obj.media_id);
+                    }
+                }
+            });
+        }
+        Page.onLoad(function(){
+            getProvince();
+            changePushType();
+        });
+    </script>
+</head>
+<body class="dialogBody" >
+<form name='form1' id="form1" method='post'>
+    <input type="hidden" name="pid" id="pid" value="$!pid">
+    <input type="hidden" name="contentids" id="contentids" value="$!ids">
+       <table width="100%" height="100%" align="left" cellpadding="0" cellspacing="0">
+        <tr>
+            <td height="2">
+                    <div class="z-toolbar" id="Toolbar">
+                        <div class="z-toolbar-ct">
+                            <div class="z-toolbar-overflow">
+                                <div class="z-toolbar-nowrap" id="Toolbar_body" style="float: left">
+
+                                    <div style="width: 600px;">接口帐号:
+                                    #set($i=0)
+                                    #foreach($o in $applist)
+                                    #set($i=$i+1)
+                                    <input name="appid" type="radio" value="$!o.id" #if($i==1)checked#end>$!o.name
+                                    #end
+                                    </div>
+                                </div></div></div></div>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td width="100%" valign="top" align="center">
+            <div id="_DivContainer" style="overflow: auto; width: 100%; position: relative; height: 350px;">
+                <div id="tab_1">
+
+
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="80" height="30" align="right">群发名称：</td>
+                                <td>
+                                    <input type="text" name="push_name" id="push_name" maxlength="100" size="50" verify="群发名称|NotNull">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="30" align="right">消息类型：</td>
+                                <td>
+                                    <select name="type" id="type" onchange="changeType()">
+                                        <option value="mpnews" selected>图文</option>
+                                        <option value="text">文本</option>
+                                        <option value="voice">语音</option>
+                                        <option value="image">图片</option>
+                                        <option value="mpvideo">视频</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="type_mpnews">
+                                <td height="30" align="right"></td>
+                                <td>
+                                    <input type="button" value="编辑图文" onclick="openContent()">
+                                </td>
+                            </tr>
+                            <tr id="type_text" style="display: none">
+                                <td height="30" align="right">文本内容：</td>
+                                <td>
+                                    <textarea rows="20" cols="80" name="push_text" id="push_text" style="height: 90px;" onkeyup="countNum()"></textarea>
+                                    <br>*500个字符。<span id="tip"></span>
+                                </td>
+                            </tr>
+                            <tr id="type_voice" style="display: none">
+                                <td height="30" align="right"></td>
+                                <td>
+                                    <input type="text" id="voice_media_id" name="voice_media_id" size="50"/>256K，播放长度不超过60s，支持AMR\MP3格式
+                                    <input type="text" id="voice_upload" name="voice_upload" style="width:273px"/>
+                                </td>
+                            </tr>
+                            <tr id="type_image" style="display: none">
+                                <td height="30" align="right"></td>
+                                <td>
+                                    <input type="text" id="image_media_id" name="image_media_id" size="50"/>128K，支持JPG格式
+                                    <input type="text" id="image_upload" name="image_upload" style="width:273px"/>
+                                </td>
+                            </tr>
+                            <tr id="type_video1" style="display: none">
+                                <td height="30" align="right">视频标题：</td>
+                                <td>
+                                    <input type="text" name="push_title" id="push_title" maxlength="100" size="50">
+                                </td>
+                            </tr>
+                            <tr id="type_video2" style="display: none">
+                                <td height="30" align="right">视频描述：</td>
+                                <td>
+                                    <textarea rows="20" cols="80" name="push_description" id="push_description" style="height: 90px;" onkeyup="countNum2()"></textarea>
+                                    <br>*255个字符。<span id="tip2"></span>
+                                </td>
+                            </tr>
+                            <tr id="type_video3" style="display: none">
+                                <td height="30" align="right">上传视频：</td>
+                                <td>
+                                    <input type="text" id="video_media_id" name="video_media_id" size="50"/>1MB，支持MP4格式
+                                    <input type="text" id="video_upload" name="video_upload" style="width:273px"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="30" align="right">群发对象：</td>
+                                <td>
+                                    <select name="push_type" id="push_type" onchange="changePushType()">
+                                        <option value="0">全部用户</option>
+                                        <option value="2">条件选择</option>
+                                        <option value="3">用户列表</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="tr_3">
+                                <td height="30" align="right">用户性别：</td>
+                                <td>
+                                    <input type="radio" name="push_sex" checked value="0" />全部
+                                    <input type="radio" name="push_sex"  value="1" />男
+                                    <input type="radio" name="push_sex"  value="2" />女
+                                </td>
+                            </tr>
+
+                            <tr id="tr_4">
+                                <td width="80" height="30" align="right">所在省份：</td>
+                                <td>
+                                    <select name="push_province" id="push_province" onchange="getCity()">
+                                        <option value="">无</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="tr_5">
+                                <td width="80" height="30" align="right">所在城市：</td>
+                                <td>
+                                    <select type="text" name="push_city" id="push_city">
+                                        <option value="">无</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="tr_6">
+                                <td width="80" height="30" align="right">用户列表：</td>
+                                <td>
+                                    <textarea rows="30" cols="80" name="openids" id="openids" style="height: 120px;"></textarea>
+                                    <br>*请用 , 号分割，最多10000个openid。
+                                </td>
+                            </tr>
+
+                        </table> 
+                </div>
+            </div>
+            </td>
+            </tr>
+            </table>
+      </form>
+
+</body>
+</html>

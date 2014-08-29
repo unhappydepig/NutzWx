@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow:hidden">
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- 框架 -->
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+    <script type='text/javascript'>
+        var CONTEXTPATH = '${base}';
+    </script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+    <!-- 树 -->
+    <script type="text/javascript" src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script>
+    <link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+</head>
+<body class="dialogBody">
+<form name='form1' id="form1" method='post'>
+    <input name="classid" id="classid" type="hidden" value="$!obj.classid">
+    <input name="id" id="id" type="hidden" value="$!obj.id">
+    <table width="100%" height="100%" border="0">
+        <tr>
+            <td valign="middle">
+                <table align="center" cellpadding="2"
+                       cellspacing="0">
+                    <tr>
+                        <td width="104" height="10"></td>
+                        <td width="6"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td align="right">属性名称：</td>
+                        <td>&nbsp;</td>
+                        <td width="260">
+                            <input type="text" name="attr_name" id="attr_name" size="30" maxlength="50" value="$!obj.attr_name"  verify="属性名称|NotNull"></td>
+                    </tr>
+                    <tr>
+                        <td align="right">属性代码：</td>
+                        <td>&nbsp;</td>
+                        <td width="260">
+                            <input type="text" name="attr_code" id="attr_code" size="30" maxlength="50" value="$!obj.attr_code" readonly></td>
+                    </tr>
+                    <tr>
+                        <td align="right">表单类型：</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <select id="attr_type" name="attr_type">
+                                #foreach($o in $formmap.entrySet())
+                                <option value="$!o.key" >$!o.value</option>
+                                #end
+                            </select>
+                            <script type="text/javascript">selected(document.form1.attr_type,"$!obj.attr_type")</script></td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">默认值：</td>
+                        <td>&nbsp;</td>
+                        <td width="260"><input type="text" name="attr_default" id="attr_default"  value="$!obj.attr_default" size="30" maxlength="50" ></td>
+                    </tr>
+                    <tr>
+                        <td align="right">是否必填：</td>
+                        <td>&nbsp;</td>
+                        <td><input type="radio" name="attr_must" value="0" #if($obj.attr_must==0)checked#end/>否
+                            <input type="radio" name="attr_must" value="1" #if($obj.attr_must==1)checked#end/>是
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3" align="center" height="10"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

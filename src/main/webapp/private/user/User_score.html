@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow-y:auto">
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- 框架 -->
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+	<!-- 分页  注意顺序 -->
+	<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css"/> 	
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>	
+    <!-- 树 -->
+    <script type="text/javascript" src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script> 
+	<link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script src="${base}/include/controls/my97/WdatePicker.js"></script>
+
+<script>
+	function getWidth(percent){
+        	   return document.body.clientWidth*percent;
+	}
+	function loadData(){
+		$("#dg1").datagrid({
+            width:"auto",
+            height:"auto",
+            nowrap: false,
+            striped: true,
+            border: true,
+            collapsible:false,//是否可折叠的
+            fit: false,//自动大小
+			url : "${base}/private/user/score/list",
+            queryParams:{"pid":$("#pid").val(),"loginname":$("#loginname").val(),"mobile":$("#mobile").val(),
+                "nickname":$("#nickname").val(),"name":$("#name").val()},
+            //sortName: 'code',
+            //sortOrder: 'desc',
+            remoteSort:false,
+            idField:"id",
+            singleSelect:false,//是否单选
+            pagination:true,//分页控件
+            rownumbers:true,//行号
+            fitColumns: true,//行自适应
+            pageSize: 10,
+            pageList:[5,10,15,20,30,40,50],
+            loadMsg:'数据加载中...',
+			columns : [ [
+                {
+                    field : "uid",
+                    title : "UID",
+                    width : getWidth(0.1),
+                    formatter:function(value,obj,index){
+                        return "<a href='javascript:jf(\""+obj.uid+"\")' title='查看积分详情'>"+obj.uid+"</a>";
+                    }
+                },{
+                    field : "loginname",
+                    title : "登陆名",
+                    width : getWidth(0.15),
+                    align: "center"
+                },{
+                    field : "name",
+                    title : "姓名",
+                    width : getWidth(0.15),
+                    align: "center"
+                },{
+                    field : "nickname",
+                    title : "昵称",
+                    width : getWidth(0.15),
+                    align: "center"
+                },{
+                    field : "mobile",
+                    title : "手机号码",
+                    width : getWidth(0.15),
+                    align: "center"
+                },{
+                    field : "score",
+                    title : "总积分",
+                    width : getWidth(0.1),
+                    align: "center"
+                },{
+                    field : "b_score",
+                    title : "本年积分",
+                    width : getWidth(0.1),
+                    align: "center"
+                },{
+                    field : "p_score",
+                    title : "上年积分",
+                    width : getWidth(0.1)
+                }
+
+
+			] ],
+        	 frozenColumns:[[  
+        	            {field:"id",checkbox:true}
+        	 ]]
+
+		});
+        //设置分页控件
+        var p = $("#dg1").datagrid("getPager");
+        $(p).pagination({
+            beforePageText: "第",//页数文本框前显示的汉字
+            afterPageText: "页    共 {pages} 页",
+            displayMsg: "当前显示 {from} - {to} 条记录   共 {total} 条记录",
+            onBeforeRefresh:function(){
+            }
+        });
+
+	}
+    function jf(id){
+        var d = new Dialog("Add");
+        d.Width = 650;
+        d.Height = 420;
+        d.Title = "积分详情";
+        d.URL = "${base}/private/user/score/indexChang?uid=" + id;
+        d.OKEvent = function() {
+            if ($DW.Verify.hasError()) {
+                return;
+            }
+
+        };
+        d.onLoad = function() {
+        };
+        d.show();
+        d.OKButton.hide();
+        d.CancelButton.value="关闭";
+    }
+    function initButton(){
+        Page.initBtn();
+        $!initBtn
+    }
+	Page.onLoad(function() {
+	    loadData();
+    });
+	$(window).resize(function () {
+		clearTimeout(timer);
+		timer=setTimeout(function(){
+		  $('#dg1').datagrid('resize');
+		  $('div.panel-body').css('width','auto');
+		 },100);
+		});
+</script>
+</head>
+<body leftmargin="0" topmargin="0"
+	style="overflow-x: hidden; overflow-y: auto">
+	<table width="100%" border="0" cellspacing="6" cellpadding="0"
+		style="border-collapse: separate; border-spacing: 6px;">
+		<tr valign="top">
+			<td>
+				<form name='form1' id="from1" method='post'>
+
+					<table width="100%" border="0" cellspacing="0" cellpadding="0"
+						class="blockTable">
+						<tr>
+							<td class="blockTd">
+								<table width="100%" border="0" cellspacing="0" cellpadding="6">
+									<tr>
+										<td valign="middle"></td>
+									</tr>
+                                    <tr>
+                                        <td height="0" colspan="2" algin="right" width="85%">
+                                            <div style="float: left; padding-right:10px;">
+                                                所属项目: <select name="pid" id="pid" onchange="loadData()" >
+                                                #foreach($o in $pro)
+                                                <option value="$!o.id">$!o.name</option>
+                                                #end
+                                            </select>
+                                                帐号: <input type="text" name="loginname" id="loginname"
+                                                           value="" style="width:60px"/>
+                                                手机号码: <input type="text" name="mobile" id="mobile"
+                                                           value="" style="width:60px"/>
+                                                姓名: <input type="text" name="name" id="name"
+                                                           value="" style="width:60px"/>
+                                                昵称: <input type="text" name="nickname" id="nickname"
+                                                           value="" style="width:60px"/>
+
+                                            </div>
+                                            <div style=""><a
+                                                    href='javascript:void(0);' ztype='zPushBtn'
+                                                    class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                    onselectstart='return false' id='BtnSearch'
+                                                    onClick="loadData();"><img
+                                                    src="/images/icons/icon403a3.gif"
+                                                    width="20" height="20"/><b>查询&nbsp;</b></a>
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:0px 5px;">
+                                            <table width="100%" height="100%" id="dg1" size="10" cellpadding="2" cellspacing="0">
+                                                <tr><td></td></tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+	</table> 
+</body>
+</html>

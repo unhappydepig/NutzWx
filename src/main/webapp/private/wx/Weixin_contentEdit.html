@@ -1,0 +1,594 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+    <title>#if($content)编辑：${content.title}#else新增文章#end</title>
+     
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/> 
+	<link href="${base}/include/css/cms.css" rel="stylesheet" type="text/css"/> 
+	<link href="${base}/include/css/scrollbar.css" rel="stylesheet" type="text/css"/> 
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+
+    <script src="${base}/include/js/colorPicker.js"></script>
+	<script src="${base}/include/controls/my97/WdatePicker.js"></script>
+    <script src="${base}/include/controls/uploadify/jquery.uploadify.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+        window.UEDITOR_HOME_URL = "${base}/include/controls/ueditor/";//编辑器路径
+        window.FILESERVER_URL="${file_domain}";//文件服务器地址
+        window.FILE_UPLOADURL="${file_uploadurl}";//文件上传路径
+        window.FILE_USERNAME="${file_username}";//文件服务器用户名
+        window.FILE_PASSWORD="${file_password}";//文件服务器密码
+    </script>
+    <script type="text/javascript" charset="utf-8" src="${base}/include/controls/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/include/controls/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/include/controls/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+	<style type="text/css">
+	html,body {
+		overflow: hidden;
+		margin: 0;
+		padding: 0;
+	}
+	#titleLength {
+		font-family: Constantia, Corbel;
+		font-size: 26px;
+		line-height: 12px;
+		margin-right: 5px;
+	}
+	.Wdate{
+		border:#999 1px solid;
+		height:20px;
+		background:#fff url(${base}/include/controls/my97/skin/datePicker.gif) no-repeat right;
+	}
+	.WdateFmtErr{
+		font-weight:bold;
+		color:red;
+	}
+	</style>
+	<script type="text/javascript">
+    var picIndex = 1;
+    var attachIndex = 1;
+    var editor;
+    $.format = function (source, params) {
+        if (arguments.length == 1)
+            return function () {
+                var args = $.makeArray(arguments);
+                args.unshift(source);
+                return $.format.apply(this, args);
+            };
+        if (arguments.length > 2 && params.constructor != Array) {
+            params = $.makeArray(arguments).slice(1);
+        }
+        if (params.constructor != Array) {
+            params = [params];
+        }
+        $.each(params, function (i, n) {
+            source = source.replace(new RegExp("\\{" + i + "\\}", "g"), n);
+        });
+        return source;
+    };
+    function setEditorContainerHeight(){
+		var height = (window.document.body.clientHeight-$("#_DivContainer").offset().top-$('#Toolbar').height())+32;
+		$('#_DivContainer').css('height', height); 
+		
+	}
+	function boldTitle(tmp){
+		if(tmp){
+			$("#short_title").css("font-weight","bold");
+		}else{
+			$("#short_title").css("font-weight","normal");
+		}
+	}
+	function closeX(){
+        var channel_id = $("#channel_id").val();
+        window.opener.changeChannel(channel_id);
+		window.close();
+	}
+	/**
+	 * 编辑页面初始化方法
+	 */
+	function onEidtorLoad(){
+	 
+		$('#title').on('keyup blur change paste',function(){
+			 
+			$('#titleLength').html($('#title').val().length);
+		});
+		$("#titleColor").colorPicker("short_title");
+		initEditor();
+
+	}
+	function initEditor(){
+		var w = (window.document.body.clientWidth)*0.9-20;
+
+        editor=UE.getEditor('editor', {
+
+		initialFrameHeight:450//初始化高度
+		});
+	}
+    function fileError(file, errorCode, errorMsg){
+        switch(errorCode) {
+            case -100:
+                alert("上传的文件数量已经超出系统限制！");
+                break;
+            case -110:
+                alert("文件 ["+file.name+"] 大小超出系统限制！");
+                break;
+            case -120:
+                alert("文件 ["+file.name+"] 大小异常！");
+                break;
+            case -130:
+                alert("文件 ["+file.name+"] 类型不正确！");
+                break;
+        }
+    }
+    function initImgUpload(){
+        $('#title_img_upload').uploadify({
+            'formData'     : {
+                'file_username' : window.FILE_USERNAME,
+                'file_password' : window.FILE_PASSWORD,
+                'file_width' : '$!model.title_img_width',
+                'file_height' : '$!model.title_img_height',
+                'filetype':'images',
+                'flag':'title'
+            },
+            'swf'      : '${base}/include/controls/uploadify/uploadify.swf',
+            'uploader' : window.FILE_UPLOADURL,
+            //在浏览窗口底部的文件类型下拉菜单中显示的文本
+            'buttonCursor':'hand',
+            'buttonImage':'${base}/include/controls/uploadify/button_images.png','width':99,'height':25,
+            'fileTypeExts':'$!allow_images',
+            //上传文件的大小限制
+            'fileSizeLimit':'$!allow_size',
+            //上传数量
+            'multi':false,
+            'queueSizeLimit' : 1,
+            //返回一个错误，选择文件的时候触发
+            'onSelectError':fileError,
+            //检测FLASH失败调用
+            'onFallback':function(){
+                Dialog.alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
+            },
+            //上传到服务器，服务器返回相应信息到data里
+            'onUploadSuccess':function(file, data, response){
+                if(data!=""&&jQuery.parseJSON(data).error!=""){
+                    Dialog.alert(jQuery.parseJSON(data).error);
+                }else{
+                var obj=jQuery.parseJSON(data).msg;
+                var title_img_s = jQuery.parseJSON(data).titlepath;
+                $("#title_img").val("${file_domain}"+obj.filepath);
+                $("#title_img_s").val("${file_domain}"+title_img_s);
+                $("#title_img_view").html("<img src='${file_domain}"+obj.filepath+"' width='$!model.title_img_width' height='$!model.title_img_height'>");
+                }
+            }
+        });
+    }
+    function clearImage(){
+        if($("#title_img").val()==""){
+            $("#title_img_s").val("");
+            $("#title_img_view").html("");
+        }
+    }
+    function initVideoUpload(){
+        $('#media_path_upload').uploadify({
+            'formData'     : {
+                'file_username' : window.FILE_USERNAME,
+                'file_password' : window.FILE_PASSWORD,
+                'filetype':'video'
+            },
+            'swf'      : '${base}/include/controls/uploadify/uploadify.swf',
+            'uploader' :window.FILE_UPLOADURL,
+            //在浏览窗口底部的文件类型下拉菜单中显示的文本
+            'buttonCursor':'hand',
+            'buttonImage':'${base}/include/controls/uploadify/button_video.png','width':99,'height':25,
+            'fileTypeExts':'$!allow_video',
+            //上传文件的大小限制
+            'fileSizeLimit':'$!allow_size',
+            //上传数量
+            'multi':false,
+            'queueSizeLimit' : 1,
+            //视频文件较大，时间设大一些
+            'successTimeout':300,
+            //返回一个错误，选择文件的时候触发
+            'onSelectError':fileError,
+            //检测FLASH失败调用
+            'onFallback':function(){
+                Dialog.alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
+            },
+            //上传到服务器，服务器返回相应信息到data里
+            'onUploadSuccess':function(file, data, response){
+                if(data!=""&&jQuery.parseJSON(data).error!=""){
+                    Dialog.alert(jQuery.parseJSON(data).error);
+                }else{
+                    var obj=jQuery.parseJSON(data).msg;
+                    $("#media_path").val("${file_domain}"+obj.filepath);
+                    $("input[name='content.media_type'][value='MP4']").attr("checked",'checked');
+                }
+            }
+
+        });
+
+    }
+    function dosave(s,t){
+        if(Verify.hasError()){
+            return;
+        }
+        getTxt();
+        $("#status").val(s);
+        $("#type").val(t);
+        Page.MinMessage.Show({
+            text: '正在提交',
+            type: 'load'
+        });
+        jQuery.ajax({
+            type: 'POST',
+            url : "${base}/private/wx/content/doSave" ,
+            data : $("#form1").serialize(),
+            success : function (res) {
+                Page.MinMessage.Hide();
+                if(res!="0"){
+                    $("#id").val(res);
+                    if(s==0){
+                        Dialog.alert("保存成功！");
+                    }
+                    if(s==1&&t==0){
+                        Dialog.alert("发布成功！");
+                    }
+                    if(s==1&&t==1){
+                        Dialog.alert("推送成功！请在列表页查看推送进度。");
+                    }
+
+                }else{
+                    Dialog.alert("保存失败！");
+                }
+                return false;
+            },
+            fail : function(res) {
+                Dialog.alert("系统错误!");
+            }
+        });
+    }
+    function topush(){
+        var d = new Dialog("Push");
+        d.Width = 300;
+        d.Height = 200;
+        d.Title = "选择微信帐号";
+        d.URL = "${base}/private/wx/content/topush?pid="+$("#pid").val();
+        d.OKEvent = function() {
+            if ($DW.Verify.hasError()) {
+                return;
+            }
+            var dc = $DW.Form.getData("form1");
+            push(dc.get("appid"));
+        };
+        d.onLoad = function() {
+
+        };
+        d.show();
+    }
+    function push(appid){
+        if(appid==null||appid==""){
+            Dialog.alert("请选择微信帐号！");
+            return;
+        }
+        getTxt();
+        $("#status").val(1);
+        $("#type").val(1);
+        Page.MinMessage.Show({
+            text: '正在提交',
+            type: 'load'
+        });
+        jQuery.ajax({
+            type: 'POST',
+            url : "${base}/private/wx/content/doSave?appid="+appid ,
+            data : $("#form1").serialize(),
+            success : function (res) {
+                Page.MinMessage.Hide();
+                $D.close();
+                if(res!="0"){
+                    $("#id").val(res);
+                        Dialog.alert("保存成功！请在列表页查看推送进度。");
+
+                }else{
+                    Dialog.alert("保存失败！");
+                }
+                return false;
+            },
+            fail : function(res) {
+                Dialog.alert("系统错误!");
+            }
+        });
+    }
+    function getTxt(){
+        $("#txt").val(editor.getContent());
+
+    }
+    function initData(){ 
+
+        #if($ctxt)
+            editor.addListener("ready", function () {
+                editor.setContent($("#txt").val());
+            });
+        #end
+
+
+    }
+	Page.onLoad(function(){
+		onEidtorLoad();
+		setEditorContainerHeight();
+        initImgUpload();
+        initVideoUpload();
+        initData();
+	});
+	$(window).resize(function () {
+		setEditorContainerHeight();
+	});
+
+</script>
+</head>
+<body>
+<form name='form1' id="form1" method='post'>
+<input type="hidden" id="pid" name="content.pid" #if($content)value="$!content.pid"#else value="$!pid"#end>
+<input type="hidden" id="channel_id" name="content.channel_id" #if($content)value="$!content.channel_id"#else value="$!channel_id"#end>
+<input type="hidden" id="id" name="content.id"  #if($content)value="$!content.id"#else value="$!id"#end>
+<input type="hidden" id="status" name="status" #if($content)value="$!content.status"#else value="0"#end>
+<input type="hidden" id="type" name="type" #if($content)value="$!content.send_type"#else value="0"#end>
+
+<textarea  style="display:none" name="contenttxt.txt" id="txt">$!ctxt.txt</textarea>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td>
+			<div class="z-toolbar" id="Toolbar">
+			<div class="z-toolbar-ct">
+			<div class="z-toolbar-overflow">
+			<div class="z-toolbar-nowrap" id="Toolbar_body">
+
+                <a href='javascript:void(0);' ztype='zPushBtn'
+                   class='zPushBtn' hidefocus='true' tabindex='-1'
+                   onselectstart='return false' id='BtnSave' onClick="dosave(0,0);"><img
+                        src="${base}/images/icons/icon003a16.gif"
+                        width="20" height="20" /><b>保存&nbsp;</b></a>
+                <a href='javascript:void(0);' ztype='zPushBtn'
+                   class='zPushBtn' hidefocus='true' tabindex='-1'
+                   onselectstart='return false' id='BtnSubmit' onClick="dosave(1,0);"><img
+                        src="${base}/images/icons/icon038a4.gif"
+                        width="20" height="20" /><b>发布&nbsp;</b></a>
+                <!--<a href='javascript:void(0);' ztype='zPushBtn'-->
+                   <!--class='zPushBtn' hidefocus='true' tabindex='-1'-->
+                   <!--onselectstart='return false' id='BtnPush' onClick="topush();"><img-->
+                        <!--src="${base}/images/icons/icon038a4.gif"-->
+                        <!--width="20" height="20" /><b>推送&nbsp;</b></a>-->
+				<a href='javascript:void(0);' ztype='zPushBtn'
+													class='zPushBtn' hidefocus='true' tabindex='-1'
+													onselectstart='return false' id='BtnClose' onClick="closeX();"><img
+														src="${base}/images/icons/icon403a11.gif"
+														width="20" height="20" /><b>关闭&nbsp;</b></a>
+				
+				</div></div></div></div>
+				</td>
+		</tr>
+	</table>
+
+
+<table width="100%" height="100%" align="center" cellpadding="1" cellspacing="0">
+		<tr>
+			<td valign='top'>
+
+<div id="_DivContainer" style="overflow: auto; width: 100%; position: relative; height: 594px;">
+
+       <table width="100%" height="100%" align="center" cellpadding="1" cellspacing="0">
+        <tr>
+            <td width="100%" valign="top" id="_Td1" align="center">
+                
+                  <table width="99%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+
+					<tr>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						标题：
+						</td>
+						<td colspan="3" width="40%" class="pn-fcontent">
+						<input type="text" tabindex="1" name="content.title" value="#if($content)$!content.title#end" id="title" maxlength="100" size="80" verify="标题|NotNull&&Length<100" style="background-image: url(${base}/images/private/cms/rule.gif); width: 400px; display: inline-block; letter-spacing: -1px;background-position: 0% 100%; background-repeat: repeat no-repeat;"><span id="titleLength"></span>
+						<label><input type="checkbox" #if("$!content.link"!="")checked#end onclick="$('#linkDiv').toggle(this.checked);if(!this.checked){$('#link').val('');}">外部链接</label>
+<div id="linkDiv" style="display: none;padding-top:3px;">URL：<input type="text" id="link" name="content.link" value="#if($content)$!content.link#end"size="60" maxlength="255" verify="Length<255"></div>
+						<script type="text/javascript">
+                            #if("$!content.link"!="")
+                            $("#linkDiv").css("display","block");
+                            #end
+						</script>
+                        </td>
+					</tr>
+					<tr>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						短标题：
+						</td>
+						<td colspan="3" width="40%" class="pn-fcontent">
+						<input type="text" tabindex="2" name="content.short_title" value="#if($content)$!content.short_title#end" id="short_title" maxlength="25" size="50" style="background-image: url(${base}/images/private/cms/rule.gif); width: 250px; display: inline-block;letter-spacing: -1px; background-position: 0% 100%; background-repeat: repeat no-repeat;color:$!content.title_color;">
+
+						
+						<input type="text" id="titleColor"  value="#if($content)$!content.title_color#end" name="content.title_color" style="width:70px;margin-left: 2px;">
+&nbsp; <label><input type="checkbox"  #if("$!content.is_bold"=="Y")checked#end onclick="$('#is_bold').val(this.checked==true?'Y':'N');boldTitle(this.checked);">加粗<input type="hidden" id="is_bold" name="content.is_bold" #if($content)value="$!content.is_bold"#else value="N"#end></label><span class="pn-fhelp">在列表中的样式</span>
+						<script type="javascript">
+                            #if($ext)
+                                #if("$!content.is_bold"=="Y")
+                                    boldTitle(true);
+                                #end
+                            #end
+						</script>
+                        </td>
+					</tr>
+					<tr>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						作者：
+						</td>
+						<td colspan="1" width="40%" class="pn-fcontent">
+						<input type="text" name="content.author"  value="#if($content)$!content.author#else$!curuser.realname#end" id="author"  maxlength="50" size="20" >
+						</td> 
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						来源：
+						</td>
+						<td colspan="1" width="40%" class="pn-fcontent">
+						<input type="text" name="content.origin" id="origin" value="#if($content)$!content.origin#end" maxlength="100" size="20" >
+						URL：
+						<input type="text" name="content.origin_url" id="origin_url" value="#if($content)$!content.origin_url#end" maxlength="100" size="30" >
+						</td> 
+					</tr>
+					<tr>
+                        <td width="10%" class="pn-flabel pn-flabel-h">
+                            发布时间：
+                        </td>
+                        <td colspan="1" width="40%" class="pn-fcontent">
+                            <input type="text" name="content.pub_time" value="#if($content)$!content.pub_time#else${timenow}#end" verify="发布时间|NotNull" style="width:140px;height:16px;background:#F4F9FB url(${base}/include/controls/my97/skin/datePicker.gif) no-repeat right;" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" realvalue="">
+                        </td>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						固顶级别：
+						</td>
+						<td colspan="1" width="40%" class="pn-fcontent">
+						<select name="content.top_level" id="top_level">
+						<option value="0">不固顶</option>
+						<option value="1">固顶1</option>
+						<option value="2">固顶2</option>
+						<option value="3">固顶3</option>
+						<option value="4">固顶4</option>
+						<option value="5">固顶5</option>
+						<option value="6">固顶6</option>
+						<option value="7">固顶7</option>
+						<option value="8">固顶8</option>
+						<option value="9">紧急</option>
+						</select> 
+						<span class="pn-fhelp">数字越大越靠前</span>
+						 </td>
+					</tr>
+
+                    #if($content)
+                      #foreach($o in $attrList)
+                      #if("$o.attr_type"=="01")
+                      <tr>
+                          <td width="10%" class="pn-flabel pn-flabel-h">$!o.attr_name：</td>
+                          <td colspan="3" width="40%" class="pn-fcontent">
+                              <input type="text" name="attr.$o.attr_code" id="$o.attr_code" value="$attrMap.get("$!o.attr_code")" maxlength="100" size="30" #if($o.attr_must==1)verify="$!o.attr_name|NotNull"#end>
+                          </td>
+                      </tr>
+                      #elseif("$o.attr_type"=="02")
+                      <tr>
+                          <td width="10%" class="pn-flabel pn-flabel-h">$!o.attr_name：</td>
+                          <td colspan="3" width="40%" class="pn-fcontent">
+                              <select name="attr.$o.attr_code" id="attr$!o.attr_code">
+                                  #if($o.attr_must==0)
+                                  <option value="无">无</option>
+                                  #end
+                                  #foreach($ob in $StringUtil.getStrings("$!o.attr_default","|"))
+                                  <option value="$!ob">$!ob</option>
+                                  #end
+                              </select>
+                              <script type="text/javascript">$("#attr$!o.attr_code").val("$attrMap.get("$!o.attr_code")");</script>
+                          </td>
+                      </tr>
+                      #end
+                      #end
+                      #else
+
+                      #foreach($o in $attrList)
+                      #if("$o.attr_type"=="01")
+                      <tr>
+                          <td width="10%" class="pn-flabel pn-flabel-h">$!o.attr_name：</td>
+                          <td colspan="3" width="40%" class="pn-fcontent">
+                              <input type="text" name="attr.$o.attr_code" id="$o.attr_code" value="$!o.attr_default" maxlength="100" size="30" #if($o.attr_must==1)verify="$!o.attr_name|NotNull"#end>
+                          </td>
+                      </tr>
+                      #elseif("$o.attr_type"=="02")
+                      <tr>
+                          <td width="10%" class="pn-flabel pn-flabel-h">$!o.attr_name：</td>
+                          <td colspan="3" width="40%" class="pn-fcontent">
+                              <select name="attr.$o.attr_code">
+                                  #if($o.attr_must==0)
+                                  <option value="无">无</option>
+                                  #end
+                                  #foreach($ob in $StringUtil.getStrings("$!o.attr_default","|"))
+                                  <option value="$!ob">$!ob</option>
+                                  #end
+                              </select>
+                          </td>
+                      </tr>
+                      #end
+                      #end
+
+                      #end
+					<tr>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						摘要：
+						</td>
+						<td colspan="3" width="40%" class="pn-fcontent"> 
+						<textarea cols="70" rows="3" name="content.description" maxlength="255">$!content.description</textarea>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						标题图：
+						</td>
+						<td colspan="3" width="40%" class="pn-fcontent">
+                        <input type="text" id="title_img_upload" name="title_img_upload" style="width:265px"/>
+                            <input type="text" onkeyup="clearImage()" id="title_img" name="content.title_img" value="$!content.title_img" style="width:265px"/>
+                            <input type="hidden" id="title_img_s"  name="content.title_img_s" value="$!content.title_img_s" />
+                        <div id="title_img_view">
+                            #if("$!content.title_img"!="")
+                            <img src='$!content.title_img' width='300' height='180'>
+                            #end
+                        </div>
+
+						</td>
+
+					</tr>
+
+					<tr>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						多媒体：
+						</td>
+						<td colspan="1" width="40%" class="pn-fcontent">
+                            <input type="text" id="media_path_upload" name="media_path_upload" style="width:265px"/>
+                            <input type="text" id="media_path" name="content.media_path" value="$!content.media_path" style="width:265px"/>
+
+						</td>
+						<td width="10%" class="pn-flabel pn-flabel-h">播放器:</td>
+						<td colspan="1" width="40%" class="pn-fcontent">
+                            <label><input type="radio"  value="MP4" #if("$!content.media_type"=="MP4")checked#end name="content.media_type"/>MP4</label> <label>
+                            <!--<input type="radio" value="FLV" #if("$!content.media_type"=="FLV")checked#end name="content.media_type"/>FLV</label> <label>-->
+                            <!--<input type="radio" value="FLASH" #if("$!content.media_type"=="FLASH")checked#end name="content.media_type"/>FLASH</label>-->
+</td>
+
+					</tr>
+
+					<tr>
+						<td width="10%" class="pn-flabel pn-flabel-h">
+						内容：
+						</td>
+						<td colspan="3" width="90%" class="pn-fcontent">
+						
+							 <div >
+								<div>
+									<script type="text/plain" id="editor"></script>
+									<div class="con-split"></div>
+								</div>
+							 </div>
+						</td>
+						
+					</tr> 
+
+
+                        </table> 
+                
+            </td>
+            </tr>
+            </table>
+			</div>
+		</td>
+            </tr>
+            </table>
+      </form>
+
+</body>
+</html>

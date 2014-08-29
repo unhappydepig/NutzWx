@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<!-- 框架 -->
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+	<!-- 分页  注意顺序 -->
+	<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css"/> 	
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>	
+    <!-- 树 -->
+    <script type="text/javascript" src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script> 
+	<link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script src="${base}/include/controls/my97/WdatePicker.js"></script>
+
+    <SCRIPT type="text/javascript">
+           <!--
+           function getWidth(percent){
+        	   return document.body.clientWidth*percent;
+		   }
+           
+           function loadData(){
+        	   $("#dg1").datagrid({  
+        	        width:"auto",
+        	   		height:"auto",
+        	        nowrap: false,  
+        	        striped: true,  
+        	        border: true,  
+        	        collapsible:false,//是否可折叠的  
+        	        fit: false,//自动大小  
+        	        url:"${base}/private/wx/push/list",
+                    queryParams: {"pid": $("#pid").val(),"push_name": $("#push_name").val(),"push_type":$("#push_type").val(),"type":$("#type").val()},
+        	        //sortName: 'code',  
+        	        //sortOrder: 'desc',  
+        	        remoteSort:false,   
+        	        idField:"id",
+        	        singleSelect:false,//是否单选  
+        	        pagination:true,//分页控件  
+        	        rownumbers:true,//行号  
+        	        fitColumns: true,//行自适应
+					pageSize: 10,
+        	        pageList:[5,10,15,20,30,40,50],
+        	        loadMsg:'数据加载中...',
+        	        columns:[[
+                        {title : '群发名称',field : 'push_name',width:getWidth(0.30),align : 'left'},
+                        {title : '群发类型',field : 'push_type',width:getWidth(0.15),align : 'left',
+                            formatter: function (value, row, index) {
+                                if(row.push_type==0){
+                                    return "全部用户";
+                                }else if(row.push_type==1){
+                                    return "节目用户";
+                                }else if(row.push_type==2){
+                                    return "条件选择";
+                                }else if(row.push_type==3){
+                                    return "用户列表";
+                                }
+                            }
+                        },
+                        {title : '消息类型',field : 'type',width:getWidth(0.15),align : 'left',
+                            formatter: function (value, row, index) {
+                                if(row.type=="mpnews"){
+                                    return "图文";
+                                }else if(row.type=="text"){
+                                    return "文本";
+                                }else if(row.type=="image"){
+                                    return "图片";
+                                }else if(row.type=="voice"){
+                                    return "语音";
+                                }else if(row.type=="mpvideo"){
+                                    return "视频";
+                                }
+                            }
+                        },
+                        {title : '创建时间',field : 'created_at',width:getWidth(0.15),align : 'left'},
+                        {title : '状态',field : 'status',width:getWidth(0.15),align : 'left',
+                            formatter: function (value, row, index) {
+                                if(row.status==0){
+                                    return "草稿";
+                                }else if(row.status==1){
+                                    return "创建成功";
+                                }else if(row.status==2){
+                                    return "<a href='javascript:void(0)' title='Errcode:"+row.errcode+" Errmsg:"+row.errmsg+"'><span style='color: :red'>创建失败</span></a>";
+                                }
+                            }},
+                        {title : '操作选项',field : 'op',width:getWidth(0.10),align : 'left',
+                            formatter: function (value, row, index) {
+                                 return "<a href='javascript:view("+row.id+")'>查看详情</a>";
+
+                            }}
+        	        ]],
+        	        frozenColumns:[[  
+        	            {field:"id",checkbox:true}
+        	        ]]
+        	    });  
+        	    //设置分页控件  
+        	    var p = $("#dg1").datagrid("getPager");  
+        	    $(p).pagination({  
+        	        beforePageText: "第",//页数文本框前显示的汉字  
+        	        afterPageText: "页    共 {pages} 页",  
+        	        displayMsg: "当前显示 {from} - {to} 条记录   共 {total} 条记录",  
+        	        onBeforeRefresh:function(){ 
+        	        } 
+        	    });  
+           }
+           //转到新增页面
+           function add()
+           {
+               var d = new Dialog("Add");
+               d.Width = 620;
+               d.Height = 400;
+               d.Title = "新建群发";
+               d.URL = "${base}/private/wx/push/toadd?pid="+$("#pid").val();
+               d.OKEvent = function() {
+                   if ($DW.Verify.hasError()) {
+                       return;
+                   }
+                   if($DW.$("#contentids").val()==""&&$DW.$("#type").val()=="mpnews"){
+                       Dialog.alert("请编辑群发内容！");
+                       return;
+                   }
+                   if($DW.$("#push_type").val()=="1"&&$DW.$("#push_tv").val()==""){
+                       Dialog.alert("请选择一期节目！");
+                       return;
+                   }
+                   if($DW.$("#push_type").val()=="3"&&$DW.$("#openids").val()==""){
+                       Dialog.alert("请填写用户列表！");
+                       return;
+                   }
+                   addSave();
+               };
+               d.onLoad = function() {
+                   $DW.$("name").focus();
+               };
+               d.show();
+               d.OKButton.value="发送";
+           }
+           function addSave(){
+               top.Page.MinMessage.Show({
+                   text: '正在发送',
+                   type: 'load'
+               });
+               jQuery.ajax({
+                   type: 'POST',
+                   url : "${base}/private/wx/push/add" ,
+                   data : $DW.$("#form1").serialize(),
+                   success : function (res) {
+                       top.Page.MinMessage.Hide();
+                       if(res=="true"){
+                           $D.close();
+                           Dialog.alert("操作成功，微信接口有延迟请稍候查看群发结果！");
+                           loadData();
+                       }else{
+                           Dialog.alert("操作失败！");
+                       }
+                       return false;
+                   },
+                   fail : function(res) {
+                       Dialog.alert("系统错误?!");
+                   }
+               });
+           }
+           //转到新增页面
+           function view(id)
+           {
+               var d = new Dialog("View");
+               d.Width = 620;
+               d.Height = 400;
+               d.Title = "查看详情";
+               d.URL = "${base}/private/wx/push/view?id="+id;
+               d.OKEvent = function() {
+               };
+               d.onLoad = function() {
+               };
+               d.show();
+               d.OKButton.hide();
+               d.CancelButton.value="关闭";
+           }
+           function del() {
+               var ids = [];
+               var arr = $('#dg1').datagrid('getSelections');
+               if (!arr || arr.length == 0) {
+                   Dialog.alert("请先选择要项！");
+                   return;
+               }
+               for(var i=0; i<arr.length; i++){
+                   ids.push(arr[i].id);
+               }
+               Dialog.confirm("确定删除？", function(){
+                   jQuery.ajax({
+                       type: 'POST',
+                       url : "${base}/private/wx/push/deleteIds?ids="+ids ,
+                       success : function (res) {
+                           if(res=="true"){
+                               Dialog.alert("删除成功！");
+                               loadData();
+                           }else{
+                               Dialog.alert("删除失败！");
+                           }
+                           return false;
+                       },
+                       fail : function(res) {
+                           Dialog.alert("系统错误!");
+                       }
+                   });
+               }, "", 250, 150);
+           }
+           function initButton(){
+               Page.initBtn();
+               $!initBtn
+           }
+           Page.onLoad(function() {
+        	   loadData();
+               initButton();
+           });
+           $(window).resize(function () {
+       		clearTimeout(timer);
+       		timer=setTimeout(function(){
+       		  $('#dg1').datagrid('resize');
+       		  $('div.panel-body').css('width','auto'); 
+       		 },200);
+       		});
+           //-->
+       </SCRIPT>
+</head>
+<body leftmargin="0" topmargin="0"
+	style="overflow-x: hidden; overflow-y: auto">
+<table width="100%" border="0" cellspacing="6" cellpadding="0"
+		style="border-collapse: separate; border-spacing: 6px;">
+		<tr valign="top">
+			<td width="100%">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: separate; border-spacing: 0;">
+    <tr valign="top">
+      <td>
+	   <form name="form1" id="form1" method="post" >
+           <input type="hidden" value="$!content_id" name="content_id" id="content_id">
+        <input type="hidden" name="checkids" id="checkids" value="">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="blockTable">
+                                      <tr>
+                                        <td class="blockTd">
+                                        
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="6" >
+                                          <tr>
+                                            <td valign="middle">
+                                                <img src="${base}/images/icons/icon021a1.gif" width="20" height="20" />&nbsp;<span>$!sys_menu</span></td>
+                                          </tr>
+                                            <tr>
+                                                <td style="padding: 0 8px 4px;">
+                                                    <a
+                                                            href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                            hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                            id='BtnAdd' onClick="add();"><img
+                                                            src="${base}/images/icons/icon022a2.gif"
+                                                            width="20" height="20" /><b>新建&nbsp;</b></a>
+
+                                                    <a
+                                                        href='javascript:void(0);' ztype='zPushBtn'
+                                                        class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                        onselectstart='return false' id='BtnDel' onClick="del();"><img
+                                                        src="${base}/images/icons/icon022a3.gif"
+                                                        width="20" height="20" /><b>删除&nbsp;</b></a>
+                                                    </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="0" colspan="2" algin="right" width="85%">
+                                                    <div style="float: left; padding-right:10px;">
+                                                        所属项目: <select name="pid" id="pid" onchange="loadData()" >
+                                                        #foreach($o in $pro)
+                                                        <option value="$!o.id">$!o.name</option>
+                                                        #end
+                                                    </select> 群发名称: <input type="text" name="push_name" id="push_name"
+                                                                     value="" style="width:100px"/>
+                                                        群发类型:
+                                                        <select name="push_type" id="push_type" onchange="loadData()">
+                                                            <option value="all">所有类型</option>
+                                                            <option value="0">全部用户</option>
+                                                            <option value="1">节目用户</option>
+                                                            <option value="2">条件选择</option>
+                                                            <option value="3">用户列表</option>
+                                                        </select>
+                                                        消息类型:
+                                                        <select name="type" id="type" onchange="loadData()">
+                                                            <option value="all">所有类型</option>
+                                                            <option value="mpnews">图文</option>
+                                                            <option value="text">文本</option>
+                                                            <option value="voice">语音</option>
+                                                            <option value="image">图片</option>
+                                                            <option value="mpvideo">视频</option>
+                                                        </select>
+
+                                                    </div>
+                                                    <div style=""><a
+                                                            href='javascript:void(0);' ztype='zPushBtn'
+                                                            class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                            onselectstart='return false' id='BtnSearch'
+                                                            onClick="loadData();"><img
+                                                            src="/images/icons/icon403a3.gif"
+                                                            width="20" height="20"/><b>查询&nbsp;</b></a>
+
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+
+                                          <tr>
+                                            <td style="padding:0px 5px;">                                             
+                                            <table width="100%" height="100%" id="dg1" size="10" cellpadding="2" cellspacing="0">
+												<tr><td></td></tr>
+											</table>                                          
+                                            </td>
+                                          </tr>
+                                        </table></td>
+                                      </tr>
+                                    </table>
+                                    
+	   </form>
+	  </td>
+    </tr>
+ </table>
+ </td>
+    </tr>
+ </table>
+</body>
+</html>

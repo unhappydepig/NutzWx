@@ -1,0 +1,534 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>$!app_name</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+<link href="${base}/include/css/cms.css" rel="stylesheet" type="text/css"/>
+<link href="${base}/include/css/cms.css" rel="stylesheet" type="text/css"/>
+<script type='text/javascript'>
+    var CONTEXTPATH = '${base}';
+</script>
+<script src="${base}/include/js/main.js"></script>
+<script src="${base}/include/js/string.js"></script>
+<!-- 分页  注意顺序 -->
+<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css"/>
+<script src="${base}/include/js/jquery.easyui.min.js"></script>
+<script src="${base}/include/controls/my97/WdatePicker.js"></script>
+
+<script type="text/javascript"
+        src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script>
+<link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+
+<SCRIPT type="text/javascript">
+<!--
+//初始化按钮
+function initBtn() {
+    Page.initBtn();
+    $!initBtn
+    $Z("BtnSearch").enable();
+}
+//初始化栏目树
+function initTree() {
+    var setting = {
+        async: {
+            enable: true,
+            url: "${base}/private/wx/content/treelist",
+            autoParam: ["id"],
+            otherParam: {"pid": Page.getValue("pid")}
+        },
+        view: {
+            nameIsHTML: true
+        }
+    };
+    jQuery.fn.zTree.init(jQuery("#treeDemo"), setting);
+}
+var status = "all";
+function chgStatus() {
+    status = $("input[name='queryStatus']:checked").val();
+    loadGrid();
+}
+//获取当前页宽带
+function getWidth(percent) {
+    return document.body.clientWidth * percent;
+}
+//加载表格数据
+function loadGrid() {
+
+    $("#dg1").datagrid({
+        width: "auto",
+        height: "auto",
+        nowrap: true,
+        striped: false,
+        border: true,
+        collapsible: false,//是否可折叠的
+        fit: true,//自动大小
+        url: "${base}/private/wx/content/list",
+        //sortName: 'pub_time',
+        //sortOrder: 'desc',
+        queryParams: {"pid": $("#pid").val(), "channel_id": $("#channel_id").val(), "queryStatus": status, "queryTitle": $("#queryTitle").val(), "queryPubusername": $("#queryPubusername").val(),
+            "queryPubtimeStart": $("#queryPubtimeStart").val(), "queryPubtimeEnd": $("#queryPubtimeEnd").val(),"queryOrderBy":$("#queryOrderBy").val()},
+        remoteSort: true,
+        idField: "id",
+        singleSelect: false,//是否单选
+        pagination: true,//分页控件
+        rownumbers: true,//行号
+        fitColumns: true,//行自适应
+        loadMsg: '数据加载中...',
+        columns: [
+            [
+                {title: 'ID', field: 'idd', width: getWidth(0.04), align: 'left',
+                    formatter: function (value, row, index) {
+                        return row.id;
+                    }
+                },
+                {title: '标题', field: 'title', width: getWidth(0.35), align: 'left', nowrap: false
+                },
+                {title: '作者', field: 'author', width: getWidth(0.10), align: 'left'},
+                {title: '发布时间', field: 'pub_time', width: getWidth(0.15), align: 'left'
+                },
+                {title: '浏览量', field: 'views', width: getWidth(0.06), align: 'center'
+                },
+                {title: '状态', field: 'status', width: getWidth(0.06), align: 'center',
+                    formatter: function (value, row, index) {
+                        if (row.status == 0) {
+                            return "<span style='color: #0000ff'>草稿</span>";
+                        } else if (row.status == 1) {
+                            return "<span style='color: #FF0000'>发布</span>";
+                        } else if (row.status == -1) {
+                            return "删除";
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+//                {title: '发布方式', field: 'send_type', width: getWidth(0.08), align: 'center',
+//                    formatter: function (value, row, index) {
+//                        if (row.send_type == 0) {
+//                            return "普通";
+//                        } else if (row.send_type == 1) {
+//                            return "<span style='color: #FF0000'>推送</span>";
+//                        }
+//                    }
+//                },
+                {title: '操作选项', field: 'aa', width: getWidth(0.18), align: 'center',
+                    formatter: function (value, row, index) {
+                        var s1 = "修改", s2 = "删除", s3 = "查看";
+                        if (!$("#BtnUpdate").hasClass("zPushBtnDisabled")) {
+                            s1 = "<a href='javascript:editContent(\"" + row.id + "\")'>修改</a>";
+                        }
+                        if (!$("#BtnDel").hasClass("zPushBtnDisabled")) {
+                            s2 = "<a href='javascript:del(\"" + row.id + "\")'>删除</a>";
+                        }
+                        if(row.send_type == 0){
+                            s3="推送进度";
+                        }else{
+                            s3 = "<a href='javascript:log(\"" + row.id + "\")'>推送进度</a>";
+                        }
+                        return   s1 + " | " + s2 ;
+
+                    }
+                }
+            ]
+        ], frozenColumns: [
+            [
+                {field: "id", checkbox: true}
+            ]
+        ]
+    });
+    //设置分页控件
+    var p = $("#dg1").datagrid("getPager");
+    $(p).pagination({
+        beforePageText: "第",//页数文本框前显示的汉字
+        afterPageText: "页    共 {pages} 页",
+        displayMsg: "当前显示 {from} - {to} 条记录   共 {total} 条记录",
+        onBeforeRefresh: function () {
+        },
+        onRefresh: function () {
+            $("#dg1").datagrid("clearSelections");
+        }
+    });
+}
+//新增栏目内容
+function addContent() {
+    if($("#channel_id").val()==""){
+        Dialog.alert("请先在左侧选择栏目");
+        return;
+    }
+    var width = screen.availWidth - 10;
+    var height = screen.availHeight - 50;
+    var leftm = 0;
+    var topm = 0;
+    var args = "toolbar=0,location=0,maximize=1,directories=0,status=0,menubar=0,scrollbars=1, resizable=1,left=" + leftm + ",top=" + topm + ", width=" + width + ", height=" + height;
+    var url = "${base}/private/wx/content/edit?pid=" + Page.getValue("pid") + "&channel_id=" + Page.getValue("channel_id");
+    var w = window.open(url, "", args);
+    if (!w) {
+        Dialog.alert("发现弹出窗口被阻止，请更改浏览器设置，以便正常使用本功能!");
+        return;
+    }
+}
+//新增栏目内容
+function editContent(content_id) {
+    if(content_id==""){
+        var arr = $("#dg1").datagrid("getSelections");
+        if (!arr || arr.length == 0) {
+            Dialog.alert("请先选择要编辑的文章！");
+            return;
+        }
+        content_id=arr[0].id;
+    }
+    var width = screen.availWidth - 10;
+    var height = screen.availHeight - 50;
+    var leftm = 0;
+    var topm = 0;
+    var args = "toolbar=0,location=0,maximize=1,directories=0,status=0,menubar=0,scrollbars=1, resizable=1,left=" + leftm + ",top=" + topm + ", width=" + width + ", height=" + height;
+    var url = "${base}/private/wx/content/edit?pid=" + Page.getValue("pid") + "&channel_id=" + Page.getValue("channel_id") + "&id=" + content_id;
+    var w = window.open(url, "", args);
+    if (!w) {
+        Dialog.alert("发现弹出窗口被阻止，请更改浏览器设置，以便正常使用本功能!");
+        return;
+    }
+}
+//  删除文章
+function del() {
+    var ids = [];
+    var arr = $("#dg1").datagrid("getSelections");
+    if (!arr || arr.length == 0) {
+        Dialog.alert("请先选择要删除的文章！");
+        return;
+    }
+    for (var i = 0; i < arr.length; i++) {
+        ids.push(arr[i].id);
+    }
+    Dialog.confirm("确定删除？", function () {
+        jQuery.ajax({
+            type: 'POST',
+            url: "${base}/private/wx/content/del?ids=" + ids,
+            success: function (res) {
+                if (res == "true") {
+                    Dialog.alert("删除成功！");
+                    $("#dg1").datagrid("clearSelections");
+                    loadGrid();
+                } else {
+                    Dialog.alert("删除失败！");
+                }
+                return false;
+            },
+            fail: function (res) {
+                Dialog.alert("系统错误!");
+            }
+        });
+    }, "", 250, 150);
+}
+
+function pub() {
+    var ids = [];
+    var arr = $("#dg1").datagrid("getSelections");
+    if (!arr || arr.length == 0) {
+        Dialog.alert("请先选择要发布的文章！");
+        return;
+    }
+    for (var i = 0; i < arr.length; i++) {
+        ids.push(arr[i].id);
+    }
+    Dialog.confirm("确定发布？", function () {
+        jQuery.ajax({
+            type: 'POST',
+            url: "${base}/private/wx/content/setStatus?type=pub&ids=" + ids,
+            success: function (res) {
+                if (res == "true") {
+                    Dialog.alert("发布成功！");
+                    $("#dg1").datagrid("clearSelections");
+                    loadGrid();
+                } else {
+                    Dialog.alert("发布失败！");
+                }
+                return false;
+            },
+            fail: function (res) {
+                Dialog.alert("系统错误!");
+            }
+        });
+    }, "", 250, 150);
+}
+
+function topush(){
+    var ids = [];
+    var arr = $("#dg1").datagrid("getSelections");
+    if (!arr || arr.length == 0) {
+        Dialog.alert("请先选择要推送的文章！");
+        return;
+    }
+    for (var i = 0; i < arr.length; i++) {
+        if(arr[i].send_type==1){
+            Dialog.alert("请勿重复推送文章！");
+            return;
+        }
+        ids.push(arr[i].id);
+    }
+    var d = new Dialog("Push");
+    d.Width = 300;
+    d.Height = 200;
+    d.Title = "选择微信帐号";
+    d.URL = "${base}/private/wx/content/topush?pid="+$("#pid").val();
+    d.OKEvent = function() {
+        if ($DW.Verify.hasError()) {
+            return;
+        }
+        var dc = $DW.Form.getData("form1");
+        push(dc.get("appid"),ids);
+    };
+    d.onLoad = function() {
+
+    };
+    d.show();
+}
+function push(appid,idstr){
+    if(appid==null||appid==""){
+        Dialog.alert("请选择微信帐号！");
+        return;
+    }
+    Page.MinMessage.Show({
+        text: '正在提交',
+        type: 'load'
+    });
+    jQuery.ajax({
+        type: 'POST',
+        url: "${base}/private/wx/content/setStatus?type=push&ids=" + idstr+"&appid="+appid,
+        data : $("#form1").serialize(),
+        success : function (res) {
+            Page.MinMessage.Hide();
+            $D.close();
+            if(res!="0"){
+                Dialog.alert("保存成功！请在列表页查看推送进度。");
+                $("#dg1").datagrid("clearSelections");
+                loadGrid();
+            }else{
+                Dialog.alert("保存失败！");
+            }
+            return false;
+        },
+        fail : function(res) {
+            Dialog.alert("系统错误!");
+        }
+    });
+}
+function recall() {
+    var ids = [];
+    var arr = $("#dg1").datagrid("getSelections");
+    if (!arr || arr.length == 0) {
+        Dialog.alert("请先选择要发布的文章！");
+        return;
+    }
+    for (var i = 0; i < arr.length; i++) {
+        ids.push(arr[i].id);
+    }
+    Dialog.confirm("确定撤回？", function () {
+        jQuery.ajax({
+            type: 'POST',
+            url: "${base}/private/wx/content/setStatus?type=recall&ids=" + ids,
+            success: function (res) {
+                if (res == "true") {
+                    Dialog.alert("撤回成功！");
+                    $("#dg1").datagrid("clearSelections");
+                    loadGrid();
+                } else {
+                    Dialog.alert("撤回失败！");
+                }
+                return false;
+            },
+            fail: function (res) {
+                Dialog.alert("系统错误!");
+            }
+        });
+    }, "", 250, 150);
+}
+function log(id){
+    var d = new Dialog("Pushlog");
+    d.Width = 750;
+    d.Height = 400;
+    d.Title = "推送进度";
+    d.URL = "${base}/private/wx/content/pushlog?id="+id;
+    d.OKEvent = function() {
+    };
+    d.onLoad = function() {
+    };
+    d.show();
+}
+function changeProject(){
+    initTree();
+    loadGrid();
+}
+function changeChannel(id){
+    $("#channel_id").val(id);
+    loadGrid();
+}
+Page.onLoad(function () {
+
+    initTree();
+    loadGrid();
+    initBtn();
+});
+//表格自适应宽度
+$(window).resize(function () {
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+        $('#dg1').treegrid('resize');
+        $('div.panel-body').css('width', 'auto');
+    }, 200);
+});
+//-->
+</SCRIPT>
+</head>
+<body leftmargin="0" topmargin="0" style="overflow-x: hidden; overflow-y: auto">
+<form name="form1" id="form1">
+    <input type="hidden" name="channel_id" id="channel_id" value="">
+
+    <table width="100%" border="0" cellspacing="6" cellpadding="0"
+           style="border-collapse: separate; border-spacing: 6px;">
+        <tr valign="top">
+            <td width="180">
+                <table width="100%" height="100%" border="0" cellspacing="0"
+                       cellpadding="6" class="blockTable">
+
+                    <tr>
+                        <td style="padding: 6px;" class="blockTd" align="right">
+                            <ul style="text-align:left;padding:2px 0 0 10px;">
+                                所属项目：<select id="pid" name="pid" onchange="changeProject()">
+                        #foreach($o in $pro)
+                                   <option value="$!o.id">$!o.name</option>
+                                #end
+                                            </select>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px;" class="blockTdn">
+                            <div ztype='_Tree'
+                                 style='-moz-user-select: none; height: 425px; width: 200px;'
+                                 id='tree1' class='treeItemN'>
+
+
+                                <ul id="treeDemo" class="ztree"></ul>
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                </table>
+            </td>
+            <td width="100%" valign="top">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0"
+                       style="border-collapse: separate; border-spacing: 0px;">
+                    <tr valign="top">
+                        <td>
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                                   class="blockTable">
+                                <tr>
+                                    <td class="blockTd">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="6">
+                                            <tr>
+                                                <td style="padding: 8px 0 4px 6px;" id="btnlist">
+                                                    <a
+                                                            href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                            hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                            id='BtnAdd' onClick="addContent();"><img
+                                                            src="${base}/images/icons/icon022a2.gif"
+                                                            width="20" height="20" /><b>新建&nbsp;</b></a> <a
+                                                        href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                        hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                        id='BtnUpdate' onClick="editContent('');"><img
+                                                        src="${base}/images/icons/icon022a4.gif"
+                                                        width="20" height="20" /><b>编辑&nbsp;</b></a>
+                                                    <a href='javascript:void(0);' ztype='zPushBtn'
+                                                       class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                       onselectstart='return false' id='BtnPub' onClick="pub();"><img
+                                                            src="${base}/images/icons/icon038a4.gif"
+                                                            width="20" height="20" /><b>发布&nbsp;</b></a>
+                                                    <!--a href='javascript:void(0);' ztype='zPushBtn'
+                                                       class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                       onselectstart='return false' id='BtnPush' onClick="topush();"><img
+                                                            src="${base}/images/icons/icon038a4.gif"
+                                                            width="20" height="20" /><b>推送&nbsp;</b></a>
+                                                    <a href='javascript:void(0);' ztype='zPushBtn'
+                                                       class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                       onselectstart='return false' id='BtnRecll' onClick="recall();"><img
+                                                            src="${base}/images/icons/icon038a4.gif"
+                                                            width="20" height="20" /><b>撤回&nbsp;</b></a-->
+
+                                                    <a
+                                                        href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                        hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                        id='BtnDel' onClick="del();"><img
+                                                        src="${base}/images/icons/icon022a3.gif"
+                                                        width="22" height="20" /><b>删除&nbsp;</b></a>
+                                                </td>
+                                                <td algin="right">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="0" colspan="2" algin="right" width="85%">
+                                                    <div style="float: left; padding-right:10px;">
+                                                        标题: <input type="text" name="queryTitle" id="queryTitle"
+                                                                   value="" style="width:100px"/>
+                                                        发布时间: <input type="text" name="queryPubtimeStart"
+                                                                     id="queryPubtimeStart" value=""
+                                                                     style="width:70px" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})"/>
+                                                        到 <input type="text" name="queryPubtimeEnd" id="queryPubtimeEnd"
+                                                                 value="" style="width:70px" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})"/>
+
+                                                        <select name="queryOrderBy" id="queryOrderBy">
+                                                            <option value="0" selected="selected">ID降序</option>
+                                                            <option value="1">ID升序</option>
+                                                            <option value="2">发布时间降</option>
+                                                            <option value="3">发布时间升</option>
+                                                        </select>
+
+                                                    </div>
+                                                    <div style=""><a
+                                                            href='javascript:void(0);' ztype='zPushBtn'
+                                                            class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                            onselectstart='return false' id='BtnSearch'
+                                                            onClick="loadGrid();"><img
+                                                            src="${base}/images/icons/icon403a3.gif"
+                                                            width="20" height="20"/><b>查询&nbsp;</b></a></div>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="0" colspan="2" algin="right" width="85%">
+                                                    <div style="">
+                                                        <label><input type="radio" name="queryStatus" value="all"
+                                                                      onclick="chgStatus();"
+                                                                      checked="checked">所有内容</label>
+                                                        <label><input type="radio" name="queryStatus" value="draft"
+                                                                      onclick="chgStatus();">草稿</label>
+                                                        <label><input type="radio" name="queryStatus" value="pub"
+                                                                      onclick="chgStatus();">发布</label>
+                                                        <label><input type="radio" name="queryStatus" value="del"
+                                                                      onclick="chgStatus();">回收站</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:0px 5px;"height="375" colspan="3" width="85%">
+                                                    <table width="100%" height="100%" id="dg1" size="10" cellpadding="2" cellspacing="0">
+                                                        <tr><td></td></tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

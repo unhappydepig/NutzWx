@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="学堂互动">
+<title>$!content.title</title>
+<link href="${base}/images/wx/activity-style.css" rel="stylesheet" type="text/css">
+<link href="${base}/images/wx/list.css" rel="stylesheet" />
+</head>
+
+<body  data-role="page" class="activity-scratch-card-winning" >
+<div class="scrollDiv boxcontent boxrotate scrollbox">
+	<ul style="margin-top: -25;">
+	<li>$!content.title</li>
+			</ul>
+</div>
+<div class="main">
+	<!--开始内容区-->
+	<div class="content" id="div_img">
+		<!--开始tupian信息-->
+		<div class="boxcontent boxwhite">
+			<div class="box">
+				<div class="title-brown"><span>$!content.op_time</span></div>
+				<div class="Detail">
+                    #if($content.status!=1)
+                    <p>文章未发布。</p>
+                    #else
+				 <p><span style="font-weight: bold">$!content.digest</span></p>
+
+				 <p>$!content.content</p>
+                 #end
+				</div>
+			</div>
+		</div>
+				
+		
+		 
+
+	</div>
+	<!--结束内容区-->
+    <div style="clear:both;"></div>
+    <div style="clear:both;"></div>
+</div>
+ 
+</body>
+</html>

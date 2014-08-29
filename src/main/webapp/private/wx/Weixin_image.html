@@ -1,0 +1,583 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow-y:auto">
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- 框架 -->
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+	<!-- 分页  注意顺序 -->
+	<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css"/> 	
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>	
+    <!-- 树 -->
+    <script type="text/javascript" src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script> 
+	<link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script src="${base}/include/controls/my97/WdatePicker.js"></script>
+    <LINK rel="stylesheet" type="text/css" href="${base}/images/doc/css/common.css">
+    <LINK rel="stylesheet" type="text/css" href="${base}/images/doc/css/page.css">
+    <script src="${base}/include/js/jquery.prettyPhoto.js"></script>
+    <link href="${base}/include/css/prettyPhoto.css" rel="stylesheet" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8"/>
+    <script>
+    var page=1;
+    var rows=20;
+    var total=0;
+    function loadData(){
+        Page.MinMessage.Show({
+            text: '正在加载',
+            type: 'load'
+        });
+        jQuery.ajax({
+            type: 'POST',
+            url : "${base}/private/wx/image/list" ,
+            data : {"page":page,"rows":rows,"tvid":$("#tvid").val(),"pid":$("#pid").val(),"name":$("#name").val(),"timeStart":$("#timeStart").val(),"timeEnd":$("#timeEnd").val()
+                ,"ageStart":$("#ageStart").val(),"ageEnd":$("#ageEnd").val()},
+            success : function (res) {
+                Page.MinMessage.Hide();
+                jxjson(res);
+            },
+            fail : function(res) {
+                Dialog.alert("系统错误?!");
+            }
+        });
+    }
+    function jxjson(res){
+        $("#js_data_list_inner").html("");
+        var jsonobj =jQuery.parseJSON(res);
+        total=jsonobj.total;
+        initPage();
+
+        jQuery.each(jsonobj.rows, function(index, obj) {
+            var t="i-share";
+            if(obj.open_status==1){
+                t="i-share:hover";
+            }
+            var image="${base}/images/doc/images/file_thumb/unknown.gif";
+            var linkimage="${base}/images/doc/images/file_thumb/unknown.gif";
+            var name="匿名用户";
+            if(obj.image_thumb){
+                image=obj.image_thumb;
+            }else if(obj.image_url){
+                image=obj.image_url;
+            }else if(obj.picurl){
+                image=obj.picurl;
+            }
+            if(obj.image_url){
+                linkimage=obj.image_url;
+            }else if(obj.picurl){
+                linkimage=obj.picurl;
+            }
+            if(obj.name){
+                name=obj.name;
+            }
+            if(obj.province){
+                name+=" "+obj.province;
+            }
+            if(obj.city){
+                name+=" "+obj.city;
+            }
+            var address=name;
+            if(obj.area){
+                address+=" "+obj.area;
+            }
+            if(obj.address){
+                address+=" "+obj.address;
+            }
+            var moreinfo=address;
+            if(obj.sex){
+                var tempsex="未填";
+                if(obj.sex==1){
+                    tempsex="男";
+                }else if(obj.sex==2){
+                    tempsex="女";
+                }
+                moreinfo+=" &#10;性别:"+tempsex;
+            }
+            if(obj.age){
+                moreinfo+=" &#10;年龄:"+obj.age+"岁";
+            }
+            if(obj.mobile){
+                moreinfo+=" &#10;手机号码:"+ obj.mobile;
+            }
+            var times=0;
+            if(obj.up_times){
+                times=obj.up_times;
+            }
+            moreinfo+=" &#10;上节目次数:"+ times;
+
+            var tip="<span style='font-size:12px;'>"+name+" "+obj.area+" "+obj.address+" <br>"+obj.post_time+" 手机号码:"+obj.mobile+"</span>";
+            if(obj.tvstatus==0){
+                tip="<span style='color: red;font-size:12px;'>"+name+" "+obj.area+" "+obj.address+" <br>"+obj.post_time+" 手机号码:"+obj.mobile+"</span> ";
+                name="<span style='color: red;'>"+name+"</span> ";
+            }else if(obj.tvstatus==1){
+                tip="<span style='color: yellowgreen;font-size:12px;'>"+name+" "+obj.area+" "+obj.address+" <br>"+obj.post_time+" 手机号码:"+obj.mobile+"</span> ";
+                name="<span style='color:yellowgreen'>"+name+"</span> ";
+            }
+            var txt="";
+            if(obj.txt){
+                txt=obj.txt;
+                tip+="<br>"+txt;
+            }
+            var html="<LI title=\""+moreinfo+"\" ><INPUT name=\"id\" value=\""+obj.id+"\" type=\"checkbox\" ><INPUT id=\"image_"+obj.id+"\" value=\""+obj.tvstatus+"\" type=\"hidden\" ><DIV class=\"checkbox\"></DIV>";
+            html+="<DIV style=\"POSITION: absolute; WIDTH: 180px; HEIGHT: 200px; TOP: 0px; LEFT: 0px\" checkbox=\"1\"></DIV><I class='file-type'>" +
+                    "<a href='"+linkimage+"' rel='prettyPhoto[gallery]'>" +
+                    "<img src=\""+image+"\" width=\"160\" height=\"120\" data-id='"+obj.id+"' alt=\""+tip+"\"/></a></I>";
+            html+="<DIV class=\"file-name\"><SPAN>"+name+"</SPAN></DIV><DIV class=\"file-info\">";
+            html+=obj.post_time+"</DIV>";
+            var temp="";
+            if(obj.status==0){
+                temp="<A class=\"ico-lio i-preview-active\"  href=\"javascript:changeStatus("+obj.id+",1);\" btn=\"goto_dir\" data_title=\"隐藏\">隐藏</A>";
+            }else if(obj.status==1){
+                temp="<A class=\"ico-lio i-preview\"  href=\"javascript:changeStatus("+obj.id+",0);\" btn=\"goto_dir\" data_title=\"显示\">显示</A>";
+            }
+            html+="<DIV class=\"file-opt\">" +temp+"<A class=\"ico-lio i-download-active\" href=\"javascript:BabyInfo("+obj.uid+","+obj.tvid+");\" data_title=\"查看资料\">查看资料</A></SPAN></DIV></LI>";
+            $("#js_data_list_inner").append(html);
+
+        });
+        initCheckbox();
+        initPrettyPhoto();
+        $("#js_data_list_outer").addClass("list-icon");
+        $("#js_data_list_outer").addClass("list-thumb");
+    }
+    function initCheckbox(){
+
+        $("#js_data_list_inner").find("li").click(function(){
+            $(this).toggleClass("focus");
+        });
+    }
+    function gotoPage(p){
+        page=p;
+        loadData();
+    }
+    function initPage(){
+        var pagetotal=parseInt(total%rows)==0?parseInt(total/rows):parseInt(total/rows)+1;
+        var pageprev="";
+        var pagenum="";
+        var pagenext="";
+        $("#pagectl").html("");
+        if(page>1){
+            pageprev="<a href=\"javascript:gotoPage("+(page-1)+")\" class=\"btn btn-prev\">上一页</a>";
+        }else{
+            pageprev="<span class=\"btn btn-prev\">上一页</span>";
+        }
+        pagenum+="<a href=\"javascript:gotoPage(1);\"";
+        pagenum+=">首页</a>";
+        var page1=pagetotal;
+        var page0=1;
+        if(pagetotal>(page+4)){
+            if(page>6){
+                page1=page+4;
+                page0=page-5;
+            }else{
+                page1=pagetotal>10?10:pagetotal;
+            }
+        }else{
+            page0=pagetotal-9>0?pagetotal-9:1;
+        }
+        for(var i=page0;i<=page1;i++){
+            pagenum+="<a href=\"javascript:gotoPage("+i+");\"";
+            if(i==page){
+                pagenum+="class=\"focus\"";
+            }
+            pagenum+=">"+i+"</a>";
+        }
+        pagenum+="<a href=\"javascript:gotoPage("+pagetotal+");\"";
+        pagenum+=">尾页</a>";
+        if(page<pagetotal){
+            pagenext="<a href=\"javascript:gotoPage("+(page+1)+")\" class=\"btn btn-next\">下一页</a>";
+        }else{
+            pagenext+="<span class=\"btn btn-next\">下一页</span>";
+        }
+        pagenext+="<span> 总计:"+total+"条 "+pagetotal+"页</span>";
+        $("#pagectl").html("<div class=\"pagination\"><div class=\"con\">"+pageprev+pagenum+pagenext+"</div></div>");
+    }
+    function del(){
+        var ids=[];
+        $("#js_data_list_inner").find(":checkbox").each(function(){
+            if($(this).parent().hasClass("focus")){
+                ids.push($(this).val());
+            }
+        });
+        if(ids.length==0){
+            Dialog.alert("请先选择要删除的照片！");
+            return;
+        }
+        Dialog.confirm("确定删除？", function(){
+            jQuery.ajax({
+                type: 'POST',
+                url : "${base}/private/wx/image/deleteIds?ids="+ids ,
+                success : function (res) {
+                    if(res=="true"){
+                        Dialog.alert("删除成功！");
+                        loadData();
+                    }else{
+                        Dialog.alert("删除失败！");
+                    }
+                    return false;
+                },
+                fail : function(res) {
+                    Dialog.alert("系统错误!");
+                }
+            });
+        }, "", 250, 150);
+    }
+    function selTv(){
+        var ids=[];
+        $("#js_data_list_inner").find(":checkbox").each(function(){
+            if($(this).parent().hasClass("focus")){
+                if($("#image_"+$(this).val()).val()==0){
+
+                }else ids.push($(this).val());
+            }
+        });
+        var d = new Dialog("toTv");
+        d.Width = 650;
+        d.Height = 450;
+        d.Title = "选入节目";
+        d.URL = "${base}/private/wx/image/totv?ids="+ids.toString();
+        d.onLoad = function(){
+            //$DW.$Z("name").focus();
+        }
+        d.OKEvent = function(){
+            if($DW.Verify.hasError()){
+                return;
+            }
+            tvSave();
+        };
+        d.show();
+        d.OKButton.value="保存选择";
+        d.addButton("tvPub","发布节目",function(){tvPub(0);});
+        d.addButton("tvDown","撤回节目",function(){tvPub(1);});
+    }
+    function tvPub(status){
+        var tvid=$DW.$("#tvid").val();
+        top.Page.MinMessage.Show({
+            text: '处理中',
+            type: 'load'
+        });
+        jQuery.ajax({
+            url : "${base}/private/tv/show/changeStatus?id="+tvid+"&status="+status,
+            type: 'POST',
+            success : function (res) {
+                top.Page.MinMessage.Hide();
+                if(res=="true"){
+                    Dialog.alert("操作成功");
+                    $D.close();
+                    loadTvinfo();
+                }else{
+                    Dialog.alert("操作失败");
+                }
+                return false;
+            },
+            fail : function(res) {
+                Dialog.alert("系统错误?!");
+            }
+        });
+    }
+    function tvSave(){
+        var ids=$DW.$("#selids").val().split(",");
+        var tvid=$DW.$("#tvid").val();
+        var num=$DW.sel3num;
+        if(num<1){
+            Dialog.alert("未选择照片");
+            return;
+        }
+        Page.MinMessage.Show({
+            text: '处理中',
+            type: 'load'
+        });
+        jQuery.ajax({
+            url : "${base}/private/wx/image/sel?tvid="+tvid+"&ids="+ids,
+            type: 'POST',
+            success : function (res) {
+                Page.MinMessage.Hide();
+                if(res=="true"){
+                    Dialog.alert("操作成功");
+                    parent.DialogRefresh("toTv");
+                    loadData();
+                }else{
+                    Dialog.alert("操作失败");
+                }
+                return false;
+            },
+            fail : function(res) {
+                Dialog.alert("系统错误?!");
+            }
+        });
+    }
+    function BabyInfo(id,tvid){
+        var d = new Dialog("BabyInfo");
+        d.Width = 450;
+        d.Height = 420;
+        d.Title = "宝贝资料";
+        d.URL = "${base}/private/baby/info/view?uid="+id+"&tvid="+tvid;
+        d.onLoad = function(){
+            //$DW.$Z("name").focus();
+        };
+        d.OKEvent = function(){
+        };
+        d.show();
+        d.OKButton.hide();
+        d.CancelButton.value="关闭";
+    }
+    //init prettyPhoto
+    function initPrettyPhoto() {
+        parent.jQuery.getScript("${base}/include/js/wx_image.js",function(){ parent.initPrettyPhoto();});
+
+    }
+    function changeStatus(id,status){
+        Page.MinMessage.Show({
+            text: '处理中',
+            type: 'load',
+            timeout:500
+        });
+        jQuery.ajax({
+            url : "${base}/private/wx/image/changeStatus?id="+id+"&status="+status,
+            type: 'POST',
+            success : function (res) {
+                loadData();
+                return false;
+            }
+        });
+    }
+    function tvShow(){
+        var d = new Dialog("BabyInfo");
+        d.Width = 850;
+        d.Height = 450;
+        d.Title = "节目管理";
+        d.URL = "${base}/private/tv/show";
+        d.onLoad = function(){
+            //$DW.$Z("name").focus();
+        };
+        d.OKEvent = function(){
+        };
+        d.show();
+        d.OKButton.hide();
+        d.CancelButton.value="关闭";
+    }
+    function notice(){
+        if($("#tvid").val()==""||$("#tvid").val()=="noshow"||$("#tvid").val()=="notv"){
+            Dialog.alert("请选择一期节目");
+            return;
+        }
+        var d = new Dialog("notice");
+        d.Width = 850;
+        d.Height = 450;
+        d.Title = "节目通知";
+        d.URL = "${base}/private/tv/show/notice?tvid="+$("#tvid").val();
+        d.onLoad = function(){
+            //$DW.$Z("name").focus();
+        };
+        d.OKEvent = function(){
+        };
+        d.show();
+        d.OKButton.hide();
+        d.CancelButton.value="关闭";
+    }
+    function qf(){
+        var d = new Dialog("qf");
+        d.Width = 950;
+        d.Height = 450;
+        d.Title = "高级群发";
+        d.URL = "${base}/private/wx/push";
+        d.onLoad = function(){
+        };
+        d.OKEvent = function(){
+        };
+        d.show();
+        d.OKButton.hide();
+        d.CancelButton.value="关闭";
+    }
+    function loadTvinfo(){
+        jQuery.ajax({
+            type: 'POST',
+            url : "/private/tv/show/list" ,
+            data : {"page":1,"rows":10,"timeStart":$("#timeStart").val(),"timeEnd":$("#timeEnd").val()},
+            success : function (res) {
+                var json = jQuery.parseJSON(res);
+                var selector = $("#tvid");
+                selector.empty();
+                selector.append("<option value=''>全部</option>");
+                selector.append("<option value='noshow'>隐藏</option>");
+                selector.append("<option value='notv'>未上节目</option>");
+                jQuery.each(json.rows, function(index, obj) {
+                    var name=obj.play_name;
+                    if(obj.status==0){
+                        name=name+" 已播";
+                    }else if(obj.status==1){
+                        name=name+" 未播";
+                    }
+                    selector.append("<option value='"+obj.id+"'>"+name+"</option>");
+                });
+                loadData();
+                return false;
+            },
+            fail : function(res) {
+                Dialog.alert("系统错误?!");
+            }
+        });
+    }
+    function downImage(){
+        if($("#tvid").val()==""||$("#tvid").val()=="noshow"||$("#tvid").val()=="notv"){
+            Dialog.alert("请选择一期节目");
+            return;
+        }
+        window.open("/private/wx/file/downImage?tvid="+$("#tvid").val());
+    }
+    function initButton(){
+        Page.initBtn();
+        $!initBtn
+    }
+	Page.onLoad(function() {
+        loadData();
+        initButton();
+    });
+</script>
+</head>
+<body leftmargin="0" topmargin="0"
+	style="overflow-x: hidden; overflow-y: auto">
+<table width="100%" border="0" cellspacing="6" cellpadding="0"
+		style="border-collapse: separate; border-spacing: 6px;">
+		<tr valign="top">
+			<td>
+				<form name='form1' id="from1" method='post'>
+					<input type="hidden" name="doAction" value=""> <input
+						type="hidden" name="sys_menuid" value="$!sys_menuid"> <input
+						type="hidden" name="checkids" value=""> <input
+						type="hidden" name="deltype" value="1">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0"
+						class="blockTable">
+						<tr>
+							<td class="blockTd">
+								<table width="100%" border="0" cellspacing="0" cellpadding="6">
+									<tr>
+										<td valign="middle">
+
+										</td>
+									</tr>
+                                    <tr>
+                                        <td style="padding: 0 8px 4px;">
+                                            <a
+                                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                    hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                    id='BtnDel' onClick="del();"><img
+                                                    src="${base}/images/icons/icon022a3.gif"
+                                                    width="20" height="20" /><b>删除照片&nbsp;</b></a>
+                                            <a
+                                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                    hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                    id='BtnIn' onClick="selTv();"><img
+                                                    src="${base}/images/icons/icon011a16.gif"
+                                                    width="20" height="20" /><b>选入节目&nbsp;</b></a>
+                                            <a
+                                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                    hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                    id='BtnJM' onClick="tvShow();"><img
+                                                    src="${base}/images/icons/icon011a4.gif"
+                                                    width="20" height="20" /><b>节目管理&nbsp;</b></a>
+                                            <a
+                                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                    hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                    id='BtnWx' onClick="notice();"><img
+                                                    src="${base}/images/icons/icon020a7.gif"
+                                                    width="20" height="20" /><b>节目通知&nbsp;</b></a>
+
+                                            <a
+                                                    href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+                                                    hidefocus='true' tabindex='-1' onselectstart='return false'
+                                                    id='BtnQf' onClick="qf();"><img
+                                                    src="${base}/images/icons/icon020a7.gif"
+                                                    width="20" height="20" /><b>高级群发&nbsp;</b></a>
+                                            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                            <span style="color: red">*红色:已播出</span>
+                                            <span style="color: yellowgreen">*黄绿色:选中尚未播出</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="0" colspan="2" algin="right" width="85%">
+                                            <div style="float: left; padding-right:10px;">
+                                                所属项目：
+                                                <select name="pid" id="pid" onchange="gotoPage(1)">
+                                                #foreach($o in $pro)
+                                                <option value="$!o.id">$!o.name</option>
+                                                #end
+                                            </select>
+                                                节目期数:
+                                                <select name="tvid" id="tvid" onchange="gotoPage(1)">
+                                                    <option value="">全部</option>
+                                                    <option value="noshow">隐藏</option>
+                                                    <option value="notv">未上节目</option>
+                                                    #foreach($o in $tvlist)
+                                                    <option value="$o.id">$o.play_name #if($o.status==0)已播#else未播#end</option>
+                                                    #end
+                                                </select>
+
+                                                宝贝姓名: <input type="text" name="name" id="name"
+                                                                   value="" style="width:100px"/>
+
+                                                上传时间: <input type="text" name="timeStart"
+                                                             id="timeStart" value=""
+                                                             style="width:70px" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})"/>
+                                                到 <input type="text" name="timeEnd" id="timeEnd"
+                                                         value="" style="width:70px" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})"/>
+
+                                                年龄:<input type="text" name="ageStart"
+                                                          id="ageStart" value=""
+                                                          style="width:30px" onKeyUp="value=value.replace(/[^\d]/g,'') " maxlength="2">
+                                                到 <input type="text" name="ageEnd"
+                                                id="ageEnd" value=""
+                                                style="width:30px" onKeyUp="value=value.replace(/[^\d]/g,'') " maxlength="2">
+
+                                            </div>
+                                            <div style=""><a
+                                                    href='javascript:void(0);' ztype='zPushBtn'
+                                                    class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                    onselectstart='return false' id='BtnSearch'
+                                                    onClick="gotoPage(1)"><img
+                                                    src="/images/icons/icon403a3.gif"
+                                                    width="20" height="20"/><b>查询&nbsp;</b></a>
+                                                <a
+                                                        href='javascript:void(0);' ztype='zPushBtn'
+                                                        class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                        onselectstart='return false' id='BtnDown'
+                                                        onClick="downImage();"><img
+                                                        src="/images/icons/icon_0_down.gif"
+                                                        width="20" height="20"/><b>下载照片&nbsp;</b></a>
+
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:0px 5px;">
+                                            <DIV id="js_cantain_box" class="col-main">
+
+
+                                                <DIV id="js_data_list_outer" class="page-list">
+                                                    <DIV style="MIN-HEIGHT: 100%; BACKGROUND: #F2F4F5; CURSOR: default; _height: 100%;" id="js_data_list">
+                                                        <UL style="OVERFLOW: hidden; _zoom: 1; BACKGROUND: #F2F4F5;" id="js_data_list_inner">
+                                                        </UL>
+                                                    </DIV>
+                                                </DIV>
+                                                <DIV  id="pagectl"class="page-footer" style="text-align:center;">
+                                                </DIV>
+
+                                            </DIV>
+                                        </td>
+                                    </tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+	</table> 
+</body>
+</html>

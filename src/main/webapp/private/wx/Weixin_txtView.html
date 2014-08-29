@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<!-- 框架 -->
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+    <link href="${base}/include/css/wxdialog.css" rel="stylesheet" type="text/css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+    <script src="${base}/include/js/jquery.endless-scroll-1.3.js"></script>
+	<!-- 分页  注意顺序 -->
+	<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css"/> 	
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>	
+    <!-- 树 -->
+    <script type="text/javascript" src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script> 
+	<link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+    <SCRIPT type="text/javascript">
+           <!--
+           var page=0;
+           var rows=10;
+           var pagenum=1;
+           function reloadData(){
+               page=0;
+               $("#items").html("");
+               loadData();
+           }
+           function loadData(){
+               page=page+1;
+               if(page>pagenum){
+                   Page.MinMessage.Show({
+                       text: '没有更多数据',
+                       type: 'load',
+                       timeout: 500
+                   });
+                   return;
+               }
+               Page.MinMessage.Show({
+                   text: '正在加载',
+                   type: 'load'
+               });
+               jQuery.ajax({
+                   type: 'POST',
+                   url: "${base}/private/wx/txt/listone?openid=$!openid&page="+page+"&rows="+rows,
+                   data : $("#form1").serialize(),
+                   success : function (res) {
+                       Page.MinMessage.Hide();
+                       showdata(res);
+                       return false;
+                   },
+                   fail : function(res) {
+                       Dialog.alert("系统错误!");
+                   }
+               });
+           }
+           function showdata(res){
+               var json = jQuery.parseJSON(res);
+               page=json.pager.pageNumber;
+               pagenum=json.pager.pageCount;
+
+               jQuery.each(json.list, function(index, obj) {
+                   var str="";
+                   str+="<div class=\"clearfix\">";
+                   if(obj.usertype=="1"){
+                       str+="<div class=\"you\">";
+                   }else{
+                       str+="<div class=\"me\">";
+                   }
+                   str+="<p class=\"name\">"+obj.name+"  "+obj.createtime+" "+obj.status+"</p>";
+                   str+="<p class=\"text\">"+obj.content+"</p>";
+                   str+="</div></div>";
+                   $("#items").append(str);
+               });
+           }
+           Page.onLoad(function() {
+               loadData();
+               $(document).endlessScroll({
+                   fireOnce: false,
+                   fireDelay: false,
+                   bottomPixels: 50,
+                   callback: function(p){
+                       loadData();
+                   }
+               });
+           });
+           //-->
+       </SCRIPT>
+</head>
+<body leftmargin="0" topmargin="0"
+	style="overflow-x: hidden; overflow-y: auto">
+<table width="100%" border="0" cellspacing="6" cellpadding="0"
+		style="border-collapse: separate; border-spacing: 6px;">
+		<tr valign="top">
+			<td width="100%">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse: separate; border-spacing: 0;">
+    <tr valign="top">
+      <td>
+	   <form name="form1" id="form1" method="post" > 
+        <input type="hidden" name="checkids" id="checkids" value="">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td >
+
+                                            <div class="list-view dialog" id="dialog_wrap">
+
+                                                <div class="items" id="items">
+
+
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                      </tr>
+                                    </table>
+                                    
+	   </form>
+	  </td>
+    </tr>
+ </table>
+ </td>
+    </tr>
+ </table>
+</body>
+</html>

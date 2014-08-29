@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow-y:auto">
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- 框架 -->
+    <link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css"/>
+
+    <link href="${base}/include/css/default.css" rel="stylesheet" type="text/css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+	<!-- 分页  注意顺序 -->
+	<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css"/> 	
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>	
+    <!-- 树 -->
+    <script type="text/javascript" src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script> 
+	<link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script src="${base}/include/controls/my97/WdatePicker.js"></script>
+
+<script>
+	function getWidth(percent){
+        	   return document.body.clientWidth*percent;
+	}
+	function loadData(){
+		$("#dg1").datagrid({
+            width:"auto",
+            height:"auto",
+            nowrap: false,
+            striped: true,
+            border: true,
+            collapsible:false,//是否可折叠的
+            fit: false,//自动大小
+			url : "${base}/private/user/connwx/list",
+			queryParams:{"pid":$("#pid").val(),"openid":$("#openid").val(),"nickname":$("#nickname").val(),
+                "city":$("#city").val(),"province":$("#province").val(),"sex":$("#sex").val()},
+            //sortName: 'code',
+            //sortOrder: 'desc',
+            remoteSort:false,
+            idField:"id",
+            singleSelect:false,//是否单选
+            pagination:true,//分页控件
+            rownumbers:true,//行号
+            fitColumns: true,//行自适应
+            pageSize: 10,
+            pageList:[5,10,15,20,30,40,50],
+            loadMsg:'数据加载中...',
+			columns : [ [
+                {
+                    field : "openid",
+                    title : "Openid",
+                    width : 25,
+                    formatter:function(value,obj,index){
+                        return "<a href='javascript:update(\""+obj.uid+"\")' title='查看会员资料'>"+obj.openid+"</a>";
+                    }
+                },{
+                    field : "wx_nickname",
+                    title : "昵称",
+                    width : 10,
+                    align: "center"
+                },{
+                    field : "wx_headimgurl",
+                    title : "头像",
+                    width : 6,
+                    align: "center",
+                    formatter:function(value,obj,index){
+                        if(obj.wx_headimgurl!=""&&obj.wx_headimgurl!=undefined){
+                            return "<img src='"+obj.wx_headimgurl+"' width='60' height='40'>";
+                        }
+                        return "";
+                    }
+                },{
+                    field : "wx_sex",
+                    title : "性别",
+                    width : 6,
+                    align: "center",
+                    formatter:function(value,obj,index){
+                        if(obj.wx_sex==0){
+                            return "未填";
+                        }else if(obj.wx_sex==1){
+                            return "男";
+                        }else if(obj.wx_sex==2){
+                            return "女";
+                        }
+                    }
+                },{
+                    field : "wx_country",
+                    title : "国家",
+                    width : 12
+                },{
+                    field : "wx_province",
+                    title : "省份",
+                    width : 12
+                },{
+                    field : "wx_city",
+                    title : "城市",
+                    width : 12
+                },{
+                    field : "wx_time",
+                    title : "关注时间",
+                    width : 25
+                }
+
+			] ],
+        	 frozenColumns:[[  
+        	            {field:"id",checkbox:true}
+        	 ]]
+
+		});
+        //设置分页控件
+        var p = $("#dg1").datagrid("getPager");
+        $(p).pagination({
+            beforePageText: "第",//页数文本框前显示的汉字
+            afterPageText: "页    共 {pages} 页",
+            displayMsg: "当前显示 {from} - {to} 条记录   共 {total} 条记录",
+            onBeforeRefresh:function(){
+            }
+        });
+
+	}
+    function update(id){
+        if(id==""){
+            var arr = $('#dg1').datagrid('getSelections');
+            if (arr && arr.length > 0) {
+                id=arr[0].bid;
+            }
+        }
+        if(id==""){
+            Dialog.alert("请选择要修改的项");
+            return;
+        }
+        var d = new Dialog("Update");
+        d.Width = 450;
+        d.Height = 450;
+        d.Title = "修改资料";
+        d.URL = "${base}/private/user/info/toupdate?uid=" + id;
+        d.OKEvent = function() {
+            if ($DW.Verify.hasError()) {
+                return;
+            }
+            updateSave();
+
+        };
+        d.onLoad = function() {
+        };
+        d.show();
+    }
+    function updateSave(){
+        jQuery.ajax({
+            type: 'POST',
+            url : "${base}/private/user/info/update" ,
+            data : $DW.$("#form1").serialize(),
+            success : function (res) {
+                if(res=="true"){
+                    $D.close();
+                    Dialog.alert("修改成功！");
+                    loadData();
+                }else{
+                    Dialog.alert("修改失败！");
+                }
+
+                return false;
+            },
+            fail : function(res) {
+                Dialog.alert("系统错误?!");
+            }
+        });
+
+    }
+    function initButton(){
+        Page.initBtn();
+        $!initBtn
+    }
+	Page.onLoad(function() {
+	    loadData();
+    });
+	$(window).resize(function () {
+		clearTimeout(timer);
+		timer=setTimeout(function(){
+		  $('#dg1').datagrid('resize');
+		  $('div.panel-body').css('width','auto');
+		 },100);
+		});
+</script>
+</head>
+<body leftmargin="0" topmargin="0"
+	style="overflow-x: hidden; overflow-y: auto">
+	<table width="100%" border="0" cellspacing="6" cellpadding="0"
+		style="border-collapse: separate; border-spacing: 6px;">
+		<tr valign="top">
+			<td>
+				<form name='form1' id="from1" method='post'>
+
+					<table width="100%" border="0" cellspacing="0" cellpadding="0"
+						class="blockTable">
+						<tr>
+							<td class="blockTd">
+								<table width="100%" border="0" cellspacing="0" cellpadding="6">
+									<tr>
+										<td valign="middle"></td>
+									</tr>
+                                    <tr>
+                                        <td height="0" colspan="2" algin="right" width="85%">
+                                            <div style="float: left; padding-right:10px;">
+                                                所属项目: <select name="pid" id="pid" onchange="loadData()" >
+                                                #foreach($o in $pro)
+                                                <option value="$!o.id">$!o.name</option>
+                                                #end
+                                            </select>
+                                                Openid: <input type="text" name="openid" id="openid"
+                                                           value="" style="width:60px"/>
+                                                昵称: <input type="text" name="nickname" id="nickname"
+                                                           value="" style="width:60px"/>
+
+                                                性别:<select name="sex" id="sex">
+                                                <option value="all">所有</option>
+                                                <option value="0">未填</option>
+                                                <option value="1">男</option>
+                                                <option value="2">女</option>
+                                                    </select>
+                                                省份:<input type="text" name="province"
+                                                          id="province" value="" style="width:60px" >
+                                                城市: <input type="text" name="city"
+                                                           id="city" value="" style="width:60px" >
+
+                                            </div>
+                                            <div style=""><a
+                                                    href='javascript:void(0);' ztype='zPushBtn'
+                                                    class='zPushBtn' hidefocus='true' tabindex='-1'
+                                                    onselectstart='return false' id='BtnSearch'
+                                                    onClick="loadData();"><img
+                                                    src="/images/icons/icon403a3.gif"
+                                                    width="20" height="20"/><b>查询&nbsp;</b></a>
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:0px 5px;">
+                                            <table width="100%" height="100%" id="dg1" size="10" cellpadding="2" cellspacing="0">
+                                                <tr><td></td></tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+	</table> 
+</body>
+</html>
