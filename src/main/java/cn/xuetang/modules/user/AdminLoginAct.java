@@ -27,7 +27,6 @@ import cn.xuetang.core.bean.User;
 
 @IocBean
 @At("/admin")
-@Filters
 public class AdminLoginAct {
 	private static final Log logger = Logs.get();
 
