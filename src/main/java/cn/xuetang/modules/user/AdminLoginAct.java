@@ -62,14 +62,14 @@ public class AdminLoginAct {
 	}
 
 	@At
-	@Ok("fm:template.login.login")
+	@Ok("->:/private/welcome.html")
 	@Filters
-	public String index() {
+	public String rekoe() {
 		return null;
 	}
 
 	@At
-	@Ok("fm:template.front.account.create_user")
+	@Ok("json")
 	@RequiresAuthentication
 	public Object register(@Attr(Webs.ME) User user) {
 		if (Lang.isEmpty(user) || user.isUpdated()) {
@@ -77,4 +77,6 @@ public class AdminLoginAct {
 		}
 		return null;
 	}
+	
+	
 }
