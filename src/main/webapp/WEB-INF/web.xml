@@ -30,6 +30,10 @@
 			org.apache.velocity.tools.view.servlet.VelocityViewServlet
 		</servlet-class>
 		<init-param>
+			<param-name>org.apache.velocity.toolbox</param-name>
+			<param-value>/WEB-INF/velocityToolBox.xml</param-value>
+		</init-param>
+		<init-param>
 			<param-name>org.apache.velocity.properties</param-name>
 			<param-value>velocity.properties</param-value>
 		</init-param>
