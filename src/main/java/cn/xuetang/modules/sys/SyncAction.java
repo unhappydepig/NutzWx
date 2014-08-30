@@ -1,7 +1,7 @@
 package cn.xuetang.modules.sys;
 
-import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.config.Globals;
+import javax.servlet.http.HttpServletRequest;
+
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -10,7 +10,8 @@ import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import javax.servlet.http.HttpServletRequest;
+import cn.xuetang.common.action.BaseAction;
+import cn.xuetang.common.config.Globals;
 
 /**
  * Created by Wizzer on 14-5-21.

@@ -2,9 +2,6 @@ package cn.xuetang.modules.sys;
  
 import javax.servlet.http.HttpServletRequest;
 
-import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -16,8 +13,10 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
+import cn.xuetang.common.action.BaseAction;
+import cn.xuetang.common.filter.GlobalsFilter;
+import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.StringUtil;
-
 import cn.xuetang.modules.sys.bean.Sys_safeconfig;
 /**
  * @author Wizzer.cn

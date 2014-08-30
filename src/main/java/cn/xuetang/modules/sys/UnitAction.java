@@ -1,22 +1,19 @@
 package cn.xuetang.modules.sys;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.config.Globals;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
-import cn.xuetang.modules.sys.bean.Sys_role_resource;
-import cn.xuetang.modules.sys.bean.Sys_user;
 
 import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
-import org.nutz.dao.Sqls; 
+import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -29,7 +26,13 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
+import cn.xuetang.common.action.BaseAction;
+import cn.xuetang.common.config.Globals;
+import cn.xuetang.common.filter.GlobalsFilter;
+import cn.xuetang.common.filter.UserLoginFilter;
+import cn.xuetang.modules.sys.bean.Sys_role_resource;
 import cn.xuetang.modules.sys.bean.Sys_unit;
+import cn.xuetang.modules.sys.bean.Sys_user;
 
 /**
  * @author Wizzer.cn

@@ -15,13 +15,11 @@ import org.nutz.dao.entity.annotation.Table;
  * @time 2012-9-13 上午10:54:04
  * 
  */
-@Table("sys_user") 
+@Table("sys_user")
 public class Sys_user {
-	@Column 
+	@Column
 	@Id
-	@Prev({
-		@SQL(db = DB.ORACLE, value="SELECT SYS_USER_S.nextval FROM dual")
-	})
+	@Prev({ @SQL(db = DB.ORACLE, value = "SELECT SYS_USER_S.nextval FROM dual") })
 	private long userid;
 	@Column
 	private String loginname;
@@ -31,8 +29,8 @@ public class Sys_user {
 	private String unitid;
 	@Column
 	private String password;// transient 修饰符可让此字段不在对象里显示
-    @Column
-    private String salt;
+	@Column
+	private String salt;
 	@Column
 	private int state;
 	@Column
@@ -59,7 +57,7 @@ public class Sys_user {
 	private String loginip;
 	@Column
 	private int logincount;
-	@Column 
+	@Column
 	private String loginresid;
 	@Column
 	private String linkqq;
@@ -86,20 +84,20 @@ public class Sys_user {
 	private boolean sysrole;
 
 	private List<Integer> rolelist;
-    private List<Integer> prolist;
+	private List<Integer> prolist;
 	private List<String> reslist;
 
 	private Hashtable<String, String> btnmap;
 
-    public String getSalt() {
-        return salt;
-    }
+	public String getSalt() {
+		return salt;
+	}
 
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 
-    public long getUserid() {
+	public long getUserid() {
 		return userid;
 	}
 
@@ -363,11 +361,11 @@ public class Sys_user {
 		this.btnmap = btnmap;
 	}
 
-    public List<Integer> getProlist() {
-        return prolist;
-    }
+	public List<Integer> getProlist() {
+		return prolist;
+	}
 
-    public void setProlist(List<Integer> prolist) {
-        this.prolist = prolist;
-    }
+	public void setProlist(List<Integer> prolist) {
+		this.prolist = prolist;
+	}
 }

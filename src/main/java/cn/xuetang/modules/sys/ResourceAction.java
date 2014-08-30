@@ -8,12 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.config.Globals;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
-import cn.xuetang.modules.sys.bean.Sys_resource;
-
 import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -29,6 +23,12 @@ import org.nutz.mvc.annotation.By;
 import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
+
+import cn.xuetang.common.action.BaseAction;
+import cn.xuetang.common.config.Globals;
+import cn.xuetang.common.filter.GlobalsFilter;
+import cn.xuetang.common.filter.UserLoginFilter;
+import cn.xuetang.modules.sys.bean.Sys_resource;
 
 /**
  * @author Wizzer.cn
@@ -79,15 +79,14 @@ public class ResourceAction extends BaseAction {
 		cri.getOrderBy().asc("location");
 		cri.getOrderBy().asc("id");
 		List<Sys_resource> list = daoCtl.list(dao, Sys_resource.class, cri);
-        List<Object> array = new ArrayList<Object>();
+		List<Object> array = new ArrayList<Object>();
 		for (int i = 0; i < list.size(); i++) {
 			Sys_resource res = list.get(i);
-			Map<String,Object> jsonobj = new HashMap<String, Object>();
+			Map<String, Object> jsonobj = new HashMap<String, Object>();
 			String pid = res.getId().substring(0, res.getId().length() - 4);
 			if (i == 0 || "".equals(pid))
 				pid = "0";
-			int num = daoCtl.getRowCount(dao, Sys_resource.class,
-					Cnd.where("id", "like", res.getId() + "____"));
+			int num = daoCtl.getRowCount(dao, Sys_resource.class, Cnd.where("id", "like", res.getId() + "____"));
 			jsonobj.put("id", res.getId());
 			jsonobj.put("name", res.getName());
 			jsonobj.put("descript", res.getDescript());
@@ -97,7 +96,7 @@ public class ResourceAction extends BaseAction {
 			String[] bt;
 			String temp = "";
 			if (!"".equals(bts)) {
-				bt = StringUtils.split(bts,";");
+				bt = StringUtils.split(bts, ";");
 				for (int j = 0; j < bt.length; j++)
 					temp += bt[j].substring(0, bt[j].indexOf("/")) + ";";
 			}
@@ -125,8 +124,7 @@ public class ResourceAction extends BaseAction {
 	 * */
 	@At
 	@Ok("raw")
-	public String updateSave(@Param("..") Sys_resource res,
-			@Param("button2") String button2, HttpServletRequest req) {
+	public String updateSave(@Param("..") Sys_resource res, @Param("button2") String button2, HttpServletRequest req) {
 
 		res.setButton(button2);
 		return daoCtl.update(dao, res) == true ? res.getId() : "";
@@ -146,11 +144,9 @@ public class ResourceAction extends BaseAction {
 	 * */
 	@At
 	@Ok("raw")
-	public boolean addSave(@Param("..") Sys_resource res,
-			@Param("button2") String button2) {
+	public boolean addSave(@Param("..") Sys_resource res, @Param("button2") String button2) {
 
-		Sql sql = Sqls
-				.create("select max(location)+1 from Sys_resource where id like  @id");
+		Sql sql = Sqls.create("select max(location)+1 from Sys_resource where id like  @id");
 		sql.params().set("id", res.getId() + "_%");
 		int location = daoCtl.getIntRowValue(dao, sql);
 		res.setLocation(location);
@@ -166,20 +162,14 @@ public class ResourceAction extends BaseAction {
 	@Ok("raw")
 	public boolean del(@Param("id") String ids) {
 		String[] id = StringUtils.split(ids, ",");
-		try{
+		try {
 			for (int i = 0; i < id.length; i++) {
-				daoCtl.exeUpdateBySql(
-						dao,
-						Sqls.create("delete from Sys_resource where id like '"
-								+ Strings.sNull(id[i]) + "%'"));
-				daoCtl.exeUpdateBySql(
-						dao,
-						Sqls.create("delete from Sys_role_resource where resourceid like '"
-								+ Strings.sNull(id[i]) + "%'"));
+				daoCtl.exeUpdateBySql(dao, Sqls.create("delete from Sys_resource where id like '" + Strings.sNull(id[i]) + "%'"));
+				daoCtl.exeUpdateBySql(dao, Sqls.create("delete from Sys_role_resource where resourceid like '" + Strings.sNull(id[i]) + "%'"));
 			}
-		}catch (Exception e){
-            return false;
-        }
+		} catch (Exception e) {
+			return false;
+		}
 		return true;
 	}
 
@@ -189,22 +179,21 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("->:/private/sys/resourceSort.html")
 	public void toSort(HttpServletRequest req) throws Exception {
-        List<Object> array = new ArrayList<Object>();
+		List<Object> array = new ArrayList<Object>();
 		Criteria cri = Cnd.cri();
 		cri.getOrderBy().asc("location");
 		cri.getOrderBy().asc("id");
 		List<Sys_resource> list = daoCtl.list(dao, Sys_resource.class, cri);
-		Map<String,Object> jsonroot = new HashMap<String, Object>();
+		Map<String, Object> jsonroot = new HashMap<String, Object>();
 		jsonroot.put("id", "");
 		jsonroot.put("pId", "0");
 		jsonroot.put("name", "资源列表");
 		jsonroot.put("open", true);
 		jsonroot.put("childOuter", false);
-		jsonroot.put("icon", Globals.APP_BASE_NAME
-				+ "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", Globals.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 		array.add(jsonroot);
 		for (int i = 0; i < list.size(); i++) {
-            Map<String,Object> jsonobj = new HashMap<String, Object>();
+			Map<String, Object> jsonobj = new HashMap<String, Object>();
 			Sys_resource obj = list.get(i);
 			jsonobj.put("id", obj.getId());
 			String p = obj.getId().substring(0, obj.getId().length() - 4);
@@ -228,8 +217,7 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public boolean sort(@Param("checkids") String[] checkids) {
-		boolean rs = daoCtl.updateSortRow(dao, "Sys_resource", checkids,
-				"location", 0);
+		boolean rs = daoCtl.updateSortRow(dao, "Sys_resource", checkids, "location", 0);
 		return rs;
 
 	}

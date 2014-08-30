@@ -1,7 +1,8 @@
 package cn.xuetang.modules.sys.bean;
 
-import org.nutz.dao.entity.annotation.*;
-import org.nutz.dao.DB;
+import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.Table;
 /**
 * @author 
 * @time   2014-03-26 14:25:53

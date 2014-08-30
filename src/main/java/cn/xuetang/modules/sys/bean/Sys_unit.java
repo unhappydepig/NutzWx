@@ -9,12 +9,11 @@ import org.nutz.dao.entity.annotation.Table;
 
 /**
  * @author Wizzer.cn
- * @time   2012-9-13 上午10:54:04
- *
+ * @time 2012-9-13 上午10:54:04
+ * 
  */
 @Table("sys_unit")
-public class Sys_unit  
-{
+public class Sys_unit {
 	@Column
 	@Name
 	private String id;
@@ -34,86 +33,88 @@ public class Sys_unit
 	private String website;
 	@Column
 	private int location;
-	@Many(target = Sys_user.class, field = "unitid")//一个单位下有N个用户
+	@Many(target = Sys_user.class, field = "unitid")
+	// 一个单位下有N个用户
 	private List<Sys_user> users;
 
-	public String getId()
-	{
+	public String getId() {
 		return id;
 	}
-	public void setId(String id)
-	{
-		this.id=id;
+
+	public void setId(String id) {
+		this.id = id;
 	}
-	public String getName()
-	{
+
+	public String getName() {
 		return name;
 	}
-	public void setName(String name)
-	{
-		this.name=name;
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getUnitcode()
-	{
+
+	public String getUnitcode() {
 		return unitcode;
 	}
-	public void setUnitcode(String unitcode)
-	{
-		this.unitcode=unitcode;
+
+	public void setUnitcode(String unitcode) {
+		this.unitcode = unitcode;
 	}
-	public String getDescript()
-	{
+
+	public String getDescript() {
 		return descript;
 	}
-	public void setDescript(String descript)
-	{
-		this.descript=descript;
+
+	public void setDescript(String descript) {
+		this.descript = descript;
 	}
-	public String getAddress()
-	{
+
+	public String getAddress() {
 		return address;
 	}
-	public void setAddress(String address)
-	{
-		this.address=address;
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
-	public String getTelephone()
-	{
+
+	public String getTelephone() {
 		return telephone;
 	}
-	public void setTelephone(String telephone)
-	{
-		this.telephone=telephone;
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
-	public String getEmail()
-	{
+
+	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String email)
-	{
-		this.email=email;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public String getWebsite()
-	{
+
+	public String getWebsite() {
 		return website;
 	}
-	public void setWebsite(String website)
-	{
-		this.website=website;
+
+	public void setWebsite(String website) {
+		this.website = website;
 	}
-	public int getLocation()
-	{
+
+	public int getLocation() {
 		return location;
 	}
-	public void setLocation(int location)
-	{
-		this.location=location;
+
+	public void setLocation(int location) {
+		this.location = location;
 	}
+
 	public List<Sys_user> getUsers() {
 		return users;
 	}
+
 	public void setUsers(List<Sys_user> users) {
 		this.users = users;
 	}
-	
+
 }

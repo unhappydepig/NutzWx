@@ -9,16 +9,14 @@ import org.nutz.dao.entity.annotation.Table;
 
 /**
  * @author Wizzer.cn
- * @time   2012-9-20 下午1:33:32
- *
+ * @time 2012-9-20 下午1:33:32
+ * 
  */
 @Table("sys_role")
 public class Sys_role {
-	@Column 
+	@Column
 	@Id
-	@Prev({
-		@SQL(db = DB.ORACLE, value="SELECT SYS_ROLE_S.nextval FROM dual")
-	})
+	@Prev({ @SQL(db = DB.ORACLE, value = "SELECT SYS_ROLE_S.nextval FROM dual") })
 	private int id;
 	@Column
 	private String name;
@@ -26,52 +24,57 @@ public class Sys_role {
 	private String unitid;
 	@Column
 	private String descript;
-    @Column
-    private int pid;
+	@Column
+	private int pid;
 	@Column
 	private int location;
 
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getUnitid() {
 		return unitid;
 	}
+
 	public void setUnitid(String unitid) {
 		this.unitid = unitid;
 	}
+
 	public String getDescript() {
 		return descript;
 	}
+
 	public void setDescript(String descript) {
 		this.descript = descript;
 	}
 
-    public int getPid() {
-        return pid;
-    }
+	public int getPid() {
+		return pid;
+	}
 
-    public void setPid(int pid) {
-        this.pid = pid;
-    }
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
 
-    public int getLocation() {
+	public int getLocation() {
 		return location;
 	}
+
 	public void setLocation(int location) {
 		this.location = location;
 	}
-	
 
 }
-
-

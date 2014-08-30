@@ -7,7 +7,7 @@ import org.nutz.dao.entity.annotation.Table;
 public class Sys_user_role {
 	@Column
 	private long userid;
-	
+
 	@Column
 	private int roleid;
 
@@ -26,5 +26,5 @@ public class Sys_user_role {
 	public void setRoleid(int roleid) {
 		this.roleid = roleid;
 	}
-		
+
 }
