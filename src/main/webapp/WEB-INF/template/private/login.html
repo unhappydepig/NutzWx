@@ -14,7 +14,7 @@ var CONTEXTPATH = '${base}';
 this.CheckUserName=function()
 {
 	 
-    if ($('#loginname').val() != "") {
+    if ($('#username').val() != "") {
         if ($('#password').val() != "") { 
             if ($('#verifcode').val().length==4) {
             	jQuery.ajax({
@@ -37,7 +37,6 @@ this.CheckUserName=function()
         		});
             } else {
                 Dialog.alert("请输入四位验证码！");
-                
                 $('#verifcode').focus();
                 return false;
             }
@@ -49,14 +48,14 @@ this.CheckUserName=function()
 
     } else {
         Dialog.alert("用户名不能为空！");
-        $('#loginname').focus();
+        $('#username').focus();
         return false;
     }
 
 }
 this.tochange=function()
 {
-    $("#validataimg").attr("src","${base}/codeimg?rnd=" + new Date().getTime());
+    $("#captcha").attr("src","${base}/captcha?rnd=" + new Date().getTime());
 } 
 $(document).ready(function(){
 	$(document).bind("keypress", "return", function (ev) { 
@@ -92,15 +91,15 @@ $(document).ready(function(){
 													<tr>
 														<td height="35">用户名：</td>
 														<td><input class="inputText" style="width: 80px"
-															name="loginname" id="loginname" type="text"
+															name="username" id="username" type="text"
 															value="superadmin" onfocus="this.select();" /></td>
 														<td>密码：</td>
 														<td><input class="inputText" style="width: 80px"
 															name="password" id="password" type="password" value="11"
 															onfocus="this.select();" /></td>
 														<td>验证码：</td>
-														<td><img src="${base}/codeimg" name="validataimg"
-															id="validataimg" title="点击刷新验证码" align="middle"
+														<td><img src="${base}/captcha" name="captcha"
+															id="captcha" title="点击刷新验证码" align="middle"
 															onclick="tochange()" style="cursor: pointer" />&nbsp; <input
 															class="inputText" maxlength="4" style="width: 60px"
 															name="verifcode" id="verifcode" type="text" value="5750"
