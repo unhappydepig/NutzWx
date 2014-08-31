@@ -2,8 +2,6 @@ package cn.xuetang.common.filter;
 
 import java.util.Hashtable;
 
-import cn.xuetang.common.config.Globals;
-import cn.xuetang.modules.sys.bean.Sys_user;
 import org.apache.commons.lang.StringUtils;
 import org.nutz.lang.Strings;
 import org.nutz.log.Log;
@@ -12,6 +10,9 @@ import org.nutz.mvc.ActionContext;
 import org.nutz.mvc.ActionFilter;
 import org.nutz.mvc.View;
 import org.nutz.mvc.view.ServerRedirectView;
+
+import cn.xuetang.modules.sys.bean.Sys_user;
+import cn.xuetang.service.AppInfoService;
 
 /**
  * @author Wizzer.cn
@@ -33,7 +34,7 @@ public class UserLoginFilter implements ActionFilter {
 		Hashtable<String, String> btnmap = user.getBtnmap();
 		if (btnmap != null) {
 			String initBtn = "";
-			String bts = btnmap.get(Strings.sNull(context.getRequest().getRequestURI().replace(Globals.APP_BASE_NAME, "")));
+			String bts = btnmap.get(Strings.sNull(context.getRequest().getRequestURI().replace(AppInfoService.APP_BASE_NAME, "")));
 			if (bts != null && bts.indexOf(",") > 0) {
 				String[] tb = StringUtils.split(bts, ",");
 				for (int i = 0; i < tb.length; i++) {

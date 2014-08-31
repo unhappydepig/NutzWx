@@ -1,23 +1,20 @@
 package cn.xuetang.modules.wx;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
 
-import org.nutz.dao.*;
+import org.nutz.dao.Cnd;
+import org.nutz.dao.Dao;
 import org.nutz.dao.sql.Criteria;
-import org.nutz.dao.util.cri.SqlExpressionGroup;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.By;
 import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
-import org.nutz.mvc.annotation.Param; 
+import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
-
 import cn.xuetang.modules.wx.bean.Weixin_content_attr;
 
 /**
@@ -32,14 +29,14 @@ public class Weixin_content_attrAction extends BaseAction {
 	@Inject
 	protected Dao dao;
 
-	@At("")
-	@Ok("->:/private/wx/Weixin_content_attr.html")
+	@At
+	@Ok("vm:template.private.wx.Weixin_content_attr")
 	public void index(@Param("sys_menu") String sys_menu,HttpServletRequest req) {
 		req.setAttribute("sys_menu",sys_menu);
 	}
 	
 	@At
-	@Ok("->:/private/wx/Weixin_content_attrAdd.html")
+	@Ok("vm:template.private.wx.Weixin_content_attrAdd")
 	public void toadd() {
 	
 	}
@@ -63,7 +60,7 @@ public class Weixin_content_attrAction extends BaseAction {
 	//}
 	
 	//@At
-	//@Ok("->:/private/wx/Weixin_content_attrUpdate.html")
+	// @Ok("vm:template.private.wx.Weixin_content_attrUpdate")
 	//public Weixin_content_attr toupdate(@Param("id") String id, HttpServletRequest req) {
 		//return daoCtl.detailByName(dao, Weixin_content_attr.class, id);//html:obj
 	//}

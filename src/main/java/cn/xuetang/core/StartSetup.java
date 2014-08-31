@@ -14,7 +14,6 @@ import org.nutz.mvc.Setup;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
-import cn.xuetang.common.config.Globals;
 import cn.xuetang.common.task.LoadTask;
 import cn.xuetang.service.AppInfoService;
 

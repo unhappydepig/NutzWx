@@ -30,13 +30,13 @@ public class User_accountAction {
 	protected UserAccountService userAccountService;
 
 	@At("/index")
-	@Ok("->:/private/user/User_account.html")
-	public void index(HttpSession session, HttpServletRequest req) {
+	@Ok("vm:template.private.user.User_account")
+	public void index() {
 
 	}
 
 	@At
-	@Ok("->:/private/user/User_accountAdd.html")
+	@Ok("vm:template.private.user.User_accountAdd")
 	public void toadd() {
 
 	}
@@ -61,7 +61,7 @@ public class User_accountAction {
 	}
 
 	@At
-	@Ok("->:/private/user/User_accountUpdate.html")
+	@Ok("vm:template.private.user.User_accountUpdate")
 	public User_account toupdate(@Param("uid") int uid) {
 		return userAccountService.getUserAccountByUid(uid);
 	}

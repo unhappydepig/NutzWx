@@ -1,24 +1,18 @@
 package cn.xuetang.modules.user;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import cn.xuetang.common.config.Dict;
-import cn.xuetang.common.config.Globals;
-import cn.xuetang.common.util.DateUtil;
-import cn.xuetang.common.util.DecodeUtil;
-import cn.xuetang.modules.app.bean.App_project;
-import cn.xuetang.modules.sys.bean.Sys_dict;
-import cn.xuetang.modules.sys.bean.Sys_user;
-import cn.xuetang.modules.user.bean.User_account;
-import cn.xuetang.modules.user.bean.User_conn_wx;
-import cn.xuetang.modules.user.bean.User_score;
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.commons.lang.math.NumberUtils;
-import org.nutz.dao.*;
-import org.nutz.dao.sql.Criteria;
-import org.nutz.dao.util.cri.SqlExpressionGroup;
+import org.nutz.dao.Chain;
+import org.nutz.dao.Cnd;
+import org.nutz.dao.Dao;
+import org.nutz.dao.Sqls;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
@@ -33,14 +27,19 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
+import cn.xuetang.common.config.Dict;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
-
+import cn.xuetang.common.util.DateUtil;
+import cn.xuetang.common.util.DecodeUtil;
+import cn.xuetang.modules.app.bean.App_project;
+import cn.xuetang.modules.sys.bean.Sys_dict;
+import cn.xuetang.modules.sys.bean.Sys_user;
+import cn.xuetang.modules.user.bean.User_account;
+import cn.xuetang.modules.user.bean.User_conn_wx;
 import cn.xuetang.modules.user.bean.User_info;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.xuetang.modules.user.bean.User_score;
+import cn.xuetang.service.AppInfoService;
 
 /**
  * @author Wizzer
@@ -54,8 +53,11 @@ public class User_infoAction extends BaseAction {
     protected Dao dao;
     private final static Log log = Logs.get();
 
-    @At("")
-    @Ok("->:/private/user/User_info.html")
+	@Inject
+	private AppInfoService appInfoService;
+	
+    @At
+    @Ok("vm:template.private.user.User_info")
     public void index(@Param("sys_menu") String sys_menu, HttpSession session, HttpServletRequest req) {
         Sys_user user = (Sys_user) session.getAttribute("userSession");
         req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("id", "in", user.getProlist()).asc("id")));
@@ -63,24 +65,24 @@ public class User_infoAction extends BaseAction {
     }
 
     @At
-    @Ok("->:/private/user/User_infoUpdate.html")
+    @Ok("vm:template.private.user.User_infoUpdate")
     public User_info toupdate(@Param("uid") int uid, HttpServletRequest req) {
         req.setAttribute("acc", daoCtl.detailById(dao, User_account.class, uid));
         req.setAttribute("jf", daoCtl.detailById(dao, User_score.class, uid));
         req.setAttribute("wx", daoCtl.detailByCnd(dao, User_conn_wx.class, Cnd.where("uid", "=", uid)));
-        req.setAttribute("level", Globals.DATA_DICT.get(Dict.USER_LEVEL));
+        req.setAttribute("level", appInfoService.DATA_DICT.get(Dict.USER_LEVEL));
         return daoCtl.detailById(dao, User_info.class, uid);//html:obj
     }
 
     @At
-    @Ok("->:/private/user/User_infoView.html")
+    @Ok("vm:template.private.user.User_infoView")
     public User_info view(@Param("uid") int uid, HttpServletRequest req) {
         req.setAttribute("acc", daoCtl.detailById(dao, User_account.class, uid));
         req.setAttribute("jf", daoCtl.detailById(dao, User_score.class, uid));
         req.setAttribute("wx", daoCtl.detailByCnd(dao, User_conn_wx.class, Cnd.where("uid", "=", uid)));
         User_info info = daoCtl.detailById(dao, User_info.class, uid);
-        Map<String, String> dict = (HashMap) Globals.DATA_DICT.get(Dict.DIVSION);
-        Map<String, String> level = (HashMap) Globals.DATA_DICT.get(Dict.USER_LEVEL);
+		Map<String, String> dict = (HashMap) appInfoService.DATA_DICT.get(Dict.DIVSION);
+        Map<String, String> level = (HashMap) appInfoService.DATA_DICT.get(Dict.USER_LEVEL);
         info.setProvince(Strings.sNull(dict.get(info.getProvince())));
         info.setCity(Strings.sNull(dict.get(info.getCity())));
         info.setArea(Strings.sNull(dict.get(info.getArea())));

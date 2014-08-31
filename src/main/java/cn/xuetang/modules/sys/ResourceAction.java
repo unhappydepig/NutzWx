@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
@@ -25,10 +24,10 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.config.Globals;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.sys.bean.Sys_resource;
+import cn.xuetang.service.AppInfoService;
 
 /**
  * @author Wizzer.cn
@@ -42,9 +41,12 @@ public class ResourceAction extends BaseAction {
 	@Inject
 	protected Dao dao;
 
+	@Inject
+	private AppInfoService appInfoService;
+
 	@At("")
-	@Ok("->:/private/sys/resource.html")
-	public void user(HttpSession session, HttpServletRequest req) {
+	@Ok("vm:template.private.sys.resource")
+	public void user() {
 	}
 
 	@At
@@ -113,7 +115,7 @@ public class ResourceAction extends BaseAction {
 	 * 修改前查找
 	 * */
 	@At
-	@Ok("->:/private/sys/resourceUpdate.html")
+	@Ok("vm:template.private.sys.resourceUpdate")
 	public void toupdate(@Param("id") String id, HttpServletRequest req) {
 		Sys_resource res = daoCtl.detailByName(dao, Sys_resource.class, id);
 		req.setAttribute("obj", res);
@@ -134,7 +136,7 @@ public class ResourceAction extends BaseAction {
 	 * 新建菜单，查找单位。
 	 * */
 	@At
-	@Ok("->:/private/sys/resourceAdd.html")
+	@Ok("vm:template.private.sys.resourceAdd")
 	public void toAdd() {
 
 	}
@@ -177,7 +179,7 @@ public class ResourceAction extends BaseAction {
 	 * 转到排序页面
 	 * */
 	@At
-	@Ok("->:/private/sys/resourceSort.html")
+	@Ok("vm:template.private.sys.resourceSort")
 	public void toSort(HttpServletRequest req) throws Exception {
 		List<Object> array = new ArrayList<Object>();
 		Criteria cri = Cnd.cri();
@@ -190,7 +192,7 @@ public class ResourceAction extends BaseAction {
 		jsonroot.put("name", "资源列表");
 		jsonroot.put("open", true);
 		jsonroot.put("childOuter", false);
-		jsonroot.put("icon", Globals.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 		array.add(jsonroot);
 		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> jsonobj = new HashMap<String, Object>();

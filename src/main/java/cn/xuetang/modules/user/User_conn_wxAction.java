@@ -3,13 +3,9 @@ package cn.xuetang.modules.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import cn.xuetang.modules.app.bean.App_project;
-import cn.xuetang.modules.sys.bean.Sys_user;
-import org.apache.commons.lang.StringUtils;
-
-import org.nutz.dao.*;
+import org.nutz.dao.Cnd;
+import org.nutz.dao.Dao;
 import org.nutz.dao.sql.Criteria;
-import org.nutz.dao.util.cri.SqlExpressionGroup;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
@@ -23,7 +19,8 @@ import org.nutz.mvc.annotation.Param;
 import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
-
+import cn.xuetang.modules.app.bean.App_project;
+import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_conn_wx;
 
 /**
@@ -44,7 +41,7 @@ public class User_conn_wxAction extends BaseAction {
     }
 
     @At("")
-    @Ok("->:/private/user/User_conn_wx.html")
+    @Ok("vm:template.private.user.User_conn_wx")
     public void index(@Param("sys_menu") String sys_menu, HttpSession session, HttpServletRequest req) {
         Sys_user user = (Sys_user) session.getAttribute("userSession");
         req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("id", "in", user.getProlist()).asc("id")));

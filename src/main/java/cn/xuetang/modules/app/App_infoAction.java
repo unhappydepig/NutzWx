@@ -11,7 +11,6 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.config.Dict;
-import cn.xuetang.common.config.Globals;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
@@ -27,25 +26,23 @@ import cn.xuetang.service.AppInfoService;
 @IocBean
 @At("/private/app/info")
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
-public class App_infoAction{
+public class App_infoAction {
 	@Inject
 	private AppInfoService appInfoService;
-	@Inject
-	protected SyncUtil syncUtil;// 通知前台服务器初始化参数
 
 	@At("")
-	@Ok("->:/private/app/App_info.html")
+	@Ok("vm:template.private.app.App_info")
 	public void index(@Param("sys_menu") String sys_menu, HttpServletRequest req) {
 		req.setAttribute("pro", appInfoService.list());
-		req.setAttribute("type", Globals.DATA_DICT.get(Dict.APP_TYPE));
+		req.setAttribute("type", appInfoService.DATA_DICT.get(Dict.APP_TYPE));
 		req.setAttribute("sys_menu", sys_menu);
 	}
 
 	@At
-	@Ok("->:/private/app/App_infoAdd.html")
+	@Ok("vm:template.private.app.App_infoAdd")
 	public void toadd(@Param("pid") int pid, HttpServletRequest req) {
 		req.setAttribute("pro", appInfoService.list());
-		req.setAttribute("type", Globals.DATA_DICT.get(Dict.APP_TYPE));
+		req.setAttribute("type", appInfoService.DATA_DICT.get(Dict.APP_TYPE));
 		req.setAttribute("pid", pid);
 
 	}
@@ -55,7 +52,7 @@ public class App_infoAction{
 	public boolean add(@Param("..") App_info app_info) {
 		if (appInfoService.insert(app_info)) {
 			appInfoService.InitAppInfo();
-			syncUtil.sendMsg("appinfo");
+			SyncUtil.sendMsg("appinfo");
 			return true;
 		} else
 			return false;
@@ -98,7 +95,7 @@ public class App_infoAction{
 	}
 
 	@At
-	@Ok("->:/private/app/App_infoUpdate.html")
+	@Ok("vm:template.private.app.App_infoUpdate")
 	public App_info toupdate(@Param("id") int id, HttpServletRequest req) {
 		req.setAttribute("pro", appInfoService.list());
 		req.setAttribute("type", appInfoService.getType(Dict.APP_TYPE));
@@ -109,7 +106,7 @@ public class App_infoAction{
 	public boolean update(@Param("..") App_info app_info) {
 		if (appInfoService.update(app_info)) {
 			appInfoService.InitAppInfo();
-			syncUtil.sendMsg("appinfo");
+			SyncUtil.sendMsg("appinfo");
 			return true;
 		} else
 			return false;
@@ -117,9 +114,9 @@ public class App_infoAction{
 
 	@At
 	public boolean delete(@Param("id") int id) {
-		if (appInfoService.delete(id)>0) {
+		if (appInfoService.delete(id) > 0) {
 			appInfoService.InitAppInfo();
-			syncUtil.sendMsg("appinfo");
+			SyncUtil.sendMsg("appinfo");
 			return true;
 		} else
 			return false;
@@ -129,7 +126,7 @@ public class App_infoAction{
 	public boolean deleteIds(@Param("ids") String[] ids) {
 		if (appInfoService.deleteByIds(ids)) {
 			appInfoService.InitAppInfo();
-			syncUtil.sendMsg("appinfo");
+			SyncUtil.sendMsg("appinfo");
 			return true;
 		} else
 			return false;

@@ -1,8 +1,10 @@
 package cn.xuetang.common.filter;
 
-import org.nutz.mvc.*;
+import org.nutz.mvc.ActionContext;
+import org.nutz.mvc.ActionFilter;
+import org.nutz.mvc.View;
 
-import cn.xuetang.common.config.Globals;
+import cn.xuetang.service.AppInfoService;
 
 /**
  * @author Wizzer.cn
@@ -13,10 +15,9 @@ public class GlobalsFilter implements ActionFilter{
 
 	@Override
 	public View match(ActionContext context) {
-		context.getRequest().setAttribute("app_name", Globals.APP_NAME);
-		context.getRequest().setAttribute("app_base_name", Globals.APP_BASE_NAME);
-		context.getRequest().setAttribute("app_base_path", Globals.APP_BASE_PATH);
-		
+		context.getRequest().setAttribute("app_name", AppInfoService.APP_NAME);
+		context.getRequest().setAttribute("app_base_name", AppInfoService.APP_BASE_NAME);
+		context.getRequest().setAttribute("app_base_path", AppInfoService.APP_BASE_PATH);
 		return null;
 	}
 

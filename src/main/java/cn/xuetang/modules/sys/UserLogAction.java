@@ -1,5 +1,6 @@
 package cn.xuetang.modules.sys;
 
+import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.sql.Criteria;
@@ -17,12 +18,10 @@ import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.sys.bean.Sys_user_log;
 
-/** 
- * 类描述： 
- * 创建人：Wizzer 
- * 联系方式：www.wizzer.cn
- * 创建时间：2013-12-2 下午6:00:07 
- * @version 
+/**
+ * 类描述： 创建人：Wizzer 联系方式：www.wizzer.cn 创建时间：2013-12-2 下午6:00:07
+ * 
+ * @version
  */
 @IocBean
 @At("/private/sys/user")
@@ -30,23 +29,22 @@ import cn.xuetang.modules.sys.bean.Sys_user_log;
 public class UserLogAction extends BaseAction {
 	@Inject
 	protected Dao dao;
+
 	@At
-	@Ok("->:/private/sys/userLog.html")
+	@Ok("vm:template.private.sys.userLog")
 	public void log() {
-		
+
 	}
+
 	@At
 	@Ok("raw")
-	public String loglist(@Param("page") int curPage,@Param("rows") int pageSize,
-			@Param("SearchUserName") String SearchUserName) {
+	public String loglist(@Param("page") int curPage, @Param("rows") int pageSize, @Param("SearchUserName") String SearchUserName) {
 		Criteria cri = Cnd.cri();
-
-		if (!"".equals(SearchUserName)) {
-			SqlExpressionGroup exp = Cnd.exps("LOGINNAME", "LIKE", "%"+SearchUserName+"%").or("REALNAME", "LIKE", "%"+SearchUserName+"%");
+		if (StringUtils.isNotBlank(SearchUserName)) {
+			SqlExpressionGroup exp = Cnd.exps("LOGINNAME", "LIKE", "%" + SearchUserName + "%").or("REALNAME", "LIKE", "%" + SearchUserName + "%");
 			cri.where().and(exp);
-		} 
+		}
 		cri.getOrderBy().desc("LOGINTIME");
-		return daoCtl.listPageJson(dao, Sys_user_log.class, curPage,
-				pageSize, cri);
+		return daoCtl.listPageJson(dao, Sys_user_log.class, curPage, pageSize, cri);
 	}
 }

@@ -27,13 +27,13 @@ public class User_addressAction {
 	protected UserAddressService userAddressService;
 
 	@At("/index")
-	@Ok("->:/private/user/User_address.html")
+	@Ok("vm:template.private.user.User_address")
 	public void index() {
 
 	}
 
 	@At
-	@Ok("->:/private/user/User_addressAdd.html")
+	@Ok("vm:template.private.user.User_addressAdd")
 	public void toadd() {
 
 	}
@@ -58,7 +58,7 @@ public class User_addressAction {
 	}
 
 	@At
-	@Ok("->:/private/user/User_addressUpdate.html")
+	@Ok("vm:template.private.user.User_addressUpdate")
 	public User_address toupdate(@Param("id") int id) {
 		return userAddressService.fetch(id);// html:obj
 	}

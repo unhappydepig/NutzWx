@@ -1,9 +1,5 @@
 package cn.xuetang.modules;
 
-import cn.xuetang.common.config.Globals;
-import cn.xuetang.common.dao.ObjectCtl;
-import cn.xuetang.modules.app.bean.App_info;
-import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -12,8 +8,11 @@ import org.nutz.log.Logs;
 import org.nutz.weixin.bean.WxInMsg;
 import org.nutz.weixin.bean.WxOutMsg;
 import org.nutz.weixin.impl.AbstractWxHandler;
-import org.nutz.weixin.impl.BasicWxHandler;
 import org.nutz.weixin.util.Wxs;
+
+import cn.xuetang.common.dao.ObjectCtl;
+import cn.xuetang.modules.app.bean.App_info;
+import cn.xuetang.service.AppInfoService;
 
 /**
  * Created by Wizzer on 14-8-11.
@@ -24,9 +23,10 @@ public class MainWxHandler extends AbstractWxHandler {
     protected static ObjectCtl daoCtl = new ObjectCtl();
     @Inject
     protected Dao dao;
-
+    @Inject
+    private AppInfoService appInfoService;
     public boolean check(String signature, String timestamp, String nonce, String key) {
-        App_info appInfo = (App_info) Globals.APP_INFO.get(key);
+        App_info appInfo = (App_info) appInfoService.APP_INFO.get(key);
         return appInfo != null && Wxs.check(appInfo.getToken(), signature, timestamp, nonce);
 
     }

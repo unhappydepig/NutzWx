@@ -30,13 +30,13 @@ public class App_projectAction extends BaseAction {
 	protected Dao dao;
 
 	@At("")
-	@Ok("->:/private/app/App_project.html")
+	@Ok("vm:template.private.app.App_project")
     public void index(@Param("sys_menu")String sys_menu,HttpServletRequest req) {
         req.setAttribute("sys_menu",sys_menu);
     }
 	
 	@At
-	@Ok("->:/private/app/App_projectAdd.html")
+	@Ok("vm:template.private.app.App_projectAdd")
 	public void toadd() {
 	
 	}
@@ -60,7 +60,7 @@ public class App_projectAction extends BaseAction {
 	}
 	
 	@At
-	@Ok("->:/private/app/App_projectUpdate.html")
+	@Ok("vm:template.private.app.App_projectUpdate")
 	public App_project toupdate(@Param("id") int id, HttpServletRequest req) {
 		return daoCtl.detailById(dao, App_project.class, id);//html:obj
 	}

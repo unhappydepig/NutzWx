@@ -125,7 +125,7 @@ public class LoginAction extends BaseAction {
 	}
 
 	@At
-	@Ok("->:/private/login.html")
+	@Ok("vm:template.private.login")
 	public void login() {
 
 	}

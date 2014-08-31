@@ -1,11 +1,8 @@
 package cn.xuetang.common.filter;
 
-import cn.xuetang.common.config.Globals;
-import cn.xuetang.common.util.ErrorUtil;
-import cn.xuetang.common.util.SortHashtable;
-import cn.xuetang.common.util.UrlUtil;
-import cn.xuetang.modules.app.bean.App_info;
-import cn.xuetang.modules.sys.bean.Sys_config;
+import java.io.OutputStream;
+import java.util.Map;
+
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
@@ -19,17 +16,13 @@ import org.nutz.log.Logs;
 import org.nutz.mvc.ActionContext;
 import org.nutz.mvc.ActionFilter;
 import org.nutz.mvc.View;
-import org.nutz.mvc.view.RawView;
-import org.nutz.mvc.view.UTF8JsonView;
 import org.nutz.mvc.view.VoidView;
-import org.nutz.repo.Base64;
-import sun.misc.BASE64Decoder;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import cn.xuetang.common.util.ErrorUtil;
+import cn.xuetang.common.util.SortHashtable;
+import cn.xuetang.common.util.UrlUtil;
+import cn.xuetang.modules.app.bean.App_info;
+import cn.xuetang.service.AppInfoService;
 
 /**
  * Created by Wizzer on 14-4-1.
@@ -37,7 +30,7 @@ import java.util.Map;
 @IocBean
 public class ApiFilter implements ActionFilter {
     @Inject
-    protected UrlUtil urlUtil;
+    protected AppInfoService appInfoService;
     private final static Log log = Logs.get();
     @Override
     public View match(ActionContext context) {
@@ -46,8 +39,8 @@ public class ApiFilter implements ActionFilter {
             JsonFormat jsonFormat=new JsonFormat();
             jsonFormat.setAutoUnicode(true);
             jsonFormat.setCompact(true);
-            App_info appInfo = (App_info) Globals.APP_INFO.get(mykey);
-            String data = Strings.sNull(urlUtil.readStreamParameterBase64(context.getRequest().getInputStream()));
+            App_info appInfo = (App_info) appInfoService.APP_INFO.get(mykey);
+            String data = Strings.sNull(UrlUtil.readStreamParameterBase64(context.getRequest().getInputStream()));
             Map map= Json.fromJson(Map.class, data);
             String signature=Strings.sNull(map.get("signature"));
             map.remove("signature");

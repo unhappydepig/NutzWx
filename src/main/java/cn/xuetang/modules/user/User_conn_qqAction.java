@@ -29,13 +29,13 @@ public class User_conn_qqAction {
 	private UserConnQQService userConnQQService;
 
 	@At("/index")
-	@Ok("->:/private/user/User_conn_qq.html")
+	@Ok("vm:template.private.user.User_conn_qq")
 	public void index() {
 
 	}
 
 	@At
-	@Ok("->:/private/user/User_conn_qqAdd.html")
+	@Ok("vm:template.private.user.User_conn_qqAdd")
 	public void toadd() {
 
 	}
@@ -60,7 +60,7 @@ public class User_conn_qqAction {
 	}
 
 	@At
-	@Ok("->:/private/user/User_conn_qqUpdate.html")
+	@Ok("vm:template.private.user.User_conn_qqUpdate")
 	public User_conn_qq toupdate(@Param("id") int id, HttpServletRequest req) {
 		return userConnQQService.fetch(id);// html:obj
 	}

@@ -1,23 +1,22 @@
 package cn.xuetang.modules.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
 
-import org.nutz.dao.*;
+import org.apache.commons.lang.StringUtils;
+import org.nutz.dao.Cnd;
+import org.nutz.dao.Dao;
 import org.nutz.dao.sql.Criteria;
-import org.nutz.dao.util.cri.SqlExpressionGroup;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.By;
 import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
-import org.nutz.mvc.annotation.Param; 
+import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
-
 import cn.xuetang.modules.user.bean.User_conn_sinawb;
 
 /**
@@ -33,13 +32,13 @@ public class User_conn_sinawbAction extends BaseAction {
 	protected Dao dao;
 
 	@At("/index")
-	@Ok("->:/private/user/User_conn_sinawb.html")
+	@Ok("vm:template.private.user.User_conn_sinawb")
 	public void index(HttpSession session,HttpServletRequest req) {
 	
 	}
 	
 	@At
-	@Ok("->:/private/user/User_conn_sinawbAdd.html")
+	@Ok("vm:template.private.user.User_conn_sinawbAdd")
 	public void toadd() {
 	
 	}
@@ -63,7 +62,7 @@ public class User_conn_sinawbAction extends BaseAction {
 	}
 	
 	@At
-	@Ok("->:/private/user/User_conn_sinawbUpdate.html")
+	@Ok("vm:template.private.user.User_conn_sinawbUpdate")
 	public User_conn_sinawb toupdate(@Param("id") int id, HttpServletRequest req) {
 		return daoCtl.detailById(dao, User_conn_sinawb.class, id);//html:obj
 	}
