@@ -17,6 +17,9 @@ public class BaseService<T> extends IdEntityService<T> {
 
 	private final static Log log = Logs.get();
 
+	public BaseService() {
+	}
+	
 	public BaseService(Dao dao) {
 		super(dao);
 	}

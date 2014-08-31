@@ -1,34 +1,47 @@
 package cn.xuetang.common.task;
 
-import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.config.Globals;
-import cn.xuetang.modules.sys.bean.Sys_task;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
-import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.integration.quartz.NutQuartzJobFactory;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
-import org.quartz.*;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.TriggerBuilder;
 
-import java.util.*;
+import cn.xuetang.common.config.Globals;
+import cn.xuetang.modules.sys.bean.Sys_task;
+import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.SysTaskService;
 
 /**
  * Created by Wizzer on 14-3-31.
  */
 @IocBean
-public class LoadTask extends BaseAction implements Runnable {
+public class LoadTask implements Runnable {
     @Inject
-    protected Dao dao;
+    protected SysTaskService sysTaskService;
+    @Inject
+    protected AppInfoService appInfoService;
     private final static Log log = Logs.get();
 
-    public void run() {
-        List<Sys_task> tasks = daoCtl.list(dao, Sys_task.class, Cnd.where("is_enable", "=", 0));
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public void run() {
+        List<Sys_task> tasks = sysTaskService.list();
         try {
             log.info("tasks.size:" + tasks.size());
-            Globals.SCHEDULER.setJobFactory(new NutQuartzJobFactory());
+            appInfoService.SCHEDULER.setJobFactory(new NutQuartzJobFactory());
             for (int i = 0; i < tasks.size(); i++) {
                 Sys_task task = tasks.get(i);
 
@@ -45,7 +58,7 @@ public class LoadTask extends BaseAction implements Runnable {
                     jobBuilder.withIdentity(uuid.toString(), Scheduler.DEFAULT_GROUP);
                     triggerBuilder.withIdentity(uuid.toString(), Scheduler.DEFAULT_GROUP);
                     task.setTask_code(uuid.toString());
-                    daoCtl.update(dao, task);
+                    sysTaskService.update(task);
                 }
                 map.put("task_code", String.valueOf(task.getTask_code()));
                 map.put("task_id", String.valueOf(task.getTask_id()));
@@ -55,7 +68,7 @@ public class LoadTask extends BaseAction implements Runnable {
                 log.info(cronExpressionFromDB);
                 triggerBuilder.withSchedule(getCronScheduleBuilder(cronExpressionFromDB));
                 //调度任务
-                Globals.SCHEDULER.scheduleJob(jobBuilder.build(), triggerBuilder.build());
+                appInfoService.SCHEDULER.scheduleJob(jobBuilder.build(), triggerBuilder.build());
             }
             if (tasks.size() > 0) {
                 Globals.SCHEDULER.start();
@@ -114,8 +127,8 @@ public class LoadTask extends BaseAction implements Runnable {
      * @return
      * @throws ClassNotFoundException
      */
-    @SuppressWarnings("unchecked")
-    private Class getClassByTask(String taskClassName) throws ClassNotFoundException {
+    @SuppressWarnings("rawtypes")
+	private Class getClassByTask(String taskClassName) throws ClassNotFoundException {
         return Class.forName(taskClassName);
     }
 }

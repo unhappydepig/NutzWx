@@ -47,7 +47,7 @@ public class StartSetup implements Setup {
 			appServer.InitSysConfig();// 初始化系统参数
 			appServer.InitDataDict();// 初始化数据字典
 			appServer.InitAppInfo();// 初始化app接口信息
-			appServer.APP_NAME = Strings.sNull(Globals.SYS_CONFIG.get("app_name"));// 项目名称
+			appServer.APP_NAME = Strings.sNull(appServer.SYS_CONFIG.get("app_name"));// 项目名称
 			appServer.FILE_POOL = new NutFilePool("~/tmp/myfiles", 10);// 创建一个文件夹用于下载
 			// 初始化Quartz任务
 			appServer.SCHEDULER = StdSchedulerFactory.getDefaultScheduler();
