@@ -8,7 +8,9 @@ import org.nutz.mvc.annotation.IocBy;
 import org.nutz.mvc.annotation.Modules;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.SetupBy;
+import org.nutz.mvc.annotation.Views;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
+import org.nutz.weixin.mvc.VelocityViewMaker;
 
 import cn.xuetang.common.filter.ShiroActionFilter;
 import cn.xuetang.core.StartSetup;
@@ -27,5 +29,6 @@ import cn.xuetang.core.StartSetup;
 @Filters(@By(type = ShiroActionFilter.class, args = "/login.jsp"))
 @Encoding(input = "UTF-8", output = "UTF-8")
 // @UrlMappingBy(value=UrlMappingSet.class)
+@Views({ VelocityViewMaker.class })
 public class MainModule {
 }

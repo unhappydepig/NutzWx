@@ -32,28 +32,10 @@
 	<filter-mapping>
 		<filter-name>nutz</filter-name>
 		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
   	
-  	<!-- Velocity servlet -->
-	<servlet>
-		<servlet-name>velocity</servlet-name>
-		<servlet-class>
-			org.apache.velocity.tools.view.servlet.VelocityViewServlet
-		</servlet-class>
-		<init-param>
-			<param-name>org.apache.velocity.toolbox</param-name>
-			<param-value>/WEB-INF/velocityToolBox.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.apache.velocity.properties</param-name>
-			<param-value>velocity.properties</param-value>
-		</init-param>
-		<load-on-startup>10</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>velocity</servlet-name>
-		<url-pattern>*.html</url-pattern>
-	</servlet-mapping>
 	<!-- druid -->
 	<servlet>
       <servlet-name>DruidStatView</servlet-name>
@@ -82,10 +64,6 @@
  	<error-page>
 		<error-code>403</error-code>
 		<location>/WEB-INF/error/403.html</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/error/404.html</location>
 	</error-page>
 		<mime-mapping>
 		<extension>rar</extension>

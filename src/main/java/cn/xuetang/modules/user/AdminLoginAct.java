@@ -62,7 +62,7 @@ public class AdminLoginAct {
 	}
 
 	@At
-	@Ok("->:/private/welcome.html")
+	@Ok("vm:template.rk")
 	@Filters
 	public String rekoe() {
 		return null;
