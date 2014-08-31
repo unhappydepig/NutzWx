@@ -2,8 +2,10 @@ package cn.xuetang.service;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +18,12 @@ import org.nutz.dao.pager.Pager;
 import org.nutz.dao.sql.Sql;
 import org.nutz.dao.sql.SqlCallback;
 import org.nutz.json.Json;
+import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.service.IdEntityService;
+
+import cn.xuetang.common.dao.DBObject;
 
 public class BaseService<T> extends IdEntityService<T> {
 
@@ -60,6 +65,10 @@ public class BaseService<T> extends IdEntityService<T> {
 		return true;
 	}
 
+	public List<T> listByCnd(Condition cnd) {
+		return dao().query(getEntityClass(), cnd);
+	}
+
 	public int delete(Condition cnd) {
 		return dao().clear(getEntityClass(), cnd);
 	}
@@ -75,6 +84,17 @@ public class BaseService<T> extends IdEntityService<T> {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public T detailByName(String colname, String name) {
+		T t;
+		try {
+			t = dao().fetch(getEntityClass(), Cnd.where(colname, "=", name));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return t;
 	}
 
 	public boolean deleteByName(String name) {
@@ -145,4 +165,73 @@ public class BaseService<T> extends IdEntityService<T> {
 		}
 	}
 
+	/**
+	 * 通过查询条件获得Hashtable
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	public Hashtable<String, String> getHTable(Sql sql) {
+		final Hashtable<String, String> htable = new Hashtable<String, String>();
+		sql.setCallback(new SqlCallback() {
+			@Override
+			public Object invoke(Connection conn, ResultSet rs, Sql sql) throws SQLException {
+				String key = "", value = "";
+				while (rs.next()) {
+					ResultSetMetaData rsmd = rs.getMetaData();
+					if (rsmd.getColumnType(1) == 2005) {
+						key = Strings.sNull(DBObject.getClobBody(rs, rsmd.getColumnName(1)));
+					} else {
+						key = Strings.sNull(rs.getString(1));
+					}
+					if (rsmd.getColumnType(2) == 2005) {
+						value = Strings.sNull(DBObject.getClobBody(rs, rsmd.getColumnName(2)));
+					} else {
+						value = Strings.sNull(rs.getString(2));
+					}
+					htable.put(key, value);
+				}
+				return null;
+			}
+		});
+		dao().execute(sql);
+		return htable;
+	}
+
+	public int delete(String table, Condition cnd) {
+		return dao().clear(table, cnd);
+	}
+
+	/**
+	 * 通过查询条件获得Hashtable
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	public HashMap<String, String> getHashMap(Sql sql) {
+		final HashMap<String, String> hashMap = new HashMap<String, String>();
+		sql.setCallback(new SqlCallback() {
+			@Override
+			public Object invoke(Connection conn, ResultSet rs, Sql sql) throws SQLException {
+				String key = "", value = "";
+				while (rs.next()) {
+					ResultSetMetaData rsmd = rs.getMetaData();
+					if (rsmd.getColumnType(1) == 2005) {
+						key = Strings.sNull(DBObject.getClobBody(rs, rsmd.getColumnName(1)));
+					} else {
+						key = Strings.sNull(rs.getString(1));
+					}
+					if (rsmd.getColumnType(2) == 2005) {
+						value = Strings.sNull(DBObject.getClobBody(rs, rsmd.getColumnName(2)));
+					} else {
+						value = Strings.sNull(rs.getString(2));
+					}
+					hashMap.put(key, value);
+				}
+				return null;
+			}
+		});
+		dao().execute(sql);
+		return hashMap;
+	}
 }

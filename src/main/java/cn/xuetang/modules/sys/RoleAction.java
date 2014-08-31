@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
-import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.dao.sql.Sql;
@@ -35,7 +34,6 @@ import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.common.util.StringUtil;
-import cn.xuetang.modules.app.bean.App_project;
 import cn.xuetang.modules.sys.bean.Sys_resource;
 import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_role_resource;
@@ -45,6 +43,15 @@ import cn.xuetang.modules.sys.bean.Sys_user_role;
 import cn.xuetang.modules.wx.bean.Weixin_channel;
 import cn.xuetang.modules.wx.bean.Weixin_channel_role;
 import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.AppProjectService;
+import cn.xuetang.service.SysResourceService;
+import cn.xuetang.service.SysRoleResourceService;
+import cn.xuetang.service.SysRoleService;
+import cn.xuetang.service.SysUnitService;
+import cn.xuetang.service.SysUserRoleService;
+import cn.xuetang.service.SysUserService;
+import cn.xuetang.service.WeixinChannelRoleService;
+import cn.xuetang.service.WeixinChannelService;
 
 /**
  * @author Wizzer.cn
@@ -57,9 +64,25 @@ import cn.xuetang.service.AppInfoService;
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class RoleAction extends BaseAction {
 	@Inject
-	protected Dao dao;
+	private SysUserService sysUserService;
 	@Inject
 	private AppInfoService appInfoService;
+	@Inject
+	private AppProjectService appProjectService;
+	@Inject
+	private SysUserRoleService sysUserRoleService;
+	@Inject
+	private SysRoleService sysRoleService;
+	@Inject
+	private SysResourceService sysResourceService;
+	@Inject
+	private SysRoleResourceService sysRoleResourceService;
+	@Inject
+	private WeixinChannelService weixinChannelService;
+	@Inject
+	private WeixinChannelRoleService weixinChannelRoleService;
+	@Inject
+	private SysUnitService sysUnitService;
 
 	@At
 	@Ok("raw")
@@ -67,7 +90,7 @@ public class RoleAction extends BaseAction {
 		Criteria cri = Cnd.cri();
 		cri.where().andInBySql("userid", "select userid from sys_user_role where roleid=%s", roleid);
 		cri.getOrderBy().asc("loginname");
-		return daoCtl.listPageJson(dao, Sys_user.class, curPage, pageSize, cri);
+		return sysUserService.listPageJson(curPage, pageSize, cri);
 	}
 
 	@At
@@ -75,7 +98,6 @@ public class RoleAction extends BaseAction {
 	public String userlist(@Param("unitid") String unitid, @Param("page") int curPage, @Param("rows") int pageSize, @Param("SearchUserName") String SearchUserName, @Param("lock") String lock, HttpSession session) {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		Criteria cri = Cnd.cri();
-
 		if (!"".equals(unitid)) {
 			cri.where().and("unitid", "like", unitid + "%");
 		} else {
@@ -93,7 +115,7 @@ public class RoleAction extends BaseAction {
 			cri.where().and(exp);
 		}
 		cri.getOrderBy().asc("loginname");
-		return daoCtl.listPageJson(dao, Sys_user.class, curPage, pageSize, cri);
+		return sysUserService.listPageJson(curPage, pageSize, cri);
 	}
 
 	/**
@@ -102,7 +124,7 @@ public class RoleAction extends BaseAction {
 	@At
 	@Ok("vm:template.private.sys.roleAdd")
 	public void toadd(HttpServletRequest req) {
-		req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("1", "=", 1).asc("id")));
+		req.setAttribute("pro", appProjectService.list());
 
 	}
 
@@ -111,11 +133,10 @@ public class RoleAction extends BaseAction {
 	 */
 	@At
 	public int add(@Param("..") Sys_role role, @Param("checkids") String checkids, HttpServletRequest req) {
-
 		String ids = Strings.sNull(checkids).replace(",", "");
 		role.setUnitid(ids);
-
-		return daoCtl.addT(dao, role).getId();
+		sysRoleService.insert(role);
+		return role.getId();
 	}
 
 	/**
@@ -124,9 +145,9 @@ public class RoleAction extends BaseAction {
 	@At
 	@Ok("vm:template.private.sys.roleUpdate")
 	public void toupdate(@Param("id") int id, HttpServletRequest req) {
-		Sys_role role = daoCtl.detailById(dao, Sys_role.class, id);
+		Sys_role role = sysRoleService.fetch(id);
 		req.setAttribute("obj", role);
-		req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("1", "=", 1).asc("id")));
+		req.setAttribute("pro", appProjectService.list());
 
 	}
 
@@ -135,7 +156,7 @@ public class RoleAction extends BaseAction {
 	 */
 	@At
 	public boolean update(@Param("..") Sys_role role) {
-		return daoCtl.update(dao, role);
+		return sysRoleService.update(role);
 	}
 
 	/**
@@ -144,13 +165,12 @@ public class RoleAction extends BaseAction {
 	@At
 	public boolean delete(@Param("id") int id) {
 		boolean res;
-		res = daoCtl.deleteById(dao, Sys_role.class, id);
+		res = sysRoleService.delete(id) > 0;
 		if (res) {
-			daoCtl.exeUpdateBySql(dao, Sqls.create("delete from weixin_channel_role where roleid=" + id));
-			daoCtl.exeUpdateBySql(dao, Sqls.create("delete from sys_role_resource where roleid=" + id));
-			daoCtl.exeUpdateBySql(dao, Sqls.create("delete from sys_user_role where roleid=" + id));
+			sysRoleService.exeUpdateBySql(Sqls.create("delete from weixin_channel_role where roleid=" + id));
+			sysRoleService.exeUpdateBySql(Sqls.create("delete from sys_role_resource where roleid=" + id));
+			sysRoleService.exeUpdateBySql(Sqls.create("delete from sys_user_role where roleid=" + id));
 		}
-
 		return res;
 	}
 
@@ -161,35 +181,30 @@ public class RoleAction extends BaseAction {
 		if (user == null) {
 			return null;
 		}
-
 		String pId = Strings.sNull(id);
 		List array = new ArrayList();
 		if ("".equals(pId)) {
 			pId = "";
 		}
-
 		List<Sys_unit> unitlist = null;
-		Condition cnd;
 		int sysrole = 0;
-		if (user.getRolelist().contains(2)) // 判断是否为系统管理员角色
-		{
+		// 判断是否为系统管理员角色
+		if (user.getRolelist().contains(2)) {
 			sysrole = 1;
-			cnd = Cnd.where("id", "like", pId + "____").asc("location").asc("id");
+			unitlist = sysUnitService.listByCnd(Cnd.where("id", "like", pId + "____").asc("location").asc("id"));
 		} else {
 			if ("".equals(pId)) {
-				cnd = Cnd.where("id", "=", user.getUnitid()).asc("location").asc("id");
+				unitlist = sysUnitService.listByCnd(Cnd.where("id", "=", user.getUnitid()).asc("location").asc("id"));
 			} else {
-				cnd = Cnd.where("id", "like", pId + "____").asc("location").asc("id");
+				unitlist = sysUnitService.listByCnd(Cnd.where("id", "like", pId + "____").asc("location").asc("id"));
 			}
 		}
-
-		unitlist = daoCtl.list(dao, Sys_unit.class, cnd);
 		if ("".equals(pId)) {
 			Map<String, Object> jsonroot = new HashMap<String, Object>();
 			jsonroot.put("id", "");
 			jsonroot.put("pId", "0");
 			jsonroot.put("name", "机构列表");
-			jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 			jsonroot.put("nocheck", true);
 			array.add(jsonroot);
 			if (sysrole == 1) {
@@ -210,7 +225,7 @@ public class RoleAction extends BaseAction {
 			String unitname = unitobj.getName();
 			boolean sign = false;
 			Condition sqlm = Cnd.wrap("id like '" + unitobj.getId() + "____'");
-			int num = daoCtl.getRowCount(dao, Sys_unit.class, sqlm);
+			int num = sysUnitService.getRowCount(sqlm);
 			if (num > 0)
 				sign = true;
 			Map<String, Object> obj = new HashMap<String, Object>();
@@ -232,11 +247,10 @@ public class RoleAction extends BaseAction {
 	@At
 	@Ok("vm:template.private.sys.roleUser")
 	public void toaddroleuser(@Param("roleid") String roleid, HttpServletRequest req, HttpSession session) {
-
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		roleid = Strings.sNull(roleid);
-		if (user.getRolelist().contains(2)) // 判断是否为系统管理员角色
-		{
+		// 判断是否为系统管理员角色
+		if (user.getRolelist().contains(2)) {
 			req.setAttribute("uid", "");
 		} else {
 			req.setAttribute("uid", user.getUnitid());
@@ -277,11 +291,11 @@ public class RoleAction extends BaseAction {
 				cri.getOrderBy().asc("id");
 			}
 		}
-		List<Sys_unit> unitlist = daoCtl.list(dao, Sys_unit.class, cri);
+		List<Sys_unit> unitlist = sysUnitService.listByCnd(cri);
 		int i = 0;
 		for (Sys_unit u : unitlist) {
 			String pid = u.getId().substring(0, u.getId().length() - 4);
-			int num = daoCtl.getRowCount(dao, Sys_unit.class, Cnd.wrap("id like '" + u.getId() + "____'"));
+			int num = sysUnitService.getRowCount(Cnd.wrap("id like '" + u.getId() + "____'"));
 			if (i == 0 || "".equals(pid))
 				pid = "0";
 			Map<String, Object> obj = new HashMap<String, Object>();
@@ -301,9 +315,7 @@ public class RoleAction extends BaseAction {
 	public String ajaxname(@Param("name") String name) throws UnsupportedEncodingException {
 		String value = "";
 		name = Strings.sNull(name);
-
-		Sys_role role = daoCtl.detailByName(dao, Sys_role.class, "name", name);
-
+		Sys_role role = sysRoleService.detailByName("name", name);
 		if (role != null) {
 			value = "true";
 		}
@@ -335,9 +347,9 @@ public class RoleAction extends BaseAction {
 			}
 			Hashtable<String, String> rh = new Hashtable<String, String>();
 			Sql htsql = Sqls.create("select RESOURCEID,BUTTON from SYS_ROLE_RESOURCE where roleid=" + roleid);
-			rh = daoCtl.getHTable(dao, htsql);
-			List<Sys_resource> list = daoCtl.list(dao, Sys_resource.class, sql);
-			List array = new ArrayList();
+			rh = sysRoleService.getHTable(htsql);
+			List<Sys_resource> list = sysResourceService.listByCnd(sql);
+			List<Map<String, Object>> array = new ArrayList<Map<String, Object>>();
 			Map<String, Object> jsonroot = new HashMap<String, Object>();
 			jsonroot.put("id", "");
 			jsonroot.put("pId", "0");
@@ -346,7 +358,7 @@ public class RoleAction extends BaseAction {
 			jsonroot.put("nocheck", true);
 			jsonroot.put("button", "");
 			jsonroot.put("open", true);
-			jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 			for (int i = 0; i < list.size(); i++) {
 				Sys_resource obj = list.get(i);
@@ -380,7 +392,7 @@ public class RoleAction extends BaseAction {
 			if (!"".equals(checkids)) {
 				String[] ids = StringUtils.split(checkids, ";");
 				Condition c = Cnd.where("roleid", "=", roleid);
-				daoCtl.delete(dao, "SYS_ROLE_RESOURCE", c);
+				sysRoleResourceService.delete("SYS_ROLE_RESOURCE", c);
 				for (int i = 0; i < ids.length; i++) {
 					Sys_role_resource resource = new Sys_role_resource();
 					String[] id_Button = StringUtils.split(ids[i], ":");
@@ -391,11 +403,11 @@ public class RoleAction extends BaseAction {
 					} else {
 						resource.setButton(id_Button[1]);
 					}
-					daoCtl.add(dao, resource);
+					sysRoleResourceService.insert(resource);
 				}
 			} else {
 				Condition c = Cnd.where("roleid", "=", roleid);
-				daoCtl.delete(dao, "SYS_ROLE_RESOURCE", c);
+				sysRoleResourceService.delete("SYS_ROLE_RESOURCE", c);
 			}
 			return true;
 
@@ -414,9 +426,9 @@ public class RoleAction extends BaseAction {
 	@Ok("vm:template.private.sys.roleMenu")
 	public void tochannel(@Param("roleid") int roleid, HttpSession session, HttpServletRequest req) {
 		try {
-			Sys_role role = daoCtl.detailById(dao, Sys_role.class, roleid);
-			Map<String, String> ht = daoCtl.getHashMap(dao, Sqls.create("select channel_id,role_id from weixin_channel_role where pid=" + role.getPid()));
-			List<Weixin_channel> list = daoCtl.list(dao, Weixin_channel.class, Cnd.where("pid", "=", role.getPid()).asc("location"));
+			Sys_role role = sysRoleService.fetch(roleid);
+			Map<String, String> ht = sysRoleService.getHashMap(Sqls.create("select channel_id,role_id from weixin_channel_role where pid=" + role.getPid()));
+			List<Weixin_channel> list = weixinChannelService.listByCnd(Cnd.where("pid", "=", role.getPid()).asc("location"));
 			List<Object> array = new ArrayList<Object>();
 			Map<String, Object> jsonroot = new HashMap<String, Object>();
 			jsonroot.put("id", "");
@@ -426,7 +438,7 @@ public class RoleAction extends BaseAction {
 			jsonroot.put("nocheck", true);
 			jsonroot.put("button", "");
 			jsonroot.put("open", true);
-			jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 			for (int i = 0; i < list.size(); i++) {
 				Weixin_channel obj = list.get(i);
@@ -458,18 +470,18 @@ public class RoleAction extends BaseAction {
 			if (!"".equals(checkids)) {
 				String[] ids = StringUtils.split(checkids, ";");
 				Condition c = Cnd.where("role_id", "=", roleid);
-				daoCtl.delete(dao, "weixin_channel_role", c);
+				weixinChannelRoleService.delete(c);
 				for (int i = 0; i < ids.length; i++) {
 					String[] id_Button = StringUtils.split(ids[i], ":");
 					Weixin_channel_role resource = new Weixin_channel_role();
 					resource.setRole_id(roleid);
 					resource.setChannel_id(id_Button[0]);
 					resource.setPid(pid);
-					daoCtl.add(dao, resource);
+					weixinChannelRoleService.insert(resource);
 				}
 			} else {
 				Condition c = Cnd.where("role_id", "=", roleid);
-				daoCtl.delete(dao, "weixin_channel_role", c);
+				weixinChannelRoleService.delete("weixin_channel_role", c);
 			}
 			return true;
 
@@ -493,16 +505,14 @@ public class RoleAction extends BaseAction {
 				Sys_user_role s = new Sys_user_role();
 				s.setUserid(NumberUtils.toLong(Strings.sNull(ids[i])));
 				s.setRoleid(roleid);
-				daoCtl.add(dao, s);
+				sysUserRoleService.insert(s);
 				result++;
 			}
 			if (result > 0) {
 				msg = "true";
 			}
 		} catch (Exception e) {
-			e.printStackTrace(); // To change body of catch statement use File |
-									// Settings | File Templates.
-		} finally {
+			e.printStackTrace();
 		}
 		return msg;
 	}
@@ -515,9 +525,8 @@ public class RoleAction extends BaseAction {
 		String[] userids = StringUtils.split(checkids, ",");
 		for (int i = 0; i < userids.length; i++) {
 			Condition cnd = Cnd.where("roleid", "=", roleid).and("userid", "=", userids[i]);
-			daoCtl.delete(dao, "sys_user_role", cnd);
+			sysUserRoleService.delete("sys_user_role", cnd);
 		}
-
 		return "true";
 	}
 
@@ -527,7 +536,7 @@ public class RoleAction extends BaseAction {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		Sql sql = Sqls.create("select roleid from sys_user_role where userid=@userid");
 		sql.params().set("userid", user.getUserid());
-		req.setAttribute("roleid", daoCtl.getIntRowValue(dao, sql));
+		req.setAttribute("roleid", sysUserRoleService.getIntRowValue(sql));
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -536,7 +545,6 @@ public class RoleAction extends BaseAction {
 	public String tree(HttpSession session, @Param("id") String unitid1, HttpServletRequest req) throws Exception {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		unitid1 = Strings.sNull(unitid1);
-
 		Condition sql;
 		Condition sqlunit;
 		Condition sqlrole;
@@ -553,9 +561,9 @@ public class RoleAction extends BaseAction {
 			sqlunit = Cnd.wrap("id in (select unitid from sys_role where unitid like '" + user.getUnitid() + "%') order by location,id asc");
 			sqlrole = Cnd.wrap("(unitid is null or unitid='') and id in (select roleid from sys_user_role where userid='" + user.getUserid() + "') order by location,id asc");
 		}
-		Sys_unit u = daoCtl.detailByName(dao, Sys_unit.class, unitid1);
+		Sys_unit u = sysUnitService.detailByName(unitid1);
 		req.setAttribute("unit", u);
-		unitlist = daoCtl.list(dao, Sys_unit.class, sqlunit);
+		unitlist = sysUnitService.listByCnd(sqlunit);
 		req.setAttribute("sysrole", sysrole);
 		Hashtable<String, String> hm = new Hashtable<String, String>();
 		List array = new ArrayList();
@@ -566,11 +574,10 @@ public class RoleAction extends BaseAction {
 		jsonroot.put("checked", false);
 		jsonroot.put("nocheck", true);
 		jsonroot.put("open", true);
-		jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 		if (!"".equals(sqlrole)) {
-			rolelist = daoCtl.list(dao, Sys_role.class, sqlrole);
+			rolelist = sysRoleService.listByCnd(sqlrole);
 			for (int j = 0; j < rolelist.size(); j++) {
-
 				Sys_role roleobj = rolelist.get(j);
 				Map<String, Object> jsonobj = new HashMap<String, Object>();
 				jsonobj.put("id", String.valueOf(roleobj.getId()));
@@ -580,16 +587,14 @@ public class RoleAction extends BaseAction {
 				jsonobj.put("url", "javascript:list(\"" + roleobj.getId() + "\")");
 				jsonobj.put("target", "_self");
 				array.add(jsonobj);
-
 			}
-
 		}
 		array.add(jsonroot);
 		for (int i = 0; i < unitlist.size(); i++) { // 得到单位列表
 			Sys_unit unitobj = unitlist.get(i);
 			String unitid = unitobj.getId();
 			sql = Cnd.wrap("unitid='" + unitid + "' order by id");
-			list = daoCtl.list(dao, Sys_role.class, sql);
+			list = sysRoleService.listByCnd(sql);
 			String tunit = "";
 			int t = 1;
 			hm.put(unitid, unitid);
@@ -603,9 +608,7 @@ public class RoleAction extends BaseAction {
 				hm.put(tunit, tunit);
 			}
 			String name = "";
-
 			for (int j = 0; j < list.size(); j++) { // 得到单位列表下的角色
-
 				Sys_role roleobj = list.get(j);
 				name = roleobj.getName();
 				Map<String, Object> jsonobj = new HashMap<String, Object>();
@@ -615,18 +618,14 @@ public class RoleAction extends BaseAction {
 				jsonobj.put("checked", false);
 				jsonobj.put("url", "javascript:list(\"" + roleobj.getId() + "\")");
 				jsonobj.put("target", "_self");
-
 				array.add(jsonobj);
-
 			}
 		}
 		String temp = "";
-
 		Map.Entry[] set = SortHashtable.getSortedHashtableByKey(hm);
 		for (int i = 0; i < set.length; i++) {
-
 			String key = set[i].getKey().toString();
-			Sys_unit su = daoCtl.detailByName(dao, Sys_unit.class, String.valueOf(key));
+			Sys_unit su = sysUnitService.detailByName(String.valueOf(key));
 			if (su != null) {
 				String tempUid = String.valueOf(key);
 				String tempName = su.getName();
@@ -642,7 +641,7 @@ public class RoleAction extends BaseAction {
 				jsonobj.put("isParent", true);
 				jsonobj.put("open", true);
 				jsonobj.put("nocheck", true);
-				jsonobj.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+				jsonobj.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 				array.add(jsonobj);
 			}
 		}
@@ -653,7 +652,7 @@ public class RoleAction extends BaseAction {
 	@At
 	@Ok("json")
 	public Sys_role getrole(@Param("roleid") int roleid) {
-		return daoCtl.detailById(dao, Sys_role.class, roleid);
+		return sysRoleService.fetch(roleid);
 	}
 
 }
