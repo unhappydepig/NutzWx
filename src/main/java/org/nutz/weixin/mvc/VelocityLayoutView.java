@@ -14,22 +14,25 @@ import org.apache.velocity.io.VelocityWriter;
 import org.apache.velocity.util.SimplePool;
 import org.nutz.lang.Files;
 import org.nutz.lang.Strings;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 import org.nutz.mvc.Mvcs;
 import org.nutz.mvc.view.AbstractPathView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import cn.xuetang.shiro.web.support.velocity.Permission;
 
 public class VelocityLayoutView extends AbstractPathView {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VelocityLayoutView.class);
+	private static final Log log = Logs.get();
 	protected static final int WRITER_BUFFER_SIZE = 8 * 1024;
 	protected SimplePool writerPool = new SimplePool(40);
 	private final static String SUFFIX = ".html";
 
-	public VelocityLayoutView(String dest) {
+	private Permission permission;
+
+	public VelocityLayoutView(Permission permission, String dest) {
 		super(dest);
+		this.permission = permission;
 	}
 
 	@Override
@@ -43,12 +46,12 @@ public class VelocityLayoutView extends AbstractPathView {
 			context.put("base", req.getContextPath());
 			context.put("request", req);
 			context.put("session", req.getSession());
-			context.put("shiro", new Permission());
+			context.put("shiro", permission);
 			Template template = Velocity.getTemplate(getPath(path));
 			template.merge(context, sw);
 			internalRenderTemplate(template, context, resp.getWriter());
 		} catch (Exception e) {
-			LOG.error("模板引擎错误", e);
+			log.error("模板引擎错误", e);
 			throw new Exception(e);
 		}
 	}

@@ -30,21 +30,21 @@ public class AppInfoService extends BaseService<App_info> {
 
 	private final static Log log = Logs.get();
 	// 虚拟目录路径
-	public static String APP_BASE_PATH = "";
+	public String APP_BASE_PATH = "";
 	// 虚拟目录名称
-	public static String APP_BASE_NAME = "";
+	public String APP_BASE_NAME = "";
 	// 应用中文名
-	public static String APP_NAME = "";
+	public String APP_NAME = "";
 	// 系统配置
 	public static Map<String, String> SYS_CONFIG;
 	// 数据字典，根据ID分别初始化
-	public static Map<String, Object> DATA_DICT = new HashMap<String, Object>();
+	public Map<String, Object> DATA_DICT = new HashMap<String, Object>();
 	// 应用信息，用于通过mykey验证来源，放在内存里为了提高响应速度
-	public static Map<String, Object> APP_INFO = new HashMap<String, Object>();;
+	public Map<String, Object> APP_INFO = new HashMap<String, Object>();;
 	// 定时任务实例
-	public static Scheduler SCHEDULER;
+	public Scheduler SCHEDULER;
 	// 文件池
-	public static FilePool FILE_POOL;
+	public FilePool FILE_POOL;
 
 	public AppInfoService(Dao dao) {
 		super(dao);

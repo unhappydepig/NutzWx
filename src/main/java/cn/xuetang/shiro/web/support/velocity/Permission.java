@@ -36,6 +36,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.velocity.tools.Scope;
 import org.apache.velocity.tools.config.DefaultKey;
 import org.apache.velocity.tools.config.ValidScope;
+import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
@@ -46,6 +47,7 @@ import org.nutz.log.Logs;
  */
 @DefaultKey("shiro")
 @ValidScope(Scope.APPLICATION)
+@IocBean(name = "shiro_permission")
 public class Permission {
 
 	private static final String ROLE_NAMES_DELIMETER = ",";
