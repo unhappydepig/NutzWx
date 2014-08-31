@@ -20,7 +20,6 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.sys.bean.Sys_resource;
@@ -35,7 +34,7 @@ import cn.xuetang.service.SysResourceService;
 @IocBean
 @At("/private/sys/res")
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
-public class ResourceAction extends BaseAction {
+public class ResourceAction{
 	@Inject
 	protected SysResourceService sysResourceService;
 
@@ -62,7 +61,7 @@ public class ResourceAction extends BaseAction {
 		return Json.toJson(getJSON(id, subtype));
 	}
 
-	private List getJSON(String id, int subtype) {
+	private List<Object> getJSON(String id, int subtype) {
 		Criteria cri = Cnd.cri();
 		if (null == id || "".equals(id)) {
 			cri.where().and("id", "like", "____");
@@ -80,7 +79,7 @@ public class ResourceAction extends BaseAction {
 			Sys_resource res = list.get(i);
 			Map<String, Object> jsonobj = new HashMap<String, Object>();
 			String pid = res.getId().substring(0, res.getId().length() - 4);
-			if (i == 0 || "".equals(pid))
+			if (i == 0 || Strings.isBlank(pid))
 				pid = "0";
 			int num = sysResourceService.getRowCount(Cnd.where("id", "like", res.getId() + "____"));
 			jsonobj.put("id", res.getId());
@@ -91,7 +90,7 @@ public class ResourceAction extends BaseAction {
 			String bts = Strings.sNull(res.getButton());
 			String[] bt;
 			String temp = "";
-			if (!"".equals(bts)) {
+			if (StringUtils.isNotBlank(bts)) {
 				bt = StringUtils.split(bts, ";");
 				for (int j = 0; j < bt.length; j++)
 					temp += bt[j].substring(0, bt[j].indexOf("/")) + ";";
