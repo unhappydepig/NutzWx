@@ -16,7 +16,7 @@ this.CheckUserName=function()
 	 
     if ($('#username').val() != "") {
         if ($('#password').val() != "") { 
-            if ($('#verifcode').val().length==4) {
+            if ($('#captcha').val().length==4) {
             	jQuery.ajax({
         			url : "${base}/private/doLogin",
         			data : jQuery("#form1").serialize(),
@@ -26,7 +26,7 @@ this.CheckUserName=function()
         					window.location.href="${base}/private/index";
         				} else {
         					Dialog.alert(res);
-        					$('#verifcode').val("");
+        					$('#captcha').val("");
         					tochange();
         				}
         				return false;
@@ -37,7 +37,7 @@ this.CheckUserName=function()
         		});
             } else {
                 Dialog.alert("请输入四位验证码！");
-                $('#verifcode').focus();
+                $('#captcha').focus();
                 return false;
             }
         } else {
@@ -102,7 +102,7 @@ $(document).ready(function(){
 															id="captcha" title="点击刷新验证码" align="middle"
 															onclick="tochange()" style="cursor: pointer" />&nbsp; <input
 															class="inputText" maxlength="4" style="width: 60px"
-															name="verifcode" id="verifcode" type="text" value="5750"
+															name="captcha" id="captcha" type="text" value="5750"
 															onfocus="this.select();" /></td>
 														<td><img id="img" src="${base}/images/private/login_icon.jpg"
 															 style="cursor: pointer" /></td>
