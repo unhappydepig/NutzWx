@@ -422,7 +422,6 @@ public class ObjectCtl {
         });
         dao.execute(sql);
         return sql.getInt();
-
     }
 
     /**

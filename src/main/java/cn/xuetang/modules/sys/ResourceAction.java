@@ -9,10 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
-import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Criteria;
-import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
@@ -28,6 +25,7 @@ import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.sys.bean.Sys_resource;
 import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.SysResourceService;
 
 /**
  * @author Wizzer.cn
@@ -39,7 +37,7 @@ import cn.xuetang.service.AppInfoService;
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class ResourceAction extends BaseAction {
 	@Inject
-	protected Dao dao;
+	protected SysResourceService sysResourceService;
 
 	@Inject
 	private AppInfoService appInfoService;
@@ -52,11 +50,7 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("json")
 	public List<Sys_resource> list(@Param("subtype") int subtype) {
-		Criteria cri = Cnd.cri();
-		cri.where().and("subtype", "=", subtype);
-		cri.getOrderBy().asc("location");
-		cri.getOrderBy().asc("id");
-		return daoCtl.list(dao, Sys_resource.class, cri);
+		return sysResourceService.list(subtype);
 	}
 
 	/**
@@ -65,10 +59,10 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public String listAll(@Param("id") String id, @Param("subtype") int subtype) {
-		return Json.toJson(getJSON(dao, id, subtype));
+		return Json.toJson(getJSON(id, subtype));
 	}
 
-	private List getJSON(Dao dao, String id, int subtype) {
+	private List getJSON(String id, int subtype) {
 		Criteria cri = Cnd.cri();
 		if (null == id || "".equals(id)) {
 			cri.where().and("id", "like", "____");
@@ -80,7 +74,7 @@ public class ResourceAction extends BaseAction {
 		}
 		cri.getOrderBy().asc("location");
 		cri.getOrderBy().asc("id");
-		List<Sys_resource> list = daoCtl.list(dao, Sys_resource.class, cri);
+		List<Sys_resource> list = sysResourceService.listByCnd(cri);
 		List<Object> array = new ArrayList<Object>();
 		for (int i = 0; i < list.size(); i++) {
 			Sys_resource res = list.get(i);
@@ -88,7 +82,7 @@ public class ResourceAction extends BaseAction {
 			String pid = res.getId().substring(0, res.getId().length() - 4);
 			if (i == 0 || "".equals(pid))
 				pid = "0";
-			int num = daoCtl.getRowCount(dao, Sys_resource.class, Cnd.where("id", "like", res.getId() + "____"));
+			int num = sysResourceService.getRowCount(Cnd.where("id", "like", res.getId() + "____"));
 			jsonobj.put("id", res.getId());
 			jsonobj.put("name", res.getName());
 			jsonobj.put("descript", res.getDescript());
@@ -104,7 +98,7 @@ public class ResourceAction extends BaseAction {
 			}
 			jsonobj.put("bts", temp);
 			if (num > 0) {
-				jsonobj.put("children", getJSON(dao, res.getId(), subtype));
+				jsonobj.put("children", getJSON(res.getId(), subtype));
 			}
 			array.add(jsonobj);
 		}
@@ -117,7 +111,7 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("vm:template.private.sys.resourceUpdate")
 	public void toupdate(@Param("id") String id, HttpServletRequest req) {
-		Sys_resource res = daoCtl.detailByName(dao, Sys_resource.class, id);
+		Sys_resource res = sysResourceService.detailByName(id);
 		req.setAttribute("obj", res);
 	}
 
@@ -127,9 +121,8 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public String updateSave(@Param("..") Sys_resource res, @Param("button2") String button2, HttpServletRequest req) {
-
 		res.setButton(button2);
-		return daoCtl.update(dao, res) == true ? res.getId() : "";
+		return sysResourceService.update(res) == true ? res.getId() : "";
 	}
 
 	/****
@@ -147,14 +140,11 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public boolean addSave(@Param("..") Sys_resource res, @Param("button2") String button2) {
-
-		Sql sql = Sqls.create("select max(location)+1 from Sys_resource where id like  @id");
-		sql.params().set("id", res.getId() + "_%");
-		int location = daoCtl.getIntRowValue(dao, sql);
+		int location = sysResourceService.getIntRowValue(res);
 		res.setLocation(location);
-		res.setId(daoCtl.getSubMenuId(dao, "Sys_resource", "id", res.getId()));
+		res.setId(sysResourceService.getSubMenuId("Sys_resource", "id", res.getId()));
 		res.setButton(button2);
-		return daoCtl.add(dao, res);
+		return sysResourceService.insert(res);
 	}
 
 	/**
@@ -162,13 +152,9 @@ public class ResourceAction extends BaseAction {
 	 * */
 	@At
 	@Ok("raw")
-	public boolean del(@Param("id") String ids) {
-		String[] id = StringUtils.split(ids, ",");
+	public boolean del(@Param("id") String[] ids) {
 		try {
-			for (int i = 0; i < id.length; i++) {
-				daoCtl.exeUpdateBySql(dao, Sqls.create("delete from Sys_resource where id like '" + Strings.sNull(id[i]) + "%'"));
-				daoCtl.exeUpdateBySql(dao, Sqls.create("delete from Sys_role_resource where resourceid like '" + Strings.sNull(id[i]) + "%'"));
-			}
+			sysResourceService.delSqls(ids);
 		} catch (Exception e) {
 			return false;
 		}
@@ -185,14 +171,14 @@ public class ResourceAction extends BaseAction {
 		Criteria cri = Cnd.cri();
 		cri.getOrderBy().asc("location");
 		cri.getOrderBy().asc("id");
-		List<Sys_resource> list = daoCtl.list(dao, Sys_resource.class, cri);
+		List<Sys_resource> list = sysResourceService.listByCnd(cri);
 		Map<String, Object> jsonroot = new HashMap<String, Object>();
 		jsonroot.put("id", "");
 		jsonroot.put("pId", "0");
 		jsonroot.put("name", "资源列表");
 		jsonroot.put("open", true);
 		jsonroot.put("childOuter", false);
-		jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
 		array.add(jsonroot);
 		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> jsonobj = new HashMap<String, Object>();
@@ -219,9 +205,7 @@ public class ResourceAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public boolean sort(@Param("checkids") String[] checkids) {
-		boolean rs = daoCtl.updateSortRow(dao, "Sys_resource", checkids, "location", 0);
+		boolean rs = sysResourceService.updateSortRow(checkids, 0);
 		return rs;
-
 	}
-
 }

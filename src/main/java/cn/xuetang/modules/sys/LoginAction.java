@@ -42,8 +42,6 @@ public class LoginAction extends BaseAction {
 		if (Strings.isBlank(loginname) || Strings.isBlank(password))
 			return "用户名及密码不能为空！";
 		String vcode = Strings.sNull(session.getAttribute("ValidateCode"));
-		// if (!vcode.equals(verifcode))
-		// return "验证码不正确！";
 		Sys_user user = daoCtl.detailByName(dao, Sys_user.class, "loginname", loginname);
 		if (user == null)
 			return "用户名不存在！";
