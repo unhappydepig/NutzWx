@@ -25,9 +25,10 @@ public class RoleService extends BaseService<Role> {
 		return query(null, null);
 	}
 
-	public void insert(Role role) {
+	public boolean insert(Role role) {
 		role = dao().insert(role);
 		dao().insertRelation(role, "permissions");
+		return true;
 	}
 
 	public void delete(Long id)

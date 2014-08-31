@@ -45,14 +45,15 @@ public class UserService extends BaseService<User> {
 		}
 	}
 
-	public void updatePwd(Object uid,String password)
-	{
+	public void updatePwd(Object uid, String password) {
 		String salt = new SecureRandomNumberGenerator().nextBytes().toBase64();
 		dao().update(User.class, Chain.make("password", new Sha256Hash(password, salt, 1024).toBase64()).add("salt", salt), Cnd.where("id", "=", uid));
 	}
-	public void insert(User user) {
+
+	public boolean insert(User user) {
 		user = dao().insert(user);
 		dao().insertRelation(user, "roles");
+		return true;
 	}
 
 	public boolean save(String username, String password, boolean isEnabled, String addr, int[] roleIds) {
@@ -100,7 +101,7 @@ public class UserService extends BaseService<User> {
 		dao().clear("system_user_role", Cnd.where("userid", "=", userId).and("roleid", "=", roleId));
 	}
 
-	public User initUser(String name, String openid, String providerid, String addr,boolean isUpdated) {
+	public User initUser(String name, String openid, String providerid, String addr, boolean isUpdated) {
 		User user = new User();
 		user.setCreateDate(Times.now());
 		user.setName(name);
