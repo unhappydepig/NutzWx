@@ -11,5 +11,4 @@ public class SysUnitService extends BaseService<Sys_unit> {
 	public SysUnitService(Dao dao) {
 		super(dao);
 	}
-
 }

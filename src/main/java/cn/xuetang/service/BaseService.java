@@ -234,4 +234,34 @@ public class BaseService<T> extends IdEntityService<T> {
 		dao().execute(sql);
 		return hashMap;
 	}
+	
+    public String listPageJsonSql(Sql sql, int curPage, int pageSize, int count) {
+        Pager pager = dao().createPager(curPage, pageSize);
+        pager.setRecordCount(count);// 记录数需手动设置
+        sql.setPager(pager);
+        sql.setCallback(Sqls.callback.records());
+        dao().execute(sql);
+        Map<String, Object> jsonobj = new HashMap<String, Object>();
+        jsonobj.put("total", pager.getRecordCount());
+        jsonobj.put("rows", sql.getList(Map.class));
+        return Json.toJson(jsonobj);
+    }
+    public String getSubMenuId(String tableName, String cloName, String value) {
+		final String val = value;
+		Sql sql = Sqls.create("select " + cloName + " from " + tableName + " where " + cloName + " like '" + value + "____' order by " + cloName + " desc");
+		sql.setCallback(new SqlCallback() {
+			@Override
+			public Object invoke(Connection conn, ResultSet rs, Sql sql) throws SQLException {
+				String rsvalue = val + "0001";
+				if (rs != null && rs.next()) {
+					rsvalue = rs.getString(1);
+					int newvalue = NumberUtils.toInt(rsvalue.substring(rsvalue.length() - 4)) + 1;
+					rsvalue = rsvalue.substring(0, rsvalue.length() - 4) + new java.text.DecimalFormat("0000").format(newvalue);
+				}
+				return rsvalue;
+			}
+		});
+		dao().execute(sql);
+		return sql.getString();
+	}
 }

@@ -2,7 +2,6 @@ package cn.xuetang.modules.sys;
 
 import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.dao.util.cri.SqlExpressionGroup;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -13,10 +12,9 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
-import cn.xuetang.modules.sys.bean.Sys_user_log;
+import cn.xuetang.service.SysUserLogService;
 
 /**
  * 类描述： 创建人：Wizzer 联系方式：www.wizzer.cn 创建时间：2013-12-2 下午6:00:07
@@ -26,9 +24,10 @@ import cn.xuetang.modules.sys.bean.Sys_user_log;
 @IocBean
 @At("/private/sys/user")
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
-public class UserLogAction extends BaseAction {
+public class UserLogAction{
+
 	@Inject
-	protected Dao dao;
+	private SysUserLogService sysUserLogService;
 
 	@At
 	@Ok("vm:template.private.sys.userLog")
@@ -45,6 +44,6 @@ public class UserLogAction extends BaseAction {
 			cri.where().and(exp);
 		}
 		cri.getOrderBy().desc("LOGINTIME");
-		return daoCtl.listPageJson(dao, Sys_user_log.class, curPage, pageSize, cri);
+		return sysUserLogService.listPageJson(curPage, pageSize, cri);
 	}
 }

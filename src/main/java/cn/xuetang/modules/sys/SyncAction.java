@@ -2,7 +2,6 @@ package cn.xuetang.modules.sys;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Strings;
@@ -10,7 +9,6 @@ import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.service.AppInfoService;
 
 /**
@@ -18,9 +16,7 @@ import cn.xuetang.service.AppInfoService;
  */
 @IocBean
 @At("/private/sys/sync")
-public class SyncAction extends BaseAction {
-	@Inject
-	protected Dao dao;
+public class SyncAction {
 
 	@Inject
 	private AppInfoService appInfoService;
@@ -28,7 +24,7 @@ public class SyncAction extends BaseAction {
 	@At("/config")
 	@Ok("raw")
 	public String config(@Param("key") String key, @Param("type") String type, HttpServletRequest req) {
-		String mykey = Strings.sNull(appInfoService.SYS_CONFIG.get("sync_key"));
+		String mykey = Strings.sNull(AppInfoService.SYS_CONFIG.get("sync_key"));
 		if (mykey.equals(key)) {
 			if ("datadict".equals(type)) {
 				appInfoService.InitDataDict();

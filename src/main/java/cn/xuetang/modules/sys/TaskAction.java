@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -33,13 +32,13 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_task;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.SysTaskService;
 
 /**
  * @author Wizzer
@@ -48,12 +47,12 @@ import cn.xuetang.service.AppInfoService;
 @IocBean
 @At("/private/sys/task")
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
-public class TaskAction extends BaseAction {
-	@Inject
-	protected Dao dao;
+public class TaskAction {
 	private final static Log log = Logs.get();
 	@Inject
 	private AppInfoService appInfoService;
+	@Inject
+	private SysTaskService sysTaskService;
 
 	@At("")
 	@Ok("vm:template.private.sys.task")
@@ -70,21 +69,20 @@ public class TaskAction extends BaseAction {
 	@Ok("raw")
 	public boolean add(@Param("..") Sys_task task, HttpSession session) throws SchedulerException, ClassNotFoundException {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
-		int type = task.getTask_type();
 		task.setTask_code(UUID.randomUUID().toString());
 		task.setCreate_time(DateUtil.getCurDateTime());
 		task.setUser_id(user.getUserid());
-		Sys_task task1 = daoCtl.addT(dao, task);
-		if (task != null && task.getIs_enable() == 0) {
-			startTask(task1);
+		if (sysTaskService.insert(task)) {
+			startTask(task);
+			return true;
 		}
-		return task != null;
+		return false;
 	}
 
 	@At
 	@Ok("vm:template.private.sys.taskUpdate")
 	public Sys_task toupdate(@Param("task_id") int task_id, HttpServletRequest req) {
-		return daoCtl.detailById(dao, Sys_task.class, task_id);// html:obj
+		return sysTaskService.fetch(task_id);// html:obj
 	}
 
 	@At
@@ -99,7 +97,7 @@ public class TaskAction extends BaseAction {
 		UUID uuid = UUID.randomUUID();
 		task.setTask_code(uuid.toString());
 		task.setUser_id(user.getUserid());
-		boolean res = daoCtl.update(dao, task);
+		boolean res = sysTaskService.update(task);
 		if (res && task.getIs_enable() == 0) {
 			log.info("Update Satrt...");
 			startTask(task);
@@ -109,8 +107,8 @@ public class TaskAction extends BaseAction {
 
 	@At
 	public boolean delete(@Param("task_id") int task_id) throws SchedulerException, ClassNotFoundException {
-		Sys_task task = daoCtl.detailById(dao, Sys_task.class, task_id);
-		boolean res = daoCtl.deleteById(dao, Sys_task.class, task_id);
+		Sys_task task = sysTaskService.fetch(task_id);
+		boolean res = sysTaskService.delete(task_id) > 0;
 		if (res) {
 			endTask(task.getTask_code());
 		}
@@ -118,13 +116,12 @@ public class TaskAction extends BaseAction {
 	}
 
 	@At
-	public boolean deleteIds(@Param("ids") String ids) throws SchedulerException, ClassNotFoundException {
-		String[] id = StringUtils.split(ids, ",");
-		List<Sys_task> list = daoCtl.list(dao, Sys_task.class, Cnd.where("task_id", "in", id));
+	public boolean deleteIds(@Param("ids") String[] ids) throws SchedulerException, ClassNotFoundException {
+		List<Sys_task> list = sysTaskService.listByCnd(Cnd.where("task_id", "in", ids));
 		for (Sys_task task : list) {
 			endTask(task.getTask_code());
 		}
-		return daoCtl.deleteByIds(dao, Sys_task.class, id);
+		return sysTaskService.deleteByIds(ids);
 	}
 
 	@At
@@ -132,7 +129,7 @@ public class TaskAction extends BaseAction {
 	public String list(@Param("page") int curPage, @Param("rows") int pageSize, HttpServletRequest req) {
 		Sql sql = Sqls.create("SELECT A.*,B.REALNAME FROM SYS_TASK A,SYS_USER B WHERE A.USER_ID=B.USERID ORDER BY A.TASK_ID");
 		Sql sql1 = Sqls.create("SELECT COUNT(*) FROM SYS_TASK A,SYS_USER B WHERE A.USER_ID=B.USERID");
-		return daoCtl.listPageJsonSql(dao, sql, curPage, pageSize, daoCtl.getIntRowValue(dao, sql1));
+		return sysTaskService.listPageJsonSql(sql, curPage, pageSize, sysTaskService.getIntRowValue(sql1));
 	}
 
 	/**
@@ -158,7 +155,7 @@ public class TaskAction extends BaseAction {
 					jobBuilder.withIdentity(uuid.toString(), Scheduler.DEFAULT_GROUP);
 					triggerBuilder.withIdentity(uuid.toString(), Scheduler.DEFAULT_GROUP);
 					task.setTask_code(uuid.toString());
-					daoCtl.update(dao, task);
+					sysTaskService.update(task);
 				}
 				log.info("task start code:" + task.getTask_code());
 				String cronExpressionFromDB = getCronExpressionFromDB(task);

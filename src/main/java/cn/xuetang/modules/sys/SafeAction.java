@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
@@ -13,11 +12,11 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.StringUtil;
 import cn.xuetang.modules.sys.bean.Sys_safeconfig;
+import cn.xuetang.service.SysSafeConfigService;
 
 /**
  * @author Wizzer.cn
@@ -27,9 +26,9 @@ import cn.xuetang.modules.sys.bean.Sys_safeconfig;
 @IocBean
 @At("/private/sys/safe")
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
-public class SafeAction extends BaseAction {
+public class SafeAction {
 	@Inject
-	protected Dao dao;
+	private SysSafeConfigService sysSafeConfigService;
 
 	/***
 	 * 查询全部
@@ -38,8 +37,8 @@ public class SafeAction extends BaseAction {
 	@Ok("vm:template.private.sys.safe")
 	public void list(HttpServletRequest req) {
 		int sel = 0;
-		Sys_safeconfig ip_safe = daoCtl.detailByName(dao, Sys_safeconfig.class, "type", "1");// 允许
-		Sys_safeconfig ip_refuse = daoCtl.detailByName(dao, Sys_safeconfig.class, "type", "0");// 拒绝
+		Sys_safeconfig ip_safe = sysSafeConfigService.detailByName("type", "1");// 允许
+		Sys_safeconfig ip_refuse = sysSafeConfigService.detailByName("type", "0");// 拒绝
 		if (ip_safe.getState() == 0) {
 			sel = 1;
 		} else if (ip_refuse.getState() == 0) {
@@ -56,14 +55,13 @@ public class SafeAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public boolean update(@Param("safetype") int cursafetype, @Param("ip_safe") String ip_safe, @Param("ip_refuse") String ip_refuse) {
-		boolean res = false;
 		if (cursafetype == 0) {
-			daoCtl.update(dao, Sys_safeconfig.class, Chain.make("note", StringUtil.getMysqlSaveString(ip_refuse, "''")).add("state", "0"), Cnd.where("type", "=", "0"));
-			res = daoCtl.update(dao, Sys_safeconfig.class, Chain.make("note", StringUtil.getMysqlSaveString(ip_safe, "''")).add("state", "1"), Cnd.where("type", "=", "1"));
+			sysSafeConfigService.update(Chain.make("note", StringUtil.getMysqlSaveString(ip_refuse, "''")).add("state", "0"), Cnd.where("type", "=", "0"));
+			sysSafeConfigService.update(Chain.make("note", StringUtil.getMysqlSaveString(ip_safe, "''")).add("state", "1"), Cnd.where("type", "=", "1"));
 		} else {
-			daoCtl.update(dao, Sys_safeconfig.class, Chain.make("note", StringUtil.getMysqlSaveString(ip_refuse, "''")).add("state", "1"), Cnd.where("type", "=", "0"));
-			res = daoCtl.update(dao, Sys_safeconfig.class, Chain.make("note", StringUtil.getMysqlSaveString(ip_safe, "''")).add("state", "0"), Cnd.where("type", "=", "1"));
+			sysSafeConfigService.update(Chain.make("note", StringUtil.getMysqlSaveString(ip_refuse, "''")).add("state", "1"), Cnd.where("type", "=", "0"));
+			sysSafeConfigService.update(Chain.make("note", StringUtil.getMysqlSaveString(ip_safe, "''")).add("state", "0"), Cnd.where("type", "=", "1"));
 		}
-		return res;
+		return true;
 	}
 }
