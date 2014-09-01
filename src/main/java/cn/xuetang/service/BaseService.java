@@ -14,6 +14,7 @@ import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
+import org.nutz.dao.entity.Entity;
 import org.nutz.dao.pager.Pager;
 import org.nutz.dao.sql.Sql;
 import org.nutz.dao.sql.SqlCallback;
@@ -264,4 +265,13 @@ public class BaseService<T> extends IdEntityService<T> {
 		dao().execute(sql);
 		return sql.getString();
 	}
+    
+    public List<T> list(Sql sql) {
+        Entity<T> entity = dao().getEntity(getEntityClass());
+        sql.setEntity(entity);
+        sql.setCallback(Sqls.callback.entities());
+        dao().execute(sql);
+        return sql.getList(getEntityClass());
+
+    }
 }
