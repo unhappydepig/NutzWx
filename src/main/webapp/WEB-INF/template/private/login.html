@@ -13,7 +13,7 @@ var CONTEXTPATH = '${base}';
  
 this.CheckUserName=function()
 {
-	 
+	alert($('#captcha').val());
     if ($('#username').val() != "") {
         if ($('#password').val() != "") { 
             if ($('#captcha').val().length==4) {
@@ -55,7 +55,7 @@ this.CheckUserName=function()
 }
 this.tochange=function()
 {
-    $("#captcha").attr("src","${base}/captcha?rnd=" + new Date().getTime());
+    $("#captchaid").attr("src","${base}/captcha?rnd=" + new Date().getTime());
 } 
 $(document).ready(function(){
 	$(document).bind("keypress", "return", function (ev) { 
@@ -95,17 +95,11 @@ $(document).ready(function(){
 															value="superadmin" onfocus="this.select();" /></td>
 														<td>密码：</td>
 														<td><input class="inputText" style="width: 80px"
-															name="password" id="password" type="password" value="11"
+															name="password" id="password" type="password" value="123"
 															onfocus="this.select();" /></td>
 														<td>验证码：</td>
-														<td><img src="${base}/captcha" name="captcha"
-															id="captcha" title="点击刷新验证码" align="middle"
-															onclick="tochange()" style="cursor: pointer" />&nbsp; <input
-															class="inputText" maxlength="4" style="width: 60px"
-															name="captcha" id="captcha" type="text" value="5750"
-															onfocus="this.select();" /></td>
-														<td><img id="img" src="${base}/images/private/login_icon.jpg"
-															 style="cursor: pointer" /></td>
+														<td><img src="${base}/captcha" name="captchaid" id="captchaid" title="点击刷新验证码" align="middle" onclick="tochange()" style="cursor: pointer" />&nbsp; <input class="inputText" maxlength="4" style="width: 60px" name="captcha" id="captcha" type="text" value="5750" onfocus="this.select();" /></td>
+														<td><img id="img" src="${base}/images/private/login_icon.jpg"style="cursor: pointer" /></td>
 													</tr>
 												</table>
 												<table width="95%" border="0" align="center" cellpadding="0"

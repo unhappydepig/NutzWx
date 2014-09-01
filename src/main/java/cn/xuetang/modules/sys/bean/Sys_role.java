@@ -1,11 +1,17 @@
 package cn.xuetang.modules.sys.bean;
 
+import java.util.List;
+
 import org.nutz.dao.DB;
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
+import org.nutz.dao.entity.annotation.ManyMany;
 import org.nutz.dao.entity.annotation.Prev;
 import org.nutz.dao.entity.annotation.SQL;
 import org.nutz.dao.entity.annotation.Table;
+
+import cn.xuetang.core.bean.Permission;
+import cn.xuetang.core.bean.User;
 
 /**
  * @author Wizzer.cn
@@ -28,9 +34,29 @@ public class Sys_role {
 	private int pid;
 	@Column
 	private int location;
+	@ManyMany(target = Sys_user.class, relation = "system_user_role", from = "roleid", to = "userid")
+	private List<Sys_user> users;
+	@ManyMany(target = Permission.class, relation = "system_role_permission", from = "roleid", to = "permissionid")
+	private List<Permission> permissions;
+	
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
 
 	public int getId() {
 		return id;
+	}
+
+	public List<Sys_user> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<Sys_user> users) {
+		this.users = users;
 	}
 
 	public void setId(int id) {

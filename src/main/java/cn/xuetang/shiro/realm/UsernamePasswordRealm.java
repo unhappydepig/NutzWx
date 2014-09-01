@@ -12,7 +12,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.util.ByteSource;
 import org.nutz.lang.Lang;
 
-import cn.xuetang.core.bean.User;
+import cn.xuetang.modules.sys.bean.Sys_user;
 
 public class UsernamePasswordRealm extends AbstractNutAuthoRealm {
 
@@ -26,7 +26,7 @@ public class UsernamePasswordRealm extends AbstractNutAuthoRealm {
 		if (StringUtils.isBlank(accountName)) {
 			throw Lang.makeThrow(AuthenticationException.class, "Account is empty");
 		}
-		User user = getUserService().fetchByName(authcToken.getUsername());
+		Sys_user user = getUserService().fetchByName(authcToken.getUsername());
 		if (Lang.isEmpty(user)) {
 			throw Lang.makeThrow(UnknownAccountException.class, "Account [ %s ] not found", authcToken.getUsername());
 		}

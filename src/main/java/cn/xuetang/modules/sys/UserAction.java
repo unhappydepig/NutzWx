@@ -24,6 +24,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
+import org.nutz.lang.Times;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.By;
 import org.nutz.mvc.annotation.Filters;
@@ -32,7 +33,6 @@ import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
-import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.common.util.DecodeUtil;
 import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.modules.sys.bean.Sys_role;
@@ -305,7 +305,7 @@ public class UserAction{
 			String salt = DecodeUtil.getSalt(6);
 			user.setPassword(Lang.digest("MD5", Strings.sNull(user.getPassword()).getBytes(), Strings.sNull(salt).getBytes(), 3));
 			user.setSalt(salt);
-			user.setLogintime(DateUtil.getCurDateTime());
+			user.setLoginTime(Times.now());
 			if (sysUserService.insert(user)) {
 				for (int i = 0; i < ids.length && (!"".equals(ids[0])); i++) {
 					Sys_user_role syr = new Sys_user_role();
@@ -456,7 +456,7 @@ public class UserAction{
 				user.setPassword(Lang.digest("MD5", Strings.sNull(user.getPassword()).getBytes(), Strings.sNull(salt).getBytes(), 3));
 				user.setSalt(salt);
 			}
-			user.setLogintime(DateUtil.getCurDateTime());
+			user.setLoginTime(Times.now());
 			result = sysUserService.update(user);
 			if (result) {
 				sysUserRoleService.delete("sys_user_role", Cnd.where("userid", "=", user.getUserid()));
@@ -545,8 +545,6 @@ public class UserAction{
 			olduser.setTelephone(user.getTelephone());
 			olduser.setMobile(user.getMobile());
 			olduser.setEmail(user.getEmail());
-			olduser.setLinkqq(user.getLinkqq());
-			olduser.setLinkweb(user.getLinkweb());
 			boolean up = sysUserService.update(olduser);
 			if (up && relogin) {
 				return "relogin";

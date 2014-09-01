@@ -3,9 +3,15 @@ package cn.xuetang.core;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.velocity.app.Velocity;
+import org.nutz.dao.Dao;
 import org.nutz.filepool.NutFilePool;
+import org.nutz.ioc.Ioc;
 import org.nutz.lang.Strings;
+import org.nutz.lang.Times;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.Mvcs;
@@ -15,6 +21,9 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 import cn.xuetang.common.task.LoadTask;
+import cn.xuetang.core.bean.Permission;
+import cn.xuetang.modules.sys.bean.Sys_role;
+import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.service.AppInfoService;
 
 /**
@@ -39,14 +48,30 @@ public class StartSetup implements Setup {
 	@Override
 	public void init(NutConfig config) {
 		try {
-			AppInfoService appServer = Mvcs.getIoc().get(AppInfoService.class);
+			Ioc ioc = Mvcs.getIoc();
+			Dao dao = ioc.get(Dao.class);
+			dao.create(Sys_user.class, false);
+			dao.create(Sys_role.class, false);
+			dao.create(Permission.class, false);
+			if(!dao.exists(Sys_user.class)){
+				Sys_user defaultUser = new Sys_user();
+				defaultUser.setLoginname("superadmin");
+				RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+				String salt = rng.nextBytes().toBase64();
+				String hashedPasswordBase64 = new Sha256Hash("123", salt, 1024).toBase64();
+				defaultUser.setPassword(hashedPasswordBase64);
+				defaultUser.setSalt(salt);
+				defaultUser.setLoginTime(Times.now());
+				dao.insert(defaultUser);
+			}
+			AppInfoService appServer = ioc.get(AppInfoService.class);
 			velocityInit(config.getAppRoot());
-			appServer.APP_BASE_PATH = Strings.sNull(config.getAppRoot());// 项目路径
-			appServer.APP_BASE_NAME = Strings.sNull(config.getServletContext().getContextPath());// 部署名
+			AppInfoService.APP_BASE_PATH = Strings.sNull(config.getAppRoot());// 项目路径
+			AppInfoService.APP_BASE_NAME = Strings.sNull(config.getServletContext().getContextPath());// 部署名
 			appServer.InitSysConfig();// 初始化系统参数
 			appServer.InitDataDict();// 初始化数据字典
 			appServer.InitAppInfo();// 初始化app接口信息
-			appServer.APP_NAME = Strings.sNull(appServer.SYS_CONFIG.get("app_name"));// 项目名称
+			AppInfoService.APP_NAME = Strings.sNull(AppInfoService.SYS_CONFIG.get("app_name"));// 项目名称
 			appServer.FILE_POOL = new NutFilePool("~/tmp/myfiles", 10);// 创建一个文件夹用于下载
 			// 初始化Quartz任务
 			appServer.SCHEDULER = StdSchedulerFactory.getDefaultScheduler();

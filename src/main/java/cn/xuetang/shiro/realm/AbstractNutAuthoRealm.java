@@ -10,10 +10,10 @@ import org.nutz.ioc.Ioc;
 import org.nutz.lang.Lang;
 import org.nutz.mvc.Mvcs;
 
-import cn.xuetang.core.bean.Role;
-import cn.xuetang.core.bean.User;
-import cn.xuetang.service.RoleService;
-import cn.xuetang.service.UserService;
+import cn.xuetang.modules.sys.bean.Sys_role;
+import cn.xuetang.modules.sys.bean.Sys_user;
+import cn.xuetang.service.SysRoleService;
+import cn.xuetang.service.SysUserService;
 
 
 /**
@@ -24,21 +24,21 @@ import cn.xuetang.service.UserService;
  */
 public abstract class AbstractNutAuthoRealm extends AuthorizingRealm {
 
-	private UserService userService;
-	private RoleService roleService;
+	private SysUserService userService;
+	private SysRoleService roleService;
 
-	protected UserService getUserService() {
+	protected SysUserService getUserService() {
 		if (Lang.isEmpty(userService)) {
 			Ioc ioc = Mvcs.getIoc();
-			userService = ioc.get(UserService.class);
+			userService = ioc.get(SysUserService.class);
 		}
 		return userService;
 	}
 
-	protected RoleService getRoleService() {
+	protected SysRoleService getRoleService() {
 		if (Lang.isEmpty(roleService)) {
 			Ioc ioc = Mvcs.getIoc();
-			roleService = ioc.get(RoleService.class);
+			roleService = ioc.get(SysRoleService.class);
 		}
 		return roleService;
 	}
@@ -67,11 +67,11 @@ public abstract class AbstractNutAuthoRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		User user = (User) principals.getPrimaryPrincipal();
+		Sys_user user = (Sys_user) principals.getPrimaryPrincipal();
 		if (user != null) {
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 			info.addRoles(getUserService().getRoleNameList(user));
-			for (Role role : user.getRoles()) {
+			for (Sys_role role : user.getRoles()) {
 				info.addStringPermissions(getRoleService().getPermissionNameList(role));
 			}
 			return info;

@@ -13,6 +13,8 @@ import org.nutz.dao.entity.annotation.One;
 import org.nutz.dao.entity.annotation.Table;
 import org.nutz.dao.entity.annotation.TableIndexes;
 
+import cn.xuetang.modules.sys.bean.Sys_role;
+
 @Table("system_permission")
 @TableIndexes({ @Index(name = "permission_name_id", fields = { "name" }, unique = true) })
 public class Permission implements Serializable{
@@ -25,8 +27,8 @@ public class Permission implements Serializable{
 	@Column
 	@ColDefine(type = ColType.VARCHAR, width = 500)
 	private String description;
-	@ManyMany(target = Role.class, relation = "system_role_permission", from = "permissionid", to = "roleid")
-	private List<Role> roles;
+	@ManyMany(target = Sys_role.class, relation = "system_role_permission", from = "permissionid", to = "roleid")
+	private List<Sys_role> roles;
 	@Column("permission_category_id")
 	private String permissionCategoryId;
 	@One(target = PermissionCategory.class, field = "permissionCategoryId")
@@ -82,11 +84,11 @@ public class Permission implements Serializable{
 		this.description = description;
 	}
 
-	public List<Role> getRoles() {
+	public List<Sys_role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(List<Sys_role> roles) {
 		this.roles = roles;
 	}
 

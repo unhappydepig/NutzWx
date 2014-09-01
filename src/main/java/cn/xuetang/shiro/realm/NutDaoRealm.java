@@ -14,10 +14,10 @@ import org.nutz.ioc.Ioc;
 import org.nutz.lang.Lang;
 import org.nutz.mvc.Mvcs;
 
-import com.octo.captcha.service.image.ImageCaptchaService;
-
 import cn.xuetang.common.exception.IncorrectCaptchaException;
-import cn.xuetang.core.bean.User;
+import cn.xuetang.modules.sys.bean.Sys_user;
+
+import com.octo.captcha.service.image.ImageCaptchaService;
 
 public class NutDaoRealm extends AbstractNutAuthoRealm {
 
@@ -47,7 +47,7 @@ public class NutDaoRealm extends AbstractNutAuthoRealm {
 		if (StringUtils.isBlank(accountName)) {
 			throw Lang.makeThrow(AuthenticationException.class, "Account is empty");
 		}
-		User user = getUserService().fetchByName(authcToken.getUsername());
+		Sys_user user = getUserService().fetchByName(authcToken.getUsername());
 		if (Lang.isEmpty(user)) {
 			throw Lang.makeThrow(UnknownAccountException.class, "Account [ %s ] not found", authcToken.getUsername());
 		}

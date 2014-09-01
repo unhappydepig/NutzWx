@@ -4,7 +4,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresGuest;
@@ -24,6 +23,7 @@ import org.nutz.mvc.annotation.Ok;
 
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.util.OnlineUtil;
+import cn.xuetang.shiro.realm.CaptchaUsernamePasswordToken;
 
 /**
  * @author Wizzer.cn
@@ -39,7 +39,7 @@ public class LoginAction {
 
 	@At("/doLogin")
 	@Filters(@By(type = cn.xuetang.common.filter.CaptchaFormAuthenticationFilter.class))
-	public String login(@Attr("loginToken") AuthenticationToken token) {
+	public String login(@Attr("loginToken") CaptchaUsernamePasswordToken token) {
 		try {
 			Subject subject = SecurityUtils.getSubject();
 			ThreadContext.bind(subject);
