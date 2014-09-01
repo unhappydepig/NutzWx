@@ -8,8 +8,6 @@ import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Lang;
 
-import cn.xuetang.core.bean.Role;
-import cn.xuetang.core.bean.User;
 import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_user;
 
@@ -21,15 +19,6 @@ public class SysUserService extends BaseService<Sys_user> {
 
 	public SysUserService(Dao dao) {
 		super(dao);
-	}
-
-	public List<String> getRoleNameList(User user) {
-		dao().fetchLinks(user, "roles");
-		List<String> roleNameList = new ArrayList<String>();
-		for (Role role : user.getRoles()) {
-			roleNameList.add(role.getName());
-		}
-		return roleNameList;
 	}
 
 	public Sys_user fetchByName(String name) {

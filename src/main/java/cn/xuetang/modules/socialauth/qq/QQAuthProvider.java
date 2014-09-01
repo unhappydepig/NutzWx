@@ -1,4 +1,4 @@
-package cn.xuetang.socialauth.qq;
+package cn.xuetang.modules.socialauth.qq;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import org.nutz.json.Json;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
-import cn.xuetang.socialauth.AbstractOAuthProvider;
+import cn.xuetang.modules.socialauth.AbstractOAuthProvider;
 
 /**
  * 实现QQ帐号登录,OAuth2

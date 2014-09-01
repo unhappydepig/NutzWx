@@ -3,6 +3,8 @@ package org.nutz.weixin.mvc;
 import java.awt.Color;
 import java.awt.Font;
 
+import cn.xuetang.common.captcha.FileReaderRandomBackgroundGenerator;
+
 import com.octo.captcha.component.image.backgroundgenerator.BackgroundGenerator;
 import com.octo.captcha.component.image.color.RandomListColorGenerator;
 import com.octo.captcha.component.image.fontgenerator.FontGenerator;
@@ -46,7 +48,7 @@ public class GMailEngine extends AbstractCaptchaEngine {
 	@Override
 	protected void buildInitialFactories(String path) {
 		RandomListColorGenerator randomListColorGenerator = new RandomListColorGenerator(RANDOM_COLOR);
-		BackgroundGenerator backgroundGenerator = new cn.xuetang.image.FileReaderRandomBackgroundGenerator(IMAGE_WIDTH, IMAGE_HEIGHT, path);
+		BackgroundGenerator backgroundGenerator = new FileReaderRandomBackgroundGenerator(IMAGE_WIDTH, IMAGE_HEIGHT, path);
 		WordGenerator wordGenerator = new RandomWordGenerator(RANDOM_WORD);
 		FontGenerator fontGenerator = new RandomFontGenerator(MIN_FONT_SIZE, MAX_FONT_SIZE, RANDOM_FONT);
 		TextDecorator[] textDecorator = new TextDecorator[] {};

@@ -6,8 +6,8 @@ import java.util.List;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.IocBean;
 
-import cn.xuetang.core.bean.Permission;
 import cn.xuetang.modules.sys.bean.Sys_role;
+import cn.xuetang.modules.user.bean.Permission;
 
 @IocBean(fields = { "dao" })
 public class SysRoleService extends BaseService<Sys_role> {

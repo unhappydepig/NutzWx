@@ -10,8 +10,7 @@ import org.nutz.dao.entity.annotation.Prev;
 import org.nutz.dao.entity.annotation.SQL;
 import org.nutz.dao.entity.annotation.Table;
 
-import cn.xuetang.core.bean.Permission;
-import cn.xuetang.core.bean.User;
+import cn.xuetang.modules.user.bean.Permission;
 
 /**
  * @author Wizzer.cn

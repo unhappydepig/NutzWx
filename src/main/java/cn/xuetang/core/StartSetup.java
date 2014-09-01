@@ -21,9 +21,9 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 import cn.xuetang.common.task.LoadTask;
-import cn.xuetang.core.bean.Permission;
 import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_user;
+import cn.xuetang.modules.user.bean.Permission;
 import cn.xuetang.service.AppInfoService;
 
 /**

@@ -4,7 +4,7 @@ var ioc = {
 	},
 	mailEngine : {
 		type : "org.nutz.weixin.mvc.GMailEngine",
-		args : [ "cn/xuetang/captcha" ]
+		args : [ "cn/xuetang/common/captcha/images" ]
 	},
 	imageCaptchaService : {
 		type : "com.octo.captcha.service.image.DefaultManageableImageCaptchaService",

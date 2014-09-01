@@ -1,4 +1,4 @@
-package cn.xuetang.image;
+package cn.xuetang.common.captcha;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

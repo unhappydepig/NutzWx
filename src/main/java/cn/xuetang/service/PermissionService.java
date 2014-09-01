@@ -13,7 +13,7 @@ import org.nutz.lang.Lang;
 import org.nutz.service.IdEntityService;
 
 import cn.xuetang.common.page.Pagination;
-import cn.xuetang.core.bean.Permission;
+import cn.xuetang.modules.user.bean.Permission;
 
 @IocBean(args = { "refer:dao" })
 public class PermissionService extends IdEntityService<Permission> {

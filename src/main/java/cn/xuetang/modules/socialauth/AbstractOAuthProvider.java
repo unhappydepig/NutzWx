@@ -1,4 +1,4 @@
-package cn.xuetang.socialauth;
+package cn.xuetang.modules.socialauth;
 
 import java.io.InputStream;
 import java.util.ArrayList;

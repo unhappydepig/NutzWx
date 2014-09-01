@@ -1,4 +1,4 @@
-package cn.xuetang.core.bean;
+package cn.xuetang.modules.user.bean;
 
 import java.io.Serializable;
 import java.util.List;

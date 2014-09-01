@@ -63,7 +63,19 @@ public class Sys_user {
 	@ManyMany(target = Sys_role.class, relation = "system_user_role", from = "userid", to = "roleid")
 	private List<Sys_role> roles;
 	@Column("is_locked")
+	@ColDefine(type = ColType.BOOLEAN)
 	private boolean locked;
+	@Column("is_system")
+	@ColDefine(type = ColType.BOOLEAN)
+	private boolean system;
+
+	public boolean isSystem() {
+		return system;
+	}
+
+	public void setSystem(boolean system) {
+		this.system = system;
+	}
 
 	public boolean isLocked() {
 		return locked;

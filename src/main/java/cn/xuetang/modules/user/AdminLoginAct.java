@@ -23,7 +23,7 @@ import org.nutz.mvc.view.ServerRedirectView;
 import org.nutz.mvc.view.ViewWrapper;
 import org.nutz.web.Webs;
 
-import cn.xuetang.core.bean.User;
+import cn.xuetang.modules.sys.bean.Sys_user;
 
 @IocBean
 @At("/admin")
@@ -71,8 +71,8 @@ public class AdminLoginAct {
 	@At
 	@Ok("json")
 	@RequiresAuthentication
-	public Object register(@Attr(Webs.ME) User user) {
-		if (Lang.isEmpty(user) || user.isUpdated()) {
+	public Object register(@Attr(Webs.ME) Sys_user user) {
+		if (Lang.isEmpty(user) || user.isSystem()) {
 			return new ForwardView("/admin/common/unauthorized.rk");
 		}
 		return null;
