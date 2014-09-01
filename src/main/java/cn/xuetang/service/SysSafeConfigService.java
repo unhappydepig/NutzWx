@@ -8,6 +8,10 @@ import cn.xuetang.modules.sys.bean.Sys_safeconfig;
 @IocBean(fields = { "dao" })
 public class SysSafeConfigService extends BaseService<Sys_safeconfig> {
 
+	
+	public SysSafeConfigService() {
+	}
+	
 	public SysSafeConfigService(Dao dao) {
 		super(dao);
 	}

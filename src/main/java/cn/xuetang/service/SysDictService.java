@@ -25,6 +25,9 @@ import cn.xuetang.modules.sys.bean.Sys_dict;
 @IocBean(fields = { "dao" })
 public class SysDictService extends BaseService<Sys_dict> {
 
+	public SysDictService() {
+	}
+	
 	public SysDictService(Dao dao) {
 		super(dao);
 	}

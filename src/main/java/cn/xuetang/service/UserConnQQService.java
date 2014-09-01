@@ -10,6 +10,8 @@ import cn.xuetang.modules.user.bean.User_conn_qq;
 @IocBean(fields = { "dao" })
 public class UserConnQQService extends BaseService<User_conn_qq> {
 
+	public UserConnQQService() {
+	}
 	public UserConnQQService(Dao dao) {
 		super(dao);
 	}

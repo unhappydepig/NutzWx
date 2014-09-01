@@ -1,11 +1,9 @@
 package cn.xuetang.modules.sys;
 
-import java.util.Hashtable;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -20,7 +18,6 @@ import org.nutz.mvc.annotation.Param;
 import org.nutz.web.Webs;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.modules.sys.bean.Sys_resource;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.service.SysResourceService;
 
@@ -30,6 +27,7 @@ import cn.xuetang.service.SysResourceService;
  */
 @IocBean
 @At("/private")
+@RequiresAuthentication
 public class IndexAction extends BaseAction {
 	@Inject
 	protected Dao dao;

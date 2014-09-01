@@ -77,10 +77,7 @@ public class LoginAction {
 	@RequiresAuthentication
 	public int Online() {
 		Subject currentUser = SecurityUtils.getSubject();
-		if (currentUser.isAuthenticated()) {
-			return -2;
-		}
-		OnlineUtil.addUser(currentUser.getPrincipal().getClass(), String.valueOf(1));
+		OnlineUtil.addUser(currentUser, String.valueOf(1));
 		return OnlineUtil.getOnlineCount(String.valueOf(1));
 	}
 

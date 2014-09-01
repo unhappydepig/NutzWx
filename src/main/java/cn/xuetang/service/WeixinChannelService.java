@@ -8,6 +8,9 @@ import cn.xuetang.modules.wx.bean.Weixin_channel;
 @IocBean(fields = { "dao" })
 public class WeixinChannelService extends BaseService<Weixin_channel> {
 
+	public WeixinChannelService() {
+	}
+
 	public WeixinChannelService(Dao dao) {
 		super(dao);
 	}

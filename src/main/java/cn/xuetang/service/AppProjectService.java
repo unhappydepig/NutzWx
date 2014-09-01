@@ -11,12 +11,14 @@ import cn.xuetang.modules.app.bean.App_project;
 @IocBean(fields = { "dao" })
 public class AppProjectService extends BaseService<App_project> {
 
+	public AppProjectService() {
+	}
+
 	public AppProjectService(Dao dao) {
 		super(dao);
 	}
-	
-	public List<App_project> list()
-	{
+
+	public List<App_project> list() {
 		return dao().query(getEntityClass(), Cnd.orderBy().asc("id"));
 	}
 }

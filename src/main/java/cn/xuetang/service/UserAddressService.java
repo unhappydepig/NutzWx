@@ -10,6 +10,10 @@ import cn.xuetang.modules.user.bean.User_address;
 @IocBean(fields = { "dao" })
 public class UserAddressService extends BaseService<User_address> {
 
+	
+	public UserAddressService() {
+	}
+	
 	public UserAddressService(Dao dao) {
 		super(dao);
 	}

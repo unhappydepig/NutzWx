@@ -17,6 +17,9 @@ import cn.xuetang.core.bean.Role;
 @IocBean(args = { "refer:dao" })
 public class RoleService extends BaseService<Role> {
 
+	public RoleService() {
+	}
+
 	public RoleService(Dao dao) {
 		super(dao);
 	}
@@ -31,12 +34,12 @@ public class RoleService extends BaseService<Role> {
 		return true;
 	}
 
-	public void delete(Long id)
-	{
+	public void delete(Long id) {
 		dao().delete(Role.class, id);
 		dao().clear("system_role_permission", Cnd.where("roleid", "=", id));
 		dao().clear("system_user_role", Cnd.where("roleid", "=", id));
 	}
+
 	public Role view(Long id) {
 		return dao().fetchLinks(fetch(id), "permissions");
 	}

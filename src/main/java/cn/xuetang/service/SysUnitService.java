@@ -8,6 +8,9 @@ import cn.xuetang.modules.sys.bean.Sys_unit;
 @IocBean(fields = { "dao" })
 public class SysUnitService extends BaseService<Sys_unit> {
 
+	
+	public SysUnitService() {
+	}	
 	public SysUnitService(Dao dao) {
 		super(dao);
 	}

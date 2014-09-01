@@ -26,8 +26,10 @@ import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
 import org.nutz.lang.Times;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.Attr;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
+import org.nutz.web.Webs;
 
 import cn.xuetang.common.util.DecodeUtil;
 import cn.xuetang.common.util.SortHashtable;
@@ -62,10 +64,8 @@ public class UserAction{
 
 	@At("")
 	@Ok("vm:template.private.sys.user")
-	public void user(HttpSession session, HttpServletRequest req) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
+	public void user(@Attr(Webs.ME) Sys_user user,HttpServletRequest req) {
 		String unitid = user.getUnitid();
-
 		req.setAttribute("unitid", unitid);
 	}
 
@@ -82,8 +82,7 @@ public class UserAction{
 
 	@At
 	@Ok("raw")
-	public String tree(@Param("id") String id, HttpSession session) throws Exception {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
+	public String tree(@Attr(Webs.ME) Sys_user user,@Param("id") String id, HttpSession session) throws Exception {
 		id = Strings.sNull(id);
 		List<Object> array = new ArrayList<Object>();
 		if ("".equals(id)) {
@@ -143,10 +142,8 @@ public class UserAction{
 
 	@At
 	@Ok("raw")
-	public String list(@Param("unitid") String unitid, @Param("page") int curPage, @Param("rows") int pageSize, @Param("SearchUserName") String SearchUserName, @Param("lock") String lock, HttpSession session) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
+	public String list(@Attr(Webs.ME) Sys_user user,@Param("unitid") String unitid, @Param("page") int curPage, @Param("rows") int pageSize, @Param("SearchUserName") String SearchUserName, @Param("lock") String lock, HttpSession session) {
 		Criteria cri = Cnd.cri();
-
 		if (StringUtils.isNotBlank(unitid)) {
 			cri.where().and("unitid", "like", unitid + "%");
 		} else {
@@ -170,10 +167,9 @@ public class UserAction{
 	@SuppressWarnings("rawtypes")
 	@At
 	@Ok("vm:template.private.sys.userAdd")
-	public void toadd(@Param("unitid") String unitid1, HttpSession session, HttpServletRequest req) {
+	public void toadd(@Attr(Webs.ME) Sys_user user,@Param("unitid") String unitid1, HttpSession session, HttpServletRequest req) {
 		Sys_unit unit = sysUnitService.detailByName(unitid1);
 		req.setAttribute("unit", unit);
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		Condition sql;
 		Condition sqlunit;
 		Condition sqlrole;
@@ -319,13 +315,12 @@ public class UserAction{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@At
 	@Ok("vm:template.private.sys.userUpdate")
-	public void toupdate(@Param("userid") long userid, HttpSession session, HttpServletRequest req) {
+	public void toupdate(@Attr(Webs.ME) Sys_user user,@Param("userid") long userid, HttpSession session, HttpServletRequest req) {
 		Sys_user obj = sysUserService.fetch(userid);
 		Sys_unit unit = sysUnitService.detailByName(obj.getUnitid());
 		req.setAttribute("obj", obj);
 		req.setAttribute("unit", unit);
 		obj.setPassword(Lang.digest("MD5", Strings.sNull(obj.getPassword()).getBytes(), Strings.sNull(obj.getSalt()).getBytes(), 3));
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		boolean self = false;
 		if (user.getLoginname().equals(obj.getLoginname())) {
 			self = true;
@@ -509,8 +504,7 @@ public class UserAction{
 	 */
 	@At
 	@Ok("vm:template.private.sys.userInfo")
-	public Sys_user info(HttpSession session) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
+	public Sys_user info(@Attr(Webs.ME) Sys_user user) {
 		return sysUserService.fetch(user.getUserid());
 	}
 

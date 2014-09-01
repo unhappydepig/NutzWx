@@ -50,10 +50,13 @@ public class ShiroActionFilter extends GlobalsFilter {
 				}
 			});
 		} catch (UnauthenticatedException e) {
+			e.printStackTrace();
 			return whenAuthFail(actionContext, e);
 		} catch (UnauthorizedException e) {
+			e.printStackTrace();
 			return permissionFail(actionContext, e);
 		} catch (AuthorizationException e) {
+			e.printStackTrace();
 			return permissionFail(actionContext, e);
 		}
 		return null;

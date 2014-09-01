@@ -19,6 +19,8 @@ import cn.xuetang.core.bean.User;
 @IocBean(args = { "refer:dao" })
 public class UserService extends BaseService<User> {
 
+	public UserService() {
+	}	
 	public UserService(Dao dao) {
 		super(dao);
 	}

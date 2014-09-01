@@ -12,6 +12,10 @@ import cn.xuetang.modules.sys.bean.Sys_role;
 @IocBean(fields = { "dao" })
 public class SysRoleService extends BaseService<Sys_role> {
 
+	
+	public SysRoleService() {
+	}
+	
 	public SysRoleService(Dao dao) {
 		super(dao);
 	}
