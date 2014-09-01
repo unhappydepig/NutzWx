@@ -21,8 +21,8 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 
 import cn.xuetang.common.config.Message;
+import cn.xuetang.common.shiro.realm.CaptchaUsernamePasswordToken;
 import cn.xuetang.common.util.OnlineUtil;
-import cn.xuetang.shiro.realm.CaptchaUsernamePasswordToken;
 
 /**
  * @author Wizzer.cn

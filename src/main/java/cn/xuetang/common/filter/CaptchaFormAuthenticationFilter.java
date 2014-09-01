@@ -10,7 +10,7 @@ import org.nutz.mvc.ActionContext;
 import org.nutz.mvc.ActionFilter;
 import org.nutz.mvc.View;
 
-import cn.xuetang.shiro.realm.CaptchaUsernamePasswordToken;
+import cn.xuetang.common.shiro.realm.CaptchaUsernamePasswordToken;
 
 public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter implements ActionFilter {
 	//private final static Log log = Logs.get();

@@ -1,4 +1,4 @@
-package cn.xuetang.shiro.realm;
+package cn.xuetang.common.shiro.realm;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
 

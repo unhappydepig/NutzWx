@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package cn.xuetang.shiro.authc.pam;
+package cn.xuetang.common.shiro.authc.pam;
 
 import java.util.Collection;
 

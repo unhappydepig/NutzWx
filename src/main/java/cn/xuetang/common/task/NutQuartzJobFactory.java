@@ -1,4 +1,4 @@
-package org.nutz.integration.quartz;
+package cn.xuetang.common.task;
 
 import org.nutz.ioc.Ioc;
 import org.nutz.log.Log;

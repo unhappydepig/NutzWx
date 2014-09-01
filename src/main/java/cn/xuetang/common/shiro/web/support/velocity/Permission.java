@@ -24,7 +24,7 @@
  * | Copyright @ 2013-2014 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package cn.xuetang.shiro.web.support.velocity;
+package cn.xuetang.common.shiro.web.support.velocity;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;

@@ -1,4 +1,4 @@
-package cn.xuetang.shiro.realm;
+package cn.xuetang.common.shiro.realm;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationInfo;

@@ -19,7 +19,7 @@ import org.nutz.log.Logs;
 import org.nutz.mvc.Mvcs;
 import org.nutz.mvc.view.AbstractPathView;
 
-import cn.xuetang.shiro.web.support.velocity.Permission;
+import cn.xuetang.common.shiro.web.support.velocity.Permission;
 
 public class VelocityLayoutView extends AbstractPathView {
 

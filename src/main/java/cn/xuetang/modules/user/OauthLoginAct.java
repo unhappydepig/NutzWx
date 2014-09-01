@@ -37,7 +37,7 @@ import org.nutz.mvc.view.ForwardView;
 import org.nutz.mvc.view.ServerRedirectView;
 import org.nutz.mvc.view.ViewWrapper;
 
-import cn.xuetang.shiro.realm.OAuthToken;
+import cn.xuetang.common.shiro.realm.OAuthToken;
 
 @IocBean(create = "init")
 @At("/user")

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package cn.xuetang.shiro.realm;
+package cn.xuetang.common.shiro.realm;
 
 import javax.servlet.http.HttpSession;
 
