@@ -1,34 +1,28 @@
 package cn.xuetang.modules.sys;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
-import org.nutz.dao.Sqls;
-import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
+import org.nutz.mvc.annotation.Attr;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
+import org.nutz.web.Webs;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.sys.bean.Sys_resource;
 import cn.xuetang.modules.sys.bean.Sys_user;
+import cn.xuetang.service.SysResourceService;
 
 /**
  * @author Wizzer.cn
@@ -36,11 +30,13 @@ import cn.xuetang.modules.sys.bean.Sys_user;
  */
 @IocBean
 @At("/private")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class IndexAction extends BaseAction {
 	@Inject
 	protected Dao dao;
 
+	@Inject
+	private SysResourceService sysResourceService;
+	
 	@At
 	public void dolock(HttpServletRequest req, HttpSession session) {
 		session.setAttribute("validate", "openLockWindow();");
@@ -79,10 +75,8 @@ public class IndexAction extends BaseAction {
 
 	@At
 	@Ok("vm:template.private.index")
-	public void index(HttpServletRequest req, HttpSession session) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
-
-		Sql sql = Sqls.create("select * from sys_role where id in(select roleid from sys_user_role where userid=@userid)");
+	public Object index(@Attr(Webs.ME) Sys_user user,HttpServletRequest req) {
+		/*Sql sql = Sqls.create("select * from sys_role where id in(select roleid from sys_user_role where userid=@userid)");
 		sql.params().set("userid", user.getUserid());
 		List<Map> rolelist = daoCtl.list(dao, sql);
 		// 判断是否为系统管理员角色
@@ -102,7 +96,6 @@ public class IndexAction extends BaseAction {
 		user.setRolelist(rolelist1);
 		user.setProlist(plist);
 		// 将用户所属角色塞入内存
-		session.setAttribute("userSession", user);
 		Sql sql1 = Sqls.create("select distinct resourceid from sys_role_resource where ( roleid in(select roleid from sys_user_role where userid=@userid) or roleid=1) and resourceid not in(select id from sys_resource where state=1)");
 		sql1.params().set("userid", user.getUserid());
 		user.setReslist(daoCtl.getStrRowValues(dao, sql1));
@@ -128,23 +121,15 @@ public class IndexAction extends BaseAction {
 			String value = Strings.sNull(btnmap.get(key)) + Strings.sNull(obj.get(1));
 			btnmap.put(key, value);
 		}
-		user.setBtnmap(btnmap);
-		req.setAttribute("validate", session.getAttribute("validate"));
+		user.setBtnmap(btnmap);*/
+		req.setAttribute("validate", true);
+		return sysResourceService.listByCnd(null);
 	}
 
 	@At
 	@Ok("vm:template.private.left")
-	public void left(@Param("sys_menuid") String sys_menuid, HttpServletRequest req, HttpSession session) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
-		List<Sys_resource> menulist = daoCtl.list(dao, Sys_resource.class, Cnd.where("id", "like", sys_menuid + "____").and("id", "in", user.getReslist()).asc("LOCATION"));
-		Hashtable<String, List<Sys_resource>> threemenu = new Hashtable<String, List<Sys_resource>>();
-		for (int i = 0; i < menulist.size(); i++) {
-			List<Sys_resource> threemenulist = daoCtl.list(dao, Sys_resource.class, Cnd.where("id", "like", menulist.get(i).getId() + "____").and("id", "in", user.getReslist()).asc("LOCATION"));
-			threemenu.put(menulist.get(i).getId(), threemenulist);
-		}
-		req.setAttribute("menulist", menulist);
-		req.setAttribute("threemenulist", threemenu);
-
+	public Object left(@Attr(Webs.ME) Sys_user user,@Param("sys_menuid") String sys_menuid, HttpServletRequest req) {
+		return sysResourceService.listByCnd(null);
 	}
 
 	@At

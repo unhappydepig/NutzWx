@@ -25,15 +25,14 @@
 <body   style="overflow:hidden;margin:0px;">
 <div class="left_menu">
     #set ($allcount =0 )
-    #foreach($menu in $menulist)
+    #foreach($menu in $obj)
     <div class="lmitem png"  id="topmenuid$!velocityCount">
         <a href="javascript:;" onclick="tourl('$!menu.id','$!menu.url','$!menu.name');viewsub('$!velocityCount');dochangeClass($!velocityCount);">$!menu.name</a>
     </div>
-    #if($threemenulist.get($!menu.id)&&$threemenulist.get($!menu.id).size()>0)
     <div id="menudiv$!velocityCount" style="display:none">
         <div class="lmitem_xm png">
             <ul>
-                #foreach($submenu in $threemenulist.get($!menu.id))
+                #foreach($submenu in $obj.get($!menu.id))
                 #set ( $allcount =$allcount+1 )
                 <li>
                     <a href="javascript:dosuburl('$!allcount','$!submenu.id','$!submenu.url','$!submenu.name');dochangeSubClass('$!velocityCount');" id=selectID$!velocityCount  title="$!submenu.name">
@@ -47,7 +46,6 @@
             </ul>
         </div>
     </div>
-    #end
     #end
 </div>
 <script type="text/javascript">
@@ -149,8 +147,8 @@
                 $("#menudiv"+topoldid).hide();
             }
             topoldid = objid;
-            #if($menulist.size()>0)
-            changefont('$menulist.get(0).id');
+            #if($obj.size()>0)
+            changefont('$obj.get(0).id');
         	#end
         }
         catch(exception)

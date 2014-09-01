@@ -13,7 +13,6 @@ var CONTEXTPATH = '${base}';
  
 this.CheckUserName=function()
 {
-	alert($('#captcha').val());
     if ($('#username').val() != "") {
         if ($('#password').val() != "") { 
             if ($('#captcha').val().length==4) {
@@ -21,17 +20,18 @@ this.CheckUserName=function()
         			url : "${base}/private/doLogin",
         			data : jQuery("#form1").serialize(),
 					type:"POST",
-        			success : function (res) {
-        				if (res == "true") {
+					dataType: "json", 
+        			success : function (message) {
+        				if (message.type == "success") {
         					window.location.href="${base}/private/index";
         				} else {
-        					Dialog.alert(res);
+        					Dialog.alert(message.content);
         					$('#captcha').val("");
         					tochange();
         				}
         				return false;
         			},
-        			fail : function(res) {
+        			fail : function(message) {
         				Dialog.alert("系统错误?!");
         			}
         		});
@@ -98,7 +98,7 @@ $(document).ready(function(){
 															name="password" id="password" type="password" value="123"
 															onfocus="this.select();" /></td>
 														<td>验证码：</td>
-														<td><img src="${base}/captcha" name="captchaid" id="captchaid" title="点击刷新验证码" align="middle" onclick="tochange()" style="cursor: pointer" />&nbsp; <input class="inputText" maxlength="4" style="width: 60px" name="captcha" id="captcha" type="text" value="5750" onfocus="this.select();" /></td>
+														<td><img src="${base}/captcha" name="captchaid" id="captchaid" title="点击刷新验证码" align="middle" onclick="tochange()" style="cursor: pointer" />&nbsp; <input class="inputText" maxlength="4" style="width: 90px;text-transform: uppercase;" name="captcha" id="captcha" type="text" onfocus="this.select();" /></td>
 														<td><img id="img" src="${base}/images/private/login_icon.jpg"style="cursor: pointer" /></td>
 													</tr>
 												</table>

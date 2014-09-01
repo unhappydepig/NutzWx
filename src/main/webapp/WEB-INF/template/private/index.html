@@ -47,14 +47,12 @@
                             <div class="top_rselect_XM" id="CMS_selectCon">
                                 <div class="top_rselect_XMtop"></div>
                                 <ul>
-                                    #foreach($modules in $moduleslist)
+                                    #foreach($modules in $obj)
                                     <li ><a href="javascript:selectMenu('$!modules.id')"><span style="color:#ffffff" >$!modules.name</span></a></li>
-                                    #if("$!resid"=="$!modules.id")
                                     <script type="text/javascript">
                                         $("#CMS_slect_name").html("$!modules.name");
                                         $("#CMS_name").html("$!modules.name");
                                     </script>
-                                    #end
                                     #end
                                 </ul>
                                 <div class="clear"></div>
@@ -65,7 +63,7 @@
                 </div>
                 <div class="m_topmenu">
                     <ul>
-                        #foreach($modules in $modulessublist)
+                        #foreach($modules in $obj)
                         <li>
                             <a href="javascript:dochange('$!modules.id','$!modules.url','$!modules.name');dochangeimg($!velocityCount)" class="Mmenu png" id=menuid$!velocityCount title="$!modules.name"><strong class="png"><span class="png">
 								#if($!{modules.name.toString().length()} > 6)

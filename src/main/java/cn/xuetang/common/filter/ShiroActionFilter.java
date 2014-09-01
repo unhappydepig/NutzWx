@@ -15,7 +15,6 @@ import org.nutz.lang.Lang;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.ActionContext;
-import org.nutz.mvc.ActionFilter;
 import org.nutz.mvc.View;
 import org.nutz.mvc.view.DefaultViewMaker;
 import org.nutz.mvc.view.ServerRedirectView;
@@ -27,13 +26,13 @@ import org.nutz.mvc.view.VoidView;
  * @author wendal
  * 
  */
-public class ShiroActionFilter implements ActionFilter {
+public class ShiroActionFilter extends GlobalsFilter {
 	private static Log log = Logs.get();
 
 	public View match(final ActionContext actionContext) {
 		try {
+			super.match(actionContext);
 			ShiroAnnotationsAuthorizingMethodInterceptor.DEFAULT_AUTH.assertAuthorized(new MethodInvocation() {
-
 				public Object proceed() throws Throwable {
 					throw Lang.noImplement();
 				}

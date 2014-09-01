@@ -1,5 +1,6 @@
 package cn.xuetang.modules.sys;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
@@ -10,8 +11,6 @@ import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.nutz.dao.Dao;
-import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
@@ -21,7 +20,7 @@ import org.nutz.mvc.annotation.By;
 import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 
-import cn.xuetang.common.filter.GlobalsFilter;
+import cn.xuetang.common.config.Message;
 import cn.xuetang.common.util.OnlineUtil;
 import cn.xuetang.shiro.realm.CaptchaUsernamePasswordToken;
 
@@ -31,26 +30,25 @@ import cn.xuetang.shiro.realm.CaptchaUsernamePasswordToken;
  */
 @IocBean
 @At("/private")
-@Filters({ @By(type = GlobalsFilter.class) })
 public class LoginAction {
+
 	private final static Log log = Logs.get();
-	@Inject
-	protected Dao dao;
 
 	@At("/doLogin")
 	@Filters(@By(type = cn.xuetang.common.filter.CaptchaFormAuthenticationFilter.class))
-	public String login(@Attr("loginToken") CaptchaUsernamePasswordToken token) {
+	@Ok("json")
+	public Message login(@Attr("loginToken") CaptchaUsernamePasswordToken token, HttpServletRequest req) {
 		try {
 			Subject subject = SecurityUtils.getSubject();
 			ThreadContext.bind(subject);
 			subject.login(token);
-			return "true";
+			return Message.success("common.success", req);
 		} catch (LockedAccountException e) {
-			return "用户被禁止登陆。请联系管理员！";
+			return Message.error("common.error.account.locked", req);
 		} catch (AuthenticationException e) {
-			return e.getMessage();
+			return Message.error("e.getMessage()", req);
 		} catch (Exception e) {
-			return e.getMessage();
+			return Message.error("e.getMessage()", req);
 		}
 	}
 

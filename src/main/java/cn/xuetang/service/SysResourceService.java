@@ -15,6 +15,9 @@ import cn.xuetang.modules.sys.bean.Sys_resource;
 @IocBean(fields = { "dao" })
 public class SysResourceService extends BaseService<Sys_resource> {
 
+	public SysResourceService() {
+	}
+
 	public SysResourceService(Dao dao) {
 		super(dao);
 	}
