@@ -12,13 +12,9 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_score;
@@ -34,7 +30,6 @@ import cn.xuetang.service.UserScoreService;
  */
 @IocBean
 @At("/private/user/score")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class User_scoreAction {
 	private final static Log log = Logs.get();
 

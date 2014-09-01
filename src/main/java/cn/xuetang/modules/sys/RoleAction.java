@@ -24,14 +24,10 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.common.util.StringUtil;
 import cn.xuetang.modules.sys.bean.Sys_resource;
@@ -61,7 +57,6 @@ import cn.xuetang.service.WeixinChannelService;
 
 @IocBean
 @At("/private/sys/role")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class RoleAction extends BaseAction {
 	@Inject
 	private SysUserService sysUserService;

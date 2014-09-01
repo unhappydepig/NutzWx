@@ -3,13 +3,9 @@ package cn.xuetang.modules.user;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.user.bean.User_account;
 import cn.xuetang.service.UserAccountService;
 
@@ -20,7 +16,6 @@ import cn.xuetang.service.UserAccountService;
  */
 @IocBean
 @At("/private/user/user_account")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class User_accountAction {
 
 	@Inject

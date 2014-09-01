@@ -20,8 +20,6 @@ import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 import org.nutz.mvc.impl.AdaptorErrorContext;
@@ -29,8 +27,6 @@ import org.nutz.mvc.upload.TempFile;
 import org.nutz.mvc.upload.UploadAdaptor;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.WeixinUtil;
 
 /**
@@ -38,7 +34,6 @@ import cn.xuetang.common.util.WeixinUtil;
  */
 @IocBean
 @At("/private/wx/file")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class WeixinFileUtil extends BaseAction {
 	private final static Log log = Logs.get();
 	@Inject

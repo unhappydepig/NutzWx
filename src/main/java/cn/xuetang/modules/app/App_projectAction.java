@@ -7,13 +7,9 @@ import org.nutz.dao.sql.Criteria;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.app.bean.App_project;
 import cn.xuetang.service.AppProjectService;
 
@@ -24,7 +20,6 @@ import cn.xuetang.service.AppProjectService;
  */
 @IocBean
 @At("/private/app/project")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class App_projectAction {
 	@Inject
 	private AppProjectService appProjectService;

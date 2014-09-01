@@ -5,13 +5,9 @@ import org.nutz.dao.sql.Criteria;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.SyncUtil;
 import cn.xuetang.modules.sys.bean.Sys_config;
 import cn.xuetang.service.AppInfoService;
@@ -24,7 +20,6 @@ import cn.xuetang.service.SysConfigService;
  */
 @IocBean
 @At("/private/sys/config")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class ConfigAction {
 	@Inject
 	protected SysConfigService sysConfigService;

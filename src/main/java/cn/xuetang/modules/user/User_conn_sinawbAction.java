@@ -8,13 +8,9 @@ import org.nutz.dao.sql.Criteria;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.user.bean.User_conn_sinawb;
 import cn.xuetang.service.UserConnSinawbService;
 
@@ -25,7 +21,6 @@ import cn.xuetang.service.UserConnSinawbService;
  */
 @IocBean
 @At("/private/user/user_conn_sinawb")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class User_conn_sinawbAction {
 
 	@Inject

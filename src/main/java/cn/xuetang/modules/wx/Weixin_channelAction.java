@@ -17,14 +17,10 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.config.Dict;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.wx.bean.Weixin_channel;
@@ -38,7 +34,6 @@ import cn.xuetang.service.WeixinChannelService;
  */
 @IocBean
 @At("/private/wx/channel")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class Weixin_channelAction{
 	@Inject
 	protected AppProjectService appProjectService;

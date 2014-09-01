@@ -10,14 +10,10 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.common.util.WeixinUtil;
 import cn.xuetang.modules.sys.bean.Sys_user;
@@ -30,7 +26,6 @@ import cn.xuetang.service.AppInfoService;
  */
 @IocBean
 @At("/private/wx/push/content")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class Weixin_push_contentAction extends BaseAction {
 	@Inject
 	protected Dao dao;

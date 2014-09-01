@@ -26,13 +26,9 @@ import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
 import org.nutz.lang.Times;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DecodeUtil;
 import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.modules.sys.bean.Sys_role;
@@ -51,7 +47,6 @@ import cn.xuetang.service.SysUserService;
  */
 @IocBean
 @At("/private/sys/user")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class UserAction{
 
 	@Inject

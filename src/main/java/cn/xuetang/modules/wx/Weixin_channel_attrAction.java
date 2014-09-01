@@ -11,14 +11,10 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.config.Dict;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.wx.bean.Weixin_channel_attr;
 import cn.xuetang.service.AppInfoService;
 import cn.xuetang.service.WeixinChannelAttrService;
@@ -29,7 +25,6 @@ import cn.xuetang.service.WeixinChannelAttrService;
  */
 @IocBean
 @At("/private/wx/channel/attr")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class Weixin_channel_attrAction {
 	@Inject
 	private AppInfoService appInfoService;

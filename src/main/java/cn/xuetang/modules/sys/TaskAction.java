@@ -20,8 +20,6 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 import org.quartz.CronScheduleBuilder;
@@ -32,8 +30,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_task;
 import cn.xuetang.modules.sys.bean.Sys_user;
@@ -46,7 +42,6 @@ import cn.xuetang.service.SysTaskService;
  */
 @IocBean
 @At("/private/sys/task")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class TaskAction {
 	private final static Log log = Logs.get();
 	@Inject

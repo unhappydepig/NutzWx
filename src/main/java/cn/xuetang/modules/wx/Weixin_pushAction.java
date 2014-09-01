@@ -25,14 +25,10 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.common.util.WeixinUtil;
 import cn.xuetang.modules.app.bean.App_info;
@@ -50,7 +46,6 @@ import cn.xuetang.modules.wx.bean.Weixin_push_user;
  */
 @IocBean
 @At("/private/wx/push")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class Weixin_pushAction extends BaseAction {
 	@Inject
 	protected Dao dao;

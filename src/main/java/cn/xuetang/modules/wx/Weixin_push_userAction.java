@@ -8,14 +8,10 @@ import org.nutz.dao.sql.Criteria;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.wx.bean.Weixin_push_user;
 
 /**
@@ -25,7 +21,6 @@ import cn.xuetang.modules.wx.bean.Weixin_push_user;
  */
 @IocBean
 @At("/private/wx/weixin_push_user")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class Weixin_push_userAction extends BaseAction {
 	@Inject
 	protected Dao dao;

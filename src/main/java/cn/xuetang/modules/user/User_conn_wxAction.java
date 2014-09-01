@@ -11,13 +11,9 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_conn_wx;
 import cn.xuetang.service.AppProjectService;
@@ -29,7 +25,6 @@ import cn.xuetang.service.UserConnWXService;
  */
 @IocBean
 @At("/private/user/connwx")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class User_conn_wxAction {
 	@Inject
 	private AppProjectService appProjectService;

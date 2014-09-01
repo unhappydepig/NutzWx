@@ -7,13 +7,9 @@ import org.nutz.dao.Cnd;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.By;
-import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.StringUtil;
 import cn.xuetang.modules.sys.bean.Sys_safeconfig;
 import cn.xuetang.service.SysSafeConfigService;
@@ -25,7 +21,6 @@ import cn.xuetang.service.SysSafeConfigService;
  */
 @IocBean
 @At("/private/sys/safe")
-@Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
 public class SafeAction {
 	@Inject
 	private SysSafeConfigService sysSafeConfigService;
