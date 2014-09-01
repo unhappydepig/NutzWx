@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -19,14 +18,16 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.filter.UserLoginFilter;
 import cn.xuetang.common.util.DateUtil;
-import cn.xuetang.modules.app.bean.App_project;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_score;
 import cn.xuetang.modules.user.bean.User_score_change;
+import cn.xuetang.service.AppProjectService;
+import cn.xuetang.service.UserAccountService;
+import cn.xuetang.service.UserScoreChangeService;
+import cn.xuetang.service.UserScoreService;
 
 /**
  * @author Wizzer
@@ -35,16 +36,23 @@ import cn.xuetang.modules.user.bean.User_score_change;
 @IocBean
 @At("/private/user/score")
 @Filters({ @By(type = GlobalsFilter.class), @By(type = UserLoginFilter.class) })
-public class User_scoreAction extends BaseAction {
-	@Inject
-	protected Dao dao;
+public class User_scoreAction {
 	private final static Log log = Logs.get();
+
+	@Inject
+	private UserAccountService userAccountService;
+	@Inject
+	private UserScoreChangeService userScoreChangeService;
+	@Inject
+	private UserScoreService userScoreService;
+	@Inject
+	private AppProjectService appProjectService;
 
 	@At("")
 	@Ok("vm:template.private.user.User_score")
 	public void index(@Param("sys_menu") String sys_menu, HttpSession session, HttpServletRequest req) {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
-		req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("id", "in", user.getProlist()).asc("id")));
+		req.setAttribute("pro", appProjectService.listByCnd(Cnd.where("id", "in", user.getProlist()).asc("id")));
 		req.setAttribute("sys_menu", sys_menu);
 	}
 
@@ -63,16 +71,16 @@ public class User_scoreAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public boolean add(@Param("..") User_score_change user_score, @Param("score") int jfscore) {
-		User_score score = daoCtl.detailByCnd(dao, User_score.class, Cnd.where("uid", "=", user_score.getUid()));
+		User_score score = userScoreService.fetch(Cnd.where("uid", "=", user_score.getUid()));
 		user_score.setScore_pre(score.getScore());
 		user_score.setScore_next(score.getScore() + jfscore);
 		user_score.setAdd_time(DateUtil.getCurDateTime());
 		if (user_score.getUid() > 0) {
-			boolean res = daoCtl.add(dao, user_score);
+			boolean res = userScoreChangeService.insert(user_score);
 			if (res) {
 				score.setB_score(score.getB_score() + jfscore);
 				score.setScore(score.getScore() + jfscore);
-				daoCtl.update(dao, score);
+				userScoreService.update(score);
 			}
 			return res;
 		}
@@ -80,8 +88,8 @@ public class User_scoreAction extends BaseAction {
 	}
 
 	@At
-	public boolean deleteIds(@Param("ids") String ids, @Param("uid") int uid) {
-		return daoCtl.deleteByIds(dao, User_score_change.class, StringUtils.split(ids, ","));
+	public boolean deleteIds(@Param("ids") String[] ids) {
+		return userScoreChangeService.deleteByIds(ids);
 	}
 
 	@At
@@ -89,22 +97,22 @@ public class User_scoreAction extends BaseAction {
 	public String list(@Param("pid") int pid, @Param("loginname") String loginname, @Param("name") String name, @Param("nickname") String nickname, @Param("mobile") String mobile, @Param("page") int curPage, @Param("rows") int pageSize) {
 		long a = System.currentTimeMillis();
 		String str = "SELECT a.*,b.*,c.* FROM USER_ACCOUNT a,USER_INFO b,USER_SCORE c WHERE a.UID=b.UID and a.UID=c.UID and a.PID=" + pid;
-		if (!Strings.isBlank(name)) {
+		if (StringUtils.isNotBlank(name)) {
 			str += " and b.name like '%" + name + "%'";
 		}
-		if (!Strings.isBlank(nickname)) {
+		if (StringUtils.isNotBlank(nickname)) {
 			str += " and b.nickname like '%" + nickname + "%'";
 		}
-		if (!Strings.isBlank(mobile)) {
+		if (StringUtils.isNotBlank(mobile)) {
 			str += " and b.mobile like '%" + mobile + "%'";
 		}
-		if (!Strings.isBlank(loginname)) {
+		if (StringUtils.isNotBlank(loginname)) {
 			str += " and a.loginname like '%" + loginname + "%'";
 		}
 		str += " order by c.score desc";
-		int count = daoCtl.getIntRowValue(dao, Sqls.create("SELECT COUNT(1) " + str.substring(str.indexOf("FROM"))));
+		int count = userAccountService.getIntRowValue(Sqls.create("SELECT COUNT(1) " + str.substring(str.indexOf("FROM"))));
 		log.debug("/private/user/infolist Load in " + (System.currentTimeMillis() - a) + "ms");
-		return daoCtl.listPageJsonSql(dao, Sqls.create(str), curPage, pageSize, count);
+		return userAccountService.listPageJsonSql(Sqls.create(str), curPage, pageSize, count);
 	}
 
 	@At
@@ -113,7 +121,7 @@ public class User_scoreAction extends BaseAction {
 		Criteria cri = Cnd.cri();
 		cri.where().and("uid", "=", uid);
 		cri.getOrderBy().desc("id");
-		return daoCtl.listPageJson(dao, User_score_change.class, curPage, pageSize, cri);
+		return userScoreChangeService.listPageJson(curPage, pageSize, cri);
 	}
 
 }
