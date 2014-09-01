@@ -82,7 +82,7 @@ public class UnitAction {
 			jsonroot.put("id", "");
 			jsonroot.put("pId", "0");
 			jsonroot.put("name", "机构列表");
-			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 		}
 		Criteria cri = Cnd.cri();
@@ -198,7 +198,7 @@ public class UnitAction {
 		jsonroot.put("name", "机构列表");
 		jsonroot.put("open", true);
 		jsonroot.put("childOuter", false);
-		jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 		array.add(jsonroot);
 		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> jsonobj = new HashMap<String, Object>();

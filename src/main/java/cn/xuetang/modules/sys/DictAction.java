@@ -61,7 +61,9 @@ public class DictAction {
 		sys_dict.setId(sysDictService.getSubMenuId("sys_dict", "id", Strings.sNull(treeid)));
 		if (sysDictService.insert(sys_dict)) {
 			appInfoService.InitDataDict();
-			SyncUtil.sendMsg("datadict");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("datadict",urls,key);
 			return true;
 		} else
 			return false;
@@ -80,7 +82,9 @@ public class DictAction {
 	public boolean update(@Param("..") Sys_dict sys_dict) {
 		if (sysDictService.update(sys_dict)) {
 			appInfoService.InitDataDict();
-			SyncUtil.sendMsg("datadict");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("datadict",urls,key);
 			return true;
 		} else
 			return false;
@@ -90,7 +94,9 @@ public class DictAction {
 	public boolean delete(@Param("id") String id) {
 		if (sysDictService.deleteByName(id)) {
 			appInfoService.InitDataDict();
-			SyncUtil.sendMsg("datadict");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("datadict",urls,key);
 			return true;
 		} else
 			return false;
@@ -104,7 +110,9 @@ public class DictAction {
 				sysDictService.delete(Cnd.where("id", "like", d + "%"));
 			}
 			appInfoService.InitDataDict();
-			SyncUtil.sendMsg("datadict");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("datadict",urls,key);
 		} catch (Exception e) {
 			return false;
 		}
@@ -136,7 +144,7 @@ public class DictAction {
 		jsonroot.put("name", "数据字典");
 		jsonroot.put("open", true);
 		jsonroot.put("childOuter", false);
-		jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 		array.add(jsonroot);
 		for (Sys_dict obj : list) {
 			Map<String, Object> jsonobj = new HashMap<String, Object>();

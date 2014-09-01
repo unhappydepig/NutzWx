@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
@@ -29,7 +30,7 @@ public class App_infoAction {
 	@Ok("vm:template.private.app.App_info")
 	public void index(@Param("sys_menu") String sys_menu, HttpServletRequest req) {
 		req.setAttribute("pro", appInfoService.list());
-		req.setAttribute("type", appInfoService.DATA_DICT.get(Dict.APP_TYPE));
+		req.setAttribute("type", appInfoService.getDATA_DICT().get(Dict.APP_TYPE));
 		req.setAttribute("sys_menu", sys_menu);
 	}
 
@@ -37,7 +38,7 @@ public class App_infoAction {
 	@Ok("vm:template.private.app.App_infoAdd")
 	public void toadd(@Param("pid") int pid, HttpServletRequest req) {
 		req.setAttribute("pro", appInfoService.list());
-		req.setAttribute("type", appInfoService.DATA_DICT.get(Dict.APP_TYPE));
+		req.setAttribute("type", appInfoService.getDATA_DICT().get(Dict.APP_TYPE));
 		req.setAttribute("pid", pid);
 
 	}
@@ -47,7 +48,9 @@ public class App_infoAction {
 	public boolean add(@Param("..") App_info app_info) {
 		if (appInfoService.insert(app_info)) {
 			appInfoService.InitAppInfo();
-			SyncUtil.sendMsg("appinfo");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("appinfo",urls,key);
 			return true;
 		} else
 			return false;
@@ -101,7 +104,9 @@ public class App_infoAction {
 	public boolean update(@Param("..") App_info app_info) {
 		if (appInfoService.update(app_info)) {
 			appInfoService.InitAppInfo();
-			SyncUtil.sendMsg("appinfo");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("appinfo",urls,key);
 			return true;
 		} else
 			return false;
@@ -111,7 +116,9 @@ public class App_infoAction {
 	public boolean delete(@Param("id") int id) {
 		if (appInfoService.delete(id) > 0) {
 			appInfoService.InitAppInfo();
-			SyncUtil.sendMsg("appinfo");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("appinfo",urls,key);
 			return true;
 		} else
 			return false;
@@ -121,7 +128,9 @@ public class App_infoAction {
 	public boolean deleteIds(@Param("ids") String[] ids) {
 		if (appInfoService.deleteByIds(ids)) {
 			appInfoService.InitAppInfo();
-			SyncUtil.sendMsg("appinfo");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("appinfo",urls,key);
 			return true;
 		} else
 			return false;

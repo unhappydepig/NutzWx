@@ -55,7 +55,7 @@ public class Weixin_push_contentAction extends BaseAction {
 		weixin_push_content.setOp_userid(user.getUserid());
 		Weixin_push_content content = daoCtl.addT(dao, weixin_push_content);
 		if (Strings.isBlank(weixin_push_content.getContent_source_url())) {
-			String domain = Strings.sNull(appInfoService.SYS_CONFIG.get("app_domain"));
+			String domain = Strings.sNull(appInfoService.getSYS_CONFIG().get("app_domain"));
 			content.setContent_source_url(domain + "/api/wx/news/pushview?id=" + content.getId());
 			daoCtl.update(dao, content);
 		}
@@ -81,7 +81,7 @@ public class Weixin_push_contentAction extends BaseAction {
 		weixin_push_content.setOp_time(DateUtil.getCurDateTime());
 		weixin_push_content.setOp_userid(user.getUserid());
 		if (Strings.isBlank(weixin_push_content.getContent_source_url())) {
-			String domain = Strings.sNull(appInfoService.SYS_CONFIG.get("app_domain"));
+			String domain = Strings.sNull(appInfoService.getSYS_CONFIG().get("app_domain"));
 			weixin_push_content.setContent_source_url(domain + "/api/wx/news/pushview?id=" + weixin_push_content.getId());
 		}
 		return daoCtl.update(dao, weixin_push_content);

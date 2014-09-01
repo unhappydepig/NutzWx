@@ -77,7 +77,7 @@ public class User_infoAction {
 		req.setAttribute("acc", userAccountService.fetch(uid));
 		req.setAttribute("jf", userScoreService.fetch(uid));
 		req.setAttribute("wx", userConnWXService.fetch(Cnd.where("uid", "=", uid)));
-		req.setAttribute("level", appInfoService.DATA_DICT.get(Dict.USER_LEVEL));
+		req.setAttribute("level", appInfoService.getDATA_DICT().get(Dict.USER_LEVEL));
 		return userInfoService.fetch(Cnd.where("uid", "=", uid));// html:obj
 	}
 
@@ -88,8 +88,8 @@ public class User_infoAction {
 		req.setAttribute("jf", userScoreService.fetch(uid));
 		req.setAttribute("wx", userConnWXService.fetch(Cnd.where("uid", "=", uid)));
 		User_info info = userInfoService.fetch(Cnd.where("uid", "=", uid));
-		Map<String, String> dict = (HashMap) appInfoService.DATA_DICT.get(Dict.DIVSION);
-		Map<String, String> level = (HashMap) appInfoService.DATA_DICT.get(Dict.USER_LEVEL);
+		Map<String, String> dict = (HashMap) appInfoService.getDATA_DICT().get(Dict.DIVSION);
+		Map<String, String> level = (HashMap) appInfoService.getDATA_DICT().get(Dict.USER_LEVEL);
 		info.setProvince(Strings.sNull(dict.get(info.getProvince())));
 		info.setCity(Strings.sNull(dict.get(info.getCity())));
 		info.setArea(Strings.sNull(dict.get(info.getArea())));

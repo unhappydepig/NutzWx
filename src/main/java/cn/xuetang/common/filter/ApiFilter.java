@@ -11,8 +11,6 @@ import org.nutz.lang.Encoding;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Streams;
 import org.nutz.lang.Strings;
-import org.nutz.log.Log;
-import org.nutz.log.Logs;
 import org.nutz.mvc.ActionContext;
 import org.nutz.mvc.ActionFilter;
 import org.nutz.mvc.View;
@@ -31,7 +29,6 @@ import cn.xuetang.service.AppInfoService;
 public class ApiFilter implements ActionFilter {
     @Inject
     protected AppInfoService appInfoService;
-    private final static Log log = Logs.get();
     @Override
     public View match(ActionContext context) {
         String mykey = Strings.sNull(context.getRequest().getParameter("mykey"));
@@ -39,7 +36,7 @@ public class ApiFilter implements ActionFilter {
             JsonFormat jsonFormat=new JsonFormat();
             jsonFormat.setAutoUnicode(true);
             jsonFormat.setCompact(true);
-            App_info appInfo = (App_info) appInfoService.APP_INFO.get(mykey);
+            App_info appInfo = (App_info) appInfoService.getAPP_INFO().get(mykey);
             String data = Strings.sNull(UrlUtil.readStreamParameterBase64(context.getRequest().getInputStream()));
             Map map= Json.fromJson(Map.class, data);
             String signature=Strings.sNull(map.get("signature"));

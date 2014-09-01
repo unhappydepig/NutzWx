@@ -92,7 +92,7 @@ public class UserAction{
 			jsonroot.put("name", "机构列表");
 			jsonroot.put("url", "javascript:list(\"\")");
 			jsonroot.put("target", "_self");
-			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 		}
 		Criteria cri = Cnd.cri();
@@ -197,7 +197,7 @@ public class UserAction{
 		jsonroot.put("checked", false);
 		jsonroot.put("nocheck", true);
 		jsonroot.put("open", true);
-		jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 		if (!Lang.isEmpty(sqlrole)) {
 			rolelist = sysRoleService.listByCnd(sqlrole);
 			for (int j = 0; j < rolelist.size(); j++) {
@@ -271,7 +271,7 @@ public class UserAction{
 				jsonobj.put("isParent", true);
 				jsonobj.put("open", true);
 				jsonobj.put("nocheck", true);
-				jsonobj.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+				jsonobj.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 				array.add(jsonobj);
 			}
 		}
@@ -355,7 +355,7 @@ public class UserAction{
 		jsonroot.put("checked", false);
 		jsonroot.put("nocheck", true);
 		jsonroot.put("open", true);
-		jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 		if (!Lang.isEmpty(rolec)) {
 			rolelist = (LinkedList<Sys_role>) sysRoleService.listByCnd(rolec);
 			for (int j = 0; j < rolelist.size(); j++) {
@@ -430,7 +430,7 @@ public class UserAction{
 				jsonobj.put("isParent", true);
 				jsonobj.put("open", true);
 				jsonobj.put("nocheck", true);
-				jsonobj.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+				jsonobj.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 				array.add(jsonobj);
 			}
 		}

@@ -21,26 +21,112 @@ import cn.xuetang.modules.sys.bean.Sys_config;
 public class AppInfoService extends BaseService<App_info> {
 
 	private final static Log log = Logs.get();
-	// 虚拟目录路径
-	public static String APP_BASE_PATH = "";
-	// 虚拟目录名称
-	public static String APP_BASE_NAME = "";
-	// 应用中文名
-	public static String APP_NAME = "";
-	// 系统配置
-	public static Map<String, String> SYS_CONFIG = new HashMap<>();
-	// 数据字典，根据ID分别初始化
-	public Map<String, Object> DATA_DICT = new HashMap<String, Object>();
-	// 应用信息，用于通过mykey验证来源，放在内存里为了提高响应速度
-	public Map<String, Object> APP_INFO = new HashMap<String, Object>();;
-	// 定时任务实例
-	public Scheduler SCHEDULER;
-	// 文件池
-	public FilePool FILE_POOL;
+	private App app = new App();
 
+	private class App {
+		// 虚拟目录路径
+		private String APP_BASE_PATH = "";
+		// 虚拟目录名称
+		private String APP_BASE_NAME = "";
+		// 应用中文名
+		private String APP_NAME = "";
+		// 系统配置
+		private Map<String, String> SYS_CONFIG = new HashMap<>();
+		// 数据字典，根据ID分别初始化
+		private Map<String, Object> DATA_DICT = new HashMap<String, Object>();
+		// 应用信息，用于通过mykey验证来源，放在内存里为了提高响应速度
+		private Map<String, Object> APP_INFO = new HashMap<String, Object>();;
+		// 定时任务实例
+		private Scheduler SCHEDULER;
+		// 文件池
+		private FilePool FILE_POOL;
+
+		public void appInfoClean() {
+			APP_INFO.clear();
+		}
+
+		public void appInfoPut(String key, Object obj) {
+			APP_INFO.put(key, obj);
+		}
+
+		public void sysConfigPut(String key, String obj) {
+			SYS_CONFIG.put(key, obj);
+		}
+
+		public void dataDictPut(String key, Object obj) {
+			DATA_DICT.put(key, obj);
+		}
+
+		public Object dataDictGet(String key) {
+			return DATA_DICT.get(key);
+		}
+
+	}
+	public void setAPP_BASE_PATH(String aPP_BASE_PATH) {
+		app.APP_BASE_PATH = aPP_BASE_PATH;
+	}
+
+	public void setAPP_BASE_NAME(String aPP_BASE_NAME) {
+		app.APP_BASE_NAME = aPP_BASE_NAME;
+	}
+
+	public void setAPP_NAME(String aPP_NAME) {
+		app.APP_NAME = aPP_NAME;
+	}
+
+	public void setSYS_CONFIG(Map<String, String> sYS_CONFIG) {
+		app.SYS_CONFIG = sYS_CONFIG;
+	}
+
+	public void setDATA_DICT(Map<String, Object> dATA_DICT) {
+		app.DATA_DICT = dATA_DICT;
+	}
+
+	public void setAPP_INFO(Map<String, Object> aPP_INFO) {
+		app.APP_INFO = aPP_INFO;
+	}
+
+	public void setSCHEDULER(Scheduler sCHEDULER) {
+		app.SCHEDULER = sCHEDULER;
+	}
+
+	public void setFILE_POOL(FilePool fILE_POOL) {
+		app.FILE_POOL = fILE_POOL;
+	}
+	public String getAPP_BASE_PATH() {
+		return app.APP_BASE_PATH;
+	}
+
+	public String getAPP_BASE_NAME() {
+		return app.APP_BASE_NAME;
+	}
+
+	public String getAPP_NAME() {
+		return app.APP_NAME;
+	}
+
+	public Map<String, String> getSYS_CONFIG() {
+		return app.SYS_CONFIG;
+	}
+
+	public Map<String, Object> getDATA_DICT() {
+		return app.DATA_DICT;
+	}
+
+	public Map<String, Object> getAPP_INFO() {
+		return app.APP_INFO;
+	}
+
+	public Scheduler getSCHEDULER() {
+		return app.SCHEDULER;
+	}
+
+	public FilePool getFILE_POOL() {
+		return app.FILE_POOL;
+	}
 	public AppInfoService() {
 	}
-	
+
 	public AppInfoService(Dao dao) {
 		super(dao);
 	}
@@ -51,10 +137,10 @@ public class AppInfoService extends BaseService<App_info> {
 
 	public void InitAppInfo() {
 		try {
-			APP_INFO.clear();
+			app.appInfoClean();
 			List<App_info> appInfoList = dao().query(getEntityClass(), Cnd.orderBy().asc("ID"));
 			for (App_info appInfo : appInfoList) {
-				APP_INFO.put(appInfo.getMykey(), appInfo);
+				app.appInfoPut(appInfo.getMykey(), appInfo);
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -65,7 +151,7 @@ public class AppInfoService extends BaseService<App_info> {
 		try {
 			List<Sys_config> configList = dao().query(Sys_config.class, Cnd.orderBy().asc("ID"));
 			for (Sys_config sysConfig : configList) {
-				SYS_CONFIG.put(sysConfig.getCname(), sysConfig.getCvalue());
+				app.sysConfigPut(sysConfig.getCname(), sysConfig.getCvalue());
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -74,9 +160,9 @@ public class AppInfoService extends BaseService<App_info> {
 
 	public void InitDataDict() {
 		try {
-			DATA_DICT.put(Dict.APP_TYPE, getHashMap(Sqls.create("SELECT dkey,dval FROM sys_dict WHERE id LIKE '" + Dict.APP_TYPE + "____'")));
-			DATA_DICT.put(Dict.DIVSION, getHashMap(Sqls.create("SELECT dkey,dval FROM sys_dict WHERE id LIKE '" + Dict.DIVSION + "_%'")));
-			DATA_DICT.put(Dict.FORM_TYPE, getHashMap(Sqls.create("SELECT dkey,dval FROM sys_dict WHERE id LIKE '" + Dict.FORM_TYPE + "_%' order by location asc,id asc")));
+			app.dataDictPut(Dict.APP_TYPE, getHashMap(Sqls.create("SELECT dkey,dval FROM sys_dict WHERE id LIKE '" + Dict.APP_TYPE + "____'")));
+			app.dataDictPut(Dict.DIVSION, getHashMap(Sqls.create("SELECT dkey,dval FROM sys_dict WHERE id LIKE '" + Dict.DIVSION + "_%'")));
+			app.dataDictPut(Dict.FORM_TYPE, getHashMap(Sqls.create("SELECT dkey,dval FROM sys_dict WHERE id LIKE '" + Dict.FORM_TYPE + "_%' order by location asc,id asc")));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -95,6 +181,6 @@ public class AppInfoService extends BaseService<App_info> {
 	}
 
 	public Object getType(String type) {
-		return DATA_DICT.get(type);
+		return app.dataDictGet(type);
 	}
 }

@@ -23,7 +23,7 @@ public class MainWxHandler extends AbstractWxHandler {
 	private AppInfoService appInfoService;
 
 	public boolean check(String signature, String timestamp, String nonce, String key) {
-		App_info appInfo = (App_info) appInfoService.APP_INFO.get(key);
+		App_info appInfo = (App_info) appInfoService.getAPP_INFO().get(key);
 		return appInfo != null && Wxs.check(appInfo.getToken(), signature, timestamp, nonce);
 
 	}

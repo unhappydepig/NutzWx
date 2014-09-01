@@ -14,6 +14,7 @@ import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.dao.sql.Sql;
 import org.nutz.dao.sql.SqlCallback;
+import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Strings;
@@ -25,6 +26,8 @@ import cn.xuetang.modules.sys.bean.Sys_dict;
 @IocBean(fields = { "dao" })
 public class SysDictService extends BaseService<Sys_dict> {
 
+	@Inject
+	private AppInfoService appInfoService;
 	public SysDictService() {
 	}
 	
@@ -47,7 +50,7 @@ public class SysDictService extends BaseService<Sys_dict> {
 			jsonroot.put("name", "数据字典");
 			jsonroot.put("url", "javascript:list(\"\")");
 			jsonroot.put("target", "_self");
-			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 			return dao().query(getEntityClass(), Cnd.where("length(id)", "=", 4).asc("location"));
 		} else {

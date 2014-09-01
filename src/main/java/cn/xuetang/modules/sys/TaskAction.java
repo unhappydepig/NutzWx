@@ -157,9 +157,9 @@ public class TaskAction {
 				log.info(cronExpressionFromDB);
 				triggerBuilder.withSchedule(getCronScheduleBuilder(cronExpressionFromDB));
 				// 调度任务
-				appInfoService.SCHEDULER.scheduleJob(jobBuilder.build(), triggerBuilder.build());
-				if (appInfoService.SCHEDULER.isShutdown()) {
-					appInfoService.SCHEDULER.start();
+				appInfoService.getSCHEDULER().scheduleJob(jobBuilder.build(), triggerBuilder.build());
+				if (appInfoService.getSCHEDULER().isShutdown()) {
+					appInfoService.getSCHEDULER().start();
 				}
 			}
 		} catch (ClassNotFoundException e) {
@@ -175,8 +175,8 @@ public class TaskAction {
 	 * @param taskName
 	 */
 	private void endTask(String taskName) throws SchedulerException {
-		if (appInfoService.SCHEDULER.checkExists(JobKey.jobKey(taskName, Scheduler.DEFAULT_GROUP)))
-			appInfoService.SCHEDULER.deleteJob(JobKey.jobKey(taskName, Scheduler.DEFAULT_GROUP));
+		if (appInfoService.getSCHEDULER().checkExists(JobKey.jobKey(taskName, Scheduler.DEFAULT_GROUP)))
+			appInfoService.getSCHEDULER().deleteJob(JobKey.jobKey(taskName, Scheduler.DEFAULT_GROUP));
 	}
 
 	/**

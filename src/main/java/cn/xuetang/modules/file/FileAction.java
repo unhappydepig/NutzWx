@@ -152,7 +152,7 @@ public class FileAction {
 	public String webPath(String date, String fname, String suffixname) {
 		String newfilepath = Mvcs.getServletContext().getRealPath("/upload/" + FileType.getFileType(suffixname) + "/" + date + "/");
 		String file = newfilepath + "/" + fname;
-		String savepath = Strings.sNull(appInfoService.SYS_CONFIG.get("file_savepath"));
+		String savepath = Strings.sNull(appInfoService.getSYS_CONFIG().get("file_savepath"));
 		if (!Strings.isBlank(savepath)) {
 			newfilepath = savepath + "/upload/" + FileType.getFileType(suffixname) + "/" + date + "/";
 			file = newfilepath + fname;

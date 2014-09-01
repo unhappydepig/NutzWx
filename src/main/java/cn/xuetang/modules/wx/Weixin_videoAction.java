@@ -168,7 +168,7 @@ public class Weixin_videoAction extends BaseAction {
 		}
 		// 组装分页数据
 		List<Object> listjson = new ArrayList<Object>();
-		Map<String, String> dict = (HashMap) appInfoService.DATA_DICT.get(Dict.DIVSION);
+		Map<String, String> dict = (HashMap) appInfoService.getDATA_DICT().get(Dict.DIVSION);
 		for (Map info : qr.getList(Map.class)) {
 			User_info userInfo = (User_info) map.get(NumberUtils.toInt(Strings.sNull(info.get("uid"))));
 			Map<String, Object> objectMap = Lang.obj2map(info);

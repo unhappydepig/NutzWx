@@ -24,7 +24,7 @@ public class SyncAction {
 	@At("/config")
 	@Ok("raw")
 	public String config(@Param("key") String key, @Param("type") String type, HttpServletRequest req) {
-		String mykey = Strings.sNull(AppInfoService.SYS_CONFIG.get("sync_key"));
+		String mykey = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
 		if (mykey.equals(key)) {
 			if ("datadict".equals(type)) {
 				appInfoService.InitDataDict();

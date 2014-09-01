@@ -4,6 +4,7 @@ import org.nutz.dao.Cnd;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.lang.Strings;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
@@ -44,7 +45,9 @@ public class ConfigAction {
 	public boolean add(@Param("..") Sys_config sys_config) {
 		if (sysConfigService.insert(sys_config)) {
 			appInfoService.InitSysConfig();
-			SyncUtil.sendMsg("sysconfig");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("sysconfig",urls,key);
 			return true;
 		} else
 			return false;
@@ -60,7 +63,9 @@ public class ConfigAction {
 	public boolean update(@Param("..") Sys_config sys_config) {
 		if (sysConfigService.update(sys_config)) {
 			appInfoService.InitSysConfig();
-			SyncUtil.sendMsg("sysconfig");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("sysconfig",urls,key);
 			return true;
 		} else
 			return false;
@@ -70,7 +75,9 @@ public class ConfigAction {
 	public boolean delete(@Param("id") int id) {
 		if (sysConfigService.delete(id) > 0) {
 			appInfoService.InitSysConfig();
-			SyncUtil.sendMsg("sysconfig");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("sysconfig",urls,key);
 			return true;
 		} else
 			return false;
@@ -80,7 +87,9 @@ public class ConfigAction {
 	public boolean deleteIds(@Param("ids") String[] ids) {
 		if (sysConfigService.deleteByIds(ids)) {
 			appInfoService.InitSysConfig();
-			SyncUtil.sendMsg("sysconfig");
+			String urls = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_url"));
+			String key = Strings.sNull(appInfoService.getSYS_CONFIG().get("sync_key"));
+			SyncUtil.sendMsg("sysconfig",urls,key);
 			return true;
 		} else
 			return false;

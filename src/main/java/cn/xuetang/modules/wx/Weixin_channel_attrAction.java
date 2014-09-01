@@ -34,7 +34,7 @@ public class Weixin_channel_attrAction {
 	@At
 	@Ok("vm:template.private.wx.Weixin_channelAttrAdd")
 	public void toadd(@Param("classid") String classid, HttpServletRequest req) {
-		Map<String, String> map = (Map) appInfoService.DATA_DICT.get(Dict.FORM_TYPE);
+		Map<String, String> map = (Map) appInfoService.getDATA_DICT().get(Dict.FORM_TYPE);
 		req.setAttribute("formmap", map);
 		req.setAttribute("classid", classid);
 	}
@@ -55,7 +55,7 @@ public class Weixin_channel_attrAction {
 	@At
 	@Ok("vm:template.private.wx.Weixin_channelAttrUpdate")
 	public Weixin_channel_attr toupdate(@Param("id") int id, HttpServletRequest req) {
-		Map<String, String> map = (Map) appInfoService.DATA_DICT.get(Dict.FORM_TYPE);
+		Map<String, String> map = (Map) appInfoService.getDATA_DICT().get(Dict.FORM_TYPE);
 		req.setAttribute("formmap", map);
 		return weixinChannelAttrService.fetch(id);// html:obj
 	}

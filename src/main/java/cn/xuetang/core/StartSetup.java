@@ -39,7 +39,7 @@ public class StartSetup implements Setup {
 	public void destroy(NutConfig config) {
 		AppInfoService appServer = Mvcs.getIoc().get(AppInfoService.class);
 		try {
-			appServer.SCHEDULER.shutdown();
+			appServer.getSCHEDULER().shutdown();
 		} catch (SchedulerException e) {
 			log.error(e.getMessage(), e);
 		}
@@ -53,7 +53,7 @@ public class StartSetup implements Setup {
 			dao.create(Sys_user.class, false);
 			dao.create(Sys_role.class, false);
 			dao.create(Permission.class, false);
-			if(!dao.exists(Sys_user.class)){
+			if (!dao.exists(Sys_user.class)) {
 				Sys_user defaultUser = new Sys_user();
 				defaultUser.setLoginname("superadmin");
 				RandomNumberGenerator rng = new SecureRandomNumberGenerator();
@@ -66,15 +66,15 @@ public class StartSetup implements Setup {
 			}
 			AppInfoService appServer = ioc.get(AppInfoService.class);
 			velocityInit(config.getAppRoot());
-			AppInfoService.APP_BASE_PATH = Strings.sNull(config.getAppRoot());// 项目路径
-			AppInfoService.APP_BASE_NAME = Strings.sNull(config.getServletContext().getContextPath());// 部署名
+			appServer.setAPP_BASE_PATH(Strings.sNull(config.getAppRoot()));// 项目路径
+			appServer.setAPP_BASE_NAME(Strings.sNull(config.getServletContext().getContextPath()));// 部署名
 			appServer.InitSysConfig();// 初始化系统参数
 			appServer.InitDataDict();// 初始化数据字典
 			appServer.InitAppInfo();// 初始化app接口信息
-			AppInfoService.APP_NAME = Strings.sNull(AppInfoService.SYS_CONFIG.get("app_name"));// 项目名称
-			appServer.FILE_POOL = new NutFilePool("~/tmp/myfiles", 10);// 创建一个文件夹用于下载
+			appServer.setAPP_NAME(Strings.sNull(appServer.getSYS_CONFIG().get("app_name")));// 项目名称
+			appServer.setFILE_POOL(new NutFilePool("~/tmp/myfiles", 10));// 创建一个文件夹用于下载
 			// 初始化Quartz任务
-			appServer.SCHEDULER = StdSchedulerFactory.getDefaultScheduler();
+			appServer.setSCHEDULER(StdSchedulerFactory.getDefaultScheduler());
 			new Thread(config.getIoc().get(LoadTask.class)).start();// 定时任务
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

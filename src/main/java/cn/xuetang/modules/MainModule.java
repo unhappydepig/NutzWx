@@ -27,7 +27,7 @@ import cn.xuetang.core.StartSetup;
 @Fail("http:500")
 @IocBy(type = ComboIocProvider.class, args = { "*org.nutz.ioc.loader.json.JsonLoader", "config", "*org.nutz.ioc.loader.annotation.AnnotationIocLoader", "cn.xuetang" })
 @SetupBy(value = StartSetup.class)
-@Filters(@By(type = ShiroActionFilter.class, args = "/login.jsp"))
+@Filters(@By(type = ShiroActionFilter.class, args = { "ioc:shiroActionFilter" }))
 @Encoding(input = "UTF-8", output = "UTF-8")
 // @UrlMappingBy(value=UrlMappingSet.class)
 @Views({ VelocityViewMaker.class, JPEGViewMaker.class })

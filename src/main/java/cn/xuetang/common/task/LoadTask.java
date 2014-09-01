@@ -40,7 +40,7 @@ public class LoadTask implements Runnable {
 		List<Sys_task> tasks = sysTaskService.list();
 		try {
 			log.info("tasks.size:" + tasks.size());
-			appInfoService.SCHEDULER.setJobFactory(new NutQuartzJobFactory());
+			appInfoService.getSCHEDULER().setJobFactory(new NutQuartzJobFactory());
 			for (int i = 0; i < tasks.size(); i++) {
 				Sys_task task = tasks.get(i);
 
@@ -67,10 +67,10 @@ public class LoadTask implements Runnable {
 				log.info(cronExpressionFromDB);
 				triggerBuilder.withSchedule(getCronScheduleBuilder(cronExpressionFromDB));
 				// 调度任务
-				appInfoService.SCHEDULER.scheduleJob(jobBuilder.build(), triggerBuilder.build());
+				appInfoService.getSCHEDULER().scheduleJob(jobBuilder.build(), triggerBuilder.build());
 			}
 			if (tasks.size() > 0) {
-				appInfoService.SCHEDULER.start();
+				appInfoService.getSCHEDULER().start();
 			}
 		} catch (SchedulerException e) {
 			log.error(e);

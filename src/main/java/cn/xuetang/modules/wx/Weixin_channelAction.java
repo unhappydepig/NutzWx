@@ -46,7 +46,7 @@ public class Weixin_channelAction{
 	@Ok("vm:template.private.wx.Weixin_channel")
 	public void index(@Param("sys_menu") String sys_menu, HttpServletRequest req, HttpSession session) {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
-		Map<String, String> map = (Map) appInfoService.DATA_DICT.get(Dict.FORM_TYPE);
+		Map<String, String> map = (Map) appInfoService.getDATA_DICT().get(Dict.FORM_TYPE);
 		req.setAttribute("formmap", map);
 		if (user.getSysrole()) {
 			req.setAttribute("pro", appProjectService.listByCnd(Cnd.orderBy().asc("id")));
@@ -140,7 +140,7 @@ public class Weixin_channelAction{
 			jsonroot.put("name", "栏目列表");
 			jsonroot.put("url", "javascript:changeClass(\"\")");
 			jsonroot.put("target", "_self");
-			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 			sql = Sqls.create("select * from Weixin_channel where pid=@s and id like @c order by location asc");
 			sql.params().set("s", proid);
@@ -235,7 +235,7 @@ public class Weixin_channelAction{
 		jsonroot.put("name", "栏目列表");
 		jsonroot.put("open", true);
 		jsonroot.put("childOuter", false);
-		jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 		array.add(jsonroot);
 		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> jsonobj = new HashMap<String, Object>();

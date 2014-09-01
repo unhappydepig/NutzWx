@@ -129,10 +129,10 @@ public class Weixin_contentAction extends BaseAction {
 		req.setAttribute("allow_video", fileTypeExts(FileType.getSuffixname("video")));
 		req.setAttribute("allow_other", fileTypeExts(FileType.getSuffixname("other")));
 		req.setAttribute("timenow", DateUtil.getCurDateTime());
-		req.setAttribute("file_username", appInfoService.SYS_CONFIG.get("file_username"));
-		req.setAttribute("file_password", DecodeUtil.Encrypt(appInfoService.SYS_CONFIG.get("file_password"), "file"));
-		req.setAttribute("file_uploadurl", appInfoService.SYS_CONFIG.get("file_uploadurl"));
-		req.setAttribute("file_domain", appInfoService.SYS_CONFIG.get("file_domain"));
+		req.setAttribute("file_username", appInfoService.getSYS_CONFIG().get("file_username"));
+		req.setAttribute("file_password", DecodeUtil.Encrypt(appInfoService.getSYS_CONFIG().get("file_password"), "file"));
+		req.setAttribute("file_uploadurl", appInfoService.getSYS_CONFIG().get("file_uploadurl"));
+		req.setAttribute("file_domain", appInfoService.getSYS_CONFIG().get("file_domain"));
 		List<Weixin_channel_attr> attrList = daoCtl.list(dao, Weixin_channel_attr.class, Cnd.where("classid", "=", channel_id).asc("attr_code"));
 		req.setAttribute("attrList", attrList);
 		req.setAttribute("StringUtil", new StringUtil());
@@ -300,7 +300,7 @@ public class Weixin_contentAction extends BaseAction {
 			jsonroot.put("name", "栏目列表");
 			jsonroot.put("url", "javascript:changeChannel(\"\")");
 			jsonroot.put("target", "_self");
-			jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 			if (user.getRolelist().contains(2)) {
 				sql = Sqls.create("select * from weixin_channel where pid=@s and id like @c order by location asc");

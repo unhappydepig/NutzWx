@@ -11,12 +11,12 @@ import org.apache.shiro.aop.MethodInvocation;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Lang;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.ActionContext;
 import org.nutz.mvc.View;
-import org.nutz.mvc.view.DefaultViewMaker;
 import org.nutz.mvc.view.ServerRedirectView;
 import org.nutz.mvc.view.VoidView;
 
@@ -26,6 +26,7 @@ import org.nutz.mvc.view.VoidView;
  * @author wendal
  * 
  */
+@IocBean
 public class ShiroActionFilter extends GlobalsFilter {
 	private static Log log = Logs.get();
 
@@ -62,21 +63,8 @@ public class ShiroActionFilter extends GlobalsFilter {
 		return null;
 	}
 
-	private View view = new ServerRedirectView("/");
+	private View view = new ServerRedirectView("/login.jsp");
 	private View NOT_PERMISSION = new ServerRedirectView("/admin/common/forbit.rk");
-
-	public ShiroActionFilter() {
-
-	}
-
-	public ShiroActionFilter(String view) {
-		if (view.contains(":")) {
-			String[] vs = view.split(":", 2);
-			this.view = new DefaultViewMaker().make(null, vs[0], vs[1]);
-		} else {
-			this.view = new ServerRedirectView(view);
-		}
-	}
 
 	private View whenAuthFail(ActionContext ctx, AuthorizationException e) {
 		HttpServletRequest localHttpServletRequest = ctx.getRequest();

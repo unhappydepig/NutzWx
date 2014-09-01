@@ -199,7 +199,7 @@ public class RoleAction extends BaseAction {
 			jsonroot.put("id", "");
 			jsonroot.put("pId", "0");
 			jsonroot.put("name", "机构列表");
-			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			jsonroot.put("nocheck", true);
 			array.add(jsonroot);
 			if (sysrole == 1) {
@@ -266,7 +266,7 @@ public class RoleAction extends BaseAction {
 			jsonroot.put("name", "机构列表");
 			jsonroot.put("url", "javascript:list(\"\")");
 			jsonroot.put("target", "_self");
-			jsonroot.put("icon", appInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 		}
 		Criteria cri = Cnd.cri();
@@ -353,7 +353,7 @@ public class RoleAction extends BaseAction {
 			jsonroot.put("nocheck", true);
 			jsonroot.put("button", "");
 			jsonroot.put("open", true);
-			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 			for (int i = 0; i < list.size(); i++) {
 				Sys_resource obj = list.get(i);
@@ -433,7 +433,7 @@ public class RoleAction extends BaseAction {
 			jsonroot.put("nocheck", true);
 			jsonroot.put("button", "");
 			jsonroot.put("open", true);
-			jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+			jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 			array.add(jsonroot);
 			for (int i = 0; i < list.size(); i++) {
 				Weixin_channel obj = list.get(i);
@@ -569,7 +569,7 @@ public class RoleAction extends BaseAction {
 		jsonroot.put("checked", false);
 		jsonroot.put("nocheck", true);
 		jsonroot.put("open", true);
-		jsonroot.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+		jsonroot.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 		if (!"".equals(sqlrole)) {
 			rolelist = sysRoleService.listByCnd(sqlrole);
 			for (int j = 0; j < rolelist.size(); j++) {
@@ -636,7 +636,7 @@ public class RoleAction extends BaseAction {
 				jsonobj.put("isParent", true);
 				jsonobj.put("open", true);
 				jsonobj.put("nocheck", true);
-				jsonobj.put("icon", AppInfoService.APP_BASE_NAME + "/images/icons/icon042a1.gif");
+				jsonobj.put("icon", appInfoService.getAPP_BASE_NAME() + "/images/icons/icon042a1.gif");
 				array.add(jsonobj);
 			}
 		}
