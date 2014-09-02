@@ -19,7 +19,7 @@ import org.nutz.web.Webs;
 
 import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.modules.sys.bean.Sys_user;
-import cn.xuetang.service.SysResourceService;
+import cn.xuetang.service.sys.SysResourceService;
 
 /**
  * @author Wizzer.cn

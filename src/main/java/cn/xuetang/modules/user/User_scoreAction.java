@@ -20,9 +20,9 @@ import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_score;
 import cn.xuetang.modules.user.bean.User_score_change;
 import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.UserAccountService;
-import cn.xuetang.service.UserScoreChangeService;
-import cn.xuetang.service.UserScoreService;
+import cn.xuetang.service.user.UserAccountService;
+import cn.xuetang.service.user.UserScoreChangeService;
+import cn.xuetang.service.user.UserScoreService;
 
 /**
  * @author Wizzer

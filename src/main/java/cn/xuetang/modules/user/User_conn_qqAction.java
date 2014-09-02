@@ -9,7 +9,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.modules.user.bean.User_conn_qq;
-import cn.xuetang.service.UserConnQQService;
+import cn.xuetang.service.user.UserConnQQService;
 
 /**
  * @author Wizzer

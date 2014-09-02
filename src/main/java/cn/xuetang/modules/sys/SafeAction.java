@@ -12,7 +12,7 @@ import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.util.StringUtil;
 import cn.xuetang.modules.sys.bean.Sys_safeconfig;
-import cn.xuetang.service.SysSafeConfigService;
+import cn.xuetang.service.sys.SysSafeConfigService;
 
 /**
  * @author Wizzer.cn

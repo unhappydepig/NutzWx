@@ -1,5 +1,6 @@
-package cn.xuetang.service;
+package cn.xuetang.service.user;
 
+import cn.xuetang.service.BaseService;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.sql.Criteria;

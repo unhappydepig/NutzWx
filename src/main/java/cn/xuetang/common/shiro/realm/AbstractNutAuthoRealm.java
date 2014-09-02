@@ -12,8 +12,8 @@ import org.nutz.mvc.Mvcs;
 
 import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_user;
-import cn.xuetang.service.SysRoleService;
-import cn.xuetang.service.SysUserService;
+import cn.xuetang.service.sys.SysRoleService;
+import cn.xuetang.service.sys.SysUserService;
 
 
 /**

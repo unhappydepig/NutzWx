@@ -21,7 +21,7 @@ import org.quartz.TriggerBuilder;
 
 import cn.xuetang.modules.sys.bean.Sys_task;
 import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.SysTaskService;
+import cn.xuetang.service.sys.SysTaskService;
 
 /**
  * Created by Wizzer on 14-3-31.

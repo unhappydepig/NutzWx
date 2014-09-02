@@ -22,7 +22,7 @@ import org.nutz.mvc.annotation.Param;
 import cn.xuetang.common.util.SyncUtil;
 import cn.xuetang.modules.sys.bean.Sys_dict;
 import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.SysDictService;
+import cn.xuetang.service.sys.SysDictService;
 
 /**
  * @author Wizzer

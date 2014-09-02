@@ -38,10 +38,10 @@ import cn.xuetang.modules.sys.bean.Sys_unit;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.sys.bean.Sys_user_role;
 import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.SysRoleService;
-import cn.xuetang.service.SysUnitService;
-import cn.xuetang.service.SysUserRoleService;
-import cn.xuetang.service.SysUserService;
+import cn.xuetang.service.sys.SysRoleService;
+import cn.xuetang.service.sys.SysUnitService;
+import cn.xuetang.service.sys.SysUserRoleService;
+import cn.xuetang.service.sys.SysUserService;
 
 /**
  * @author Wizzer.cn

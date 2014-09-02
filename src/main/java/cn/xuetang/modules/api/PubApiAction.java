@@ -9,7 +9,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.filter.ApiFilter;
-import cn.xuetang.service.SysDictService;
+import cn.xuetang.service.sys.SysDictService;
 
 /**
  * Created by Wizzer on 14-4-9.

@@ -32,11 +32,11 @@ import cn.xuetang.modules.user.bean.User_account;
 import cn.xuetang.modules.user.bean.User_info;
 import cn.xuetang.service.AppInfoService;
 import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.SysDictService;
-import cn.xuetang.service.UserAccountService;
-import cn.xuetang.service.UserConnWXService;
-import cn.xuetang.service.UserInfoService;
-import cn.xuetang.service.UserScoreService;
+import cn.xuetang.service.sys.SysDictService;
+import cn.xuetang.service.user.UserAccountService;
+import cn.xuetang.service.user.UserConnWXService;
+import cn.xuetang.service.user.UserInfoService;
+import cn.xuetang.service.user.UserScoreService;
 
 /**
  * @author Wizzer

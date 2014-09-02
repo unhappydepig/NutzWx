@@ -20,7 +20,7 @@ import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.modules.sys.bean.Sys_resource;
 import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.SysResourceService;
+import cn.xuetang.service.sys.SysResourceService;
 
 /**
  * @author Wizzer.cn

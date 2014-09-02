@@ -7,7 +7,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.modules.user.bean.User_account;
-import cn.xuetang.service.UserAccountService;
+import cn.xuetang.service.user.UserAccountService;
 
 /**
  * @author Wizzer

@@ -26,7 +26,7 @@ import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.wx.bean.Weixin_channel;
 import cn.xuetang.service.AppInfoService;
 import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.WeixinChannelService;
+import cn.xuetang.service.wx.WeixinChannelService;
 
 /**
  * @author Wizzer

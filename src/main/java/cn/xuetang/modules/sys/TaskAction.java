@@ -34,7 +34,7 @@ import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_task;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.SysTaskService;
+import cn.xuetang.service.sys.SysTaskService;
 
 /**
  * @author Wizzer

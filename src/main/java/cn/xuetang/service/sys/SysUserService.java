@@ -1,8 +1,9 @@
-package cn.xuetang.service;
+package cn.xuetang.service.sys;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.xuetang.service.BaseService;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.IocBean;

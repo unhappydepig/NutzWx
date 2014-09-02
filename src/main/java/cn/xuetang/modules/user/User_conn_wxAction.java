@@ -17,7 +17,7 @@ import org.nutz.mvc.annotation.Param;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_conn_wx;
 import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.UserConnWXService;
+import cn.xuetang.service.user.UserConnWXService;
 
 /**
  * @author Wizzer

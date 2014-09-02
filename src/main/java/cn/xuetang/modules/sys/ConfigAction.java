@@ -12,7 +12,7 @@ import org.nutz.mvc.annotation.Param;
 import cn.xuetang.common.util.SyncUtil;
 import cn.xuetang.modules.sys.bean.Sys_config;
 import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.SysConfigService;
+import cn.xuetang.service.sys.SysConfigService;
 
 /**
  * @author Wizzer

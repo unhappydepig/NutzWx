@@ -12,7 +12,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.modules.user.bean.User_conn_sinawb;
-import cn.xuetang.service.UserConnSinawbService;
+import cn.xuetang.service.user.UserConnSinawbService;
 
 /**
  * @author Wizzer

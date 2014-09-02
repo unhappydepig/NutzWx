@@ -40,14 +40,14 @@ import cn.xuetang.modules.wx.bean.Weixin_channel;
 import cn.xuetang.modules.wx.bean.Weixin_channel_role;
 import cn.xuetang.service.AppInfoService;
 import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.SysResourceService;
-import cn.xuetang.service.SysRoleResourceService;
-import cn.xuetang.service.SysRoleService;
-import cn.xuetang.service.SysUnitService;
-import cn.xuetang.service.SysUserRoleService;
-import cn.xuetang.service.SysUserService;
-import cn.xuetang.service.WeixinChannelRoleService;
-import cn.xuetang.service.WeixinChannelService;
+import cn.xuetang.service.sys.SysResourceService;
+import cn.xuetang.service.sys.SysRoleResourceService;
+import cn.xuetang.service.sys.SysRoleService;
+import cn.xuetang.service.sys.SysUnitService;
+import cn.xuetang.service.sys.SysUserRoleService;
+import cn.xuetang.service.sys.SysUserService;
+import cn.xuetang.service.wx.WeixinChannelRoleService;
+import cn.xuetang.service.wx.WeixinChannelService;
 
 /**
  * @author Wizzer.cn
