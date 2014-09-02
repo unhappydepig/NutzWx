@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.xuetang</groupId>
 	<artifactId>nutz_wx</artifactId>
-	<packaging>war</packaging>
+	<packaging>ejb</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>nutz_wx</name>
 	<url>http://www.nutzwx.com</url>
@@ -365,4 +365,8 @@
 			</plugin>
 		</plugins>
 	</build>
+	<issueManagement>
+		<system>Github Issue</system>
+		<url>https://github.com/Wizzercn/NutzWx/issues</url>
+	</issueManagement>
 </project>
