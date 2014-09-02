@@ -52,7 +52,7 @@ var Login = {
                 username: {
                     required: true
                 },
-                verifyCode: 'required'
+                captcha: 'required'
             },
 
             messages: {
@@ -83,7 +83,7 @@ var Login = {
                         spinner.spin();
                         bootbox.alert("data:::"+data);
                         if (data.type == "success") {
-                            window.location = "${base}/private/index";
+                            window.location = APP_BASE+"/private/index";
                         } else {
                             bootbox.alert(data.content);
                             $('#captcha').val("");
@@ -103,8 +103,8 @@ var Login = {
                 $('#login-form').submit()
             }
         });
-        $("#yw0").click(function () {
-            $("#yw0").attr("src", APP_BASE + "/captcha?rnd=" + new Date().getTime());
+        $("#captchaid").click(function () {
+            $("#captchaid").attr("src", APP_BASE + "/captcha?rnd=" + new Date().getTime());
         });
     },
     refreshCaptcha: function () {
