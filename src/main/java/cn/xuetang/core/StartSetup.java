@@ -87,7 +87,7 @@ public class StartSetup implements Setup {
 		p.setProperty("resource.loader", "file,classloader");
 		p.setProperty("file.resource.loader.path", appPath);
 		p.setProperty("file", "org.apache.velocity.tools.view.WebappResourceLoader");
-		p.setProperty("classloader.resource.loader.class", "org.nutz.weixin.mvc.VelocityResourceLoader");
+		p.setProperty("classloader.resource.loader.class", "cn.xuetang.mvc.VelocityResourceLoader");
 		p.setProperty("classloader.resource.loader.path", appPath);
 		p.setProperty(Velocity.INPUT_ENCODING, "UTF-8");
 		p.setProperty(Velocity.OUTPUT_ENCODING, "UTF-8");

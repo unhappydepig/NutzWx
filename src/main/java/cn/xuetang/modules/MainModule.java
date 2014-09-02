@@ -10,8 +10,8 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.SetupBy;
 import org.nutz.mvc.annotation.Views;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
-import org.nutz.weixin.mvc.JPEGViewMaker;
-import org.nutz.weixin.mvc.VelocityViewMaker;
+import cn.xuetang.mvc.JPEGViewMaker;
+import cn.xuetang.mvc.VelocityViewMaker;
 import org.nutz.weixin.mvc.WxViewMaker;
 
 import cn.xuetang.common.filter.ShiroActionFilter;

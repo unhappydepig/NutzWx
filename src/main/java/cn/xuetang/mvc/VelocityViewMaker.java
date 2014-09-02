@@ -1,4 +1,4 @@
-package org.nutz.weixin.mvc;
+package cn.xuetang.mvc;
 
 import org.nutz.ioc.Ioc;
 import org.nutz.mvc.View;

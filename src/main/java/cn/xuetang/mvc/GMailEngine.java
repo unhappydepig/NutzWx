@@ -1,4 +1,4 @@
-package org.nutz.weixin.mvc;
+package cn.xuetang.mvc;
 
 import java.awt.Color;
 import java.awt.Font;

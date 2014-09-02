@@ -3,7 +3,7 @@ var ioc = {
 		type : "com.octo.captcha.service.captchastore.FastHashMapCaptchaStore"
 	},
 	mailEngine : {
-		type : "org.nutz.weixin.mvc.GMailEngine",
+		type : "cn.xuetang.mvc.GMailEngine",
 		args : [ "cn/xuetang/common/captcha/images" ]
 	},
 	imageCaptchaService : {
@@ -15,7 +15,7 @@ var ioc = {
 		}, 180, 100000, 75000 ]
 	},
 	jPEGView : {
-		type : "org.nutz.weixin.mvc.JPEGView",
+		type : "cn.xuetang.mvc.JPEGView",
 		args : [ {
 			refer : "imageCaptchaService"
 		} ]
