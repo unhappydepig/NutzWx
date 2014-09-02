@@ -77,7 +77,7 @@ var Login = {
                 $.ajax({
                     type: 'POST',
                     url: APP_BASE + "/private/doLogin",
-                    dataType: 'text',
+                    dataType: 'json',
                     data: $(form).serialize(),
                     success: function (data) {
                         spinner.spin();

@@ -63,7 +63,7 @@ public class ShiroActionFilter extends GlobalsFilter {
 		return null;
 	}
 
-	private View view = new ServerRedirectView("/login.jsp");
+	private View view = new ServerRedirectView("/private/login");
 	private View NOT_PERMISSION = new ServerRedirectView("/admin/common/forbit.rk");
 
 	private View whenAuthFail(ActionContext ctx, AuthorizationException e) {
