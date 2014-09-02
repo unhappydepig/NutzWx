@@ -27,6 +27,9 @@
     <script src="${base}/themes/ace/assets/js/html5shiv.js"></script>
     <script src="${base}/themes/ace/assets/js/respond.min.js"></script>
     <![endif]-->
+    <script language="JavaScript">
+        var APP_BASE="${base}";
+    </script>
 </head>
 
 <body class="login-layout">
@@ -57,12 +60,12 @@
 
                 <div class="space-6"></div>
 
-                <form>
+                <form id="login-form">
                     <fieldset>
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
 															<input type="text" class="form-control"
-                                                                   placeholder="Username"/>
+                                                                   placeholder="Username" id="username" name="username"/>
 															<i class="icon-user"></i>
 														</span>
                         </label>
@@ -70,7 +73,7 @@
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
 															<input type="password" class="form-control"
-                                                                   placeholder="Password"/>
+                                                                   placeholder="Password" id="password" name="password"/>
 															<i class="icon-lock"></i>
 														</span>
                         </label>
@@ -78,7 +81,7 @@
                         <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
                                 <img alt="验证码" title="点击切换" style="cursor:pointer;position:absolute;left:0;height:34px;padding-top:1px;" data-rel="tooltip" data-placement="bottom" id="yw0" src="${base}/captcha" />
-                                <input style="padding-left: 92px;" type="text" name="verifyCode" id="verifyCode" class="form-control" placeholder="Captcha" />
+                                <input style="padding-left: 93px;" type="text" name="captcha" id="captcha" class="form-control" placeholder="Captcha" />
                                 <i class="icon-tint"></i>
                             </span>
                         </label>
@@ -87,11 +90,11 @@
 
                         <div class="clearfix">
                             <label class="inline">
-                                <input type="checkbox" class="ace"/>
+                                <input type="checkbox" class="ace" id="remember"/>
                                 <span class="lbl"> 记住登陆</span>
                             </label>
-
-                            <button type="button" class="width-35 pull-right btn btn-sm btn-primary">
+                            <span id="spin-container"></span>
+                            <button id="btn-submit" type="button" class="width-35 pull-right btn btn-sm btn-primary">
                                 <i class="icon-key"></i>
                                 登陆
                             </button>
@@ -138,18 +141,19 @@
     window.jQuery || document.write("<script src='${base}/themes/ace/assets/js/jquery-1.10.2.min.js'>" + "<" + "/script>");
 </script>
 <![endif]-->
-
 <script type="text/javascript">
     if ("ontouchend" in document) document.write("<script src='${base}/themes/ace/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
 </script>
-
-<!-- inline scripts related to this page -->
-
+<script type="text/javascript" src="${base}/themes/ace/assets/js/spin.min.js"></script>
+<script type="text/javascript" src="${base}/themes/ace/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${base}/themes/ace/assets/js/bootbox.min.js"></script>
+<script type="text/javascript" src="${base}/themes/ace/assets/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${base}/themes/ace/assets/js/jquery.cokie.min.js"></script>
+<script type="text/javascript" src="${base}/themes/ace/assets/scripts/login.js"></script>
 <script type="text/javascript">
-    function show_box(id) {
-        jQuery('.widget-box.visible').removeClass('visible');
-        jQuery('#' + id).addClass('visible');
-    }
+    jQuery(document).ready(function() {
+        Login.init();
+    });
 </script>
 </body>
 </html>
