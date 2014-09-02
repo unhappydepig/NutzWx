@@ -41,7 +41,7 @@
         <span class="red">NutzWx</span>
         <span class="white">开源微信平台</span>
     </h1>
-    <h4 class="blue">&copy; NutzWx</h4>
+    <h4 class="blue">&copy; <a href="http://nutzwx.com" target="_blank">NutzWx</a> </h4>
 </div>
 
 <div class="space-6"></div>
@@ -77,7 +77,8 @@
 
                         <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                                <img alt="验证码" title="点击切换" style="cursor:pointer;position:absolute;left:0;" data-rel="tooltip" data-placement="bottom" id="yw0" src="${base}/captcha" />                                <input style="padding-left: 86px;" type="text" name="verifyCode" id="verifyCode" class="form-control" placeholder="Captcha" />
+                                <img alt="验证码" title="点击切换" style="cursor:pointer;position:absolute;left:0;height:34px;padding-top:1px;" data-rel="tooltip" data-placement="bottom" id="yw0" src="${base}/captcha" />
+                                <input style="padding-left: 92px;" type="text" name="verifyCode" id="verifyCode" class="form-control" placeholder="Captcha" />
                                 <i class="icon-tint"></i>
                             </span>
                         </label>
@@ -119,35 +120,27 @@
 </div>
 </div>
 <!-- /.main-container -->
-
 <!-- basic scripts -->
-
 <!--[if !IE]> -->
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
+<script src="${base}/themes/ace/assets/js/jquery-2.0.3.min.js"></script>
 <!-- <![endif]-->
-
 <!--[if IE]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="${base}/themes/ace/assets/js/jquery-1.10.2.min.js"></script>
 <![endif]-->
-
 <!--[if !IE]> -->
-
 <script type="text/javascript">
-    window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+    window.jQuery || document.write("<script src='${base}/themes/ace/assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
 </script>
-
 <!-- <![endif]-->
 
 <!--[if IE]>
 <script type="text/javascript">
-    window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>" + "<" + "/script>");
+    window.jQuery || document.write("<script src='${base}/themes/ace/assets/js/jquery-1.10.2.min.js'>" + "<" + "/script>");
 </script>
 <![endif]-->
 
 <script type="text/javascript">
-    if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    if ("ontouchend" in document) document.write("<script src='${base}/themes/ace/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
 </script>
 
 <!-- inline scripts related to this page -->
@@ -158,8 +151,5 @@
         jQuery('#' + id).addClass('visible');
     }
 </script>
-<div style="display:none">
-    <script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script>
-</div>
 </body>
 </html>
