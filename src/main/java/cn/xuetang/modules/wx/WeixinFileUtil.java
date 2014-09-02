@@ -12,12 +12,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
-import org.nutz.log.Log;
-import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
@@ -26,23 +23,19 @@ import org.nutz.mvc.impl.AdaptorErrorContext;
 import org.nutz.mvc.upload.TempFile;
 import org.nutz.mvc.upload.UploadAdaptor;
 
-import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.util.WeixinUtil;
+import cn.xuetang.service.AppInfoService;
 
 /**
  * Created by Wizzer on 14-4-29.
  */
 @IocBean
 @At("/private/wx/file")
-public class WeixinFileUtil extends BaseAction {
-	private final static Log log = Logs.get();
-	@Inject
-	protected Dao dao;
+public class WeixinFileUtil{
 	@Inject
 	protected UploadAdaptor upload;
-	@Inject
-	protected WeixinUtil weixinUtil;
 
+	@Inject
+	private AppInfoService appInfoService;
 	@At
 	@Ok("raw")
 	@AdaptBy(type = UploadAdaptor.class, args = "ioc:upload")
@@ -63,7 +56,7 @@ public class WeixinFileUtil extends BaseAction {
 			}
 		}
 		try {
-			URL urlObj = new URL("http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=" + weixinUtil.getGloalsAccessToken(dao, appid) + "&type=" + type);
+			URL urlObj = new URL("http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=" + appInfoService.getGloalsAccessToken(appid) + "&type=" + type);
 			HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
 			/**
 			 * 设置关键值
@@ -87,14 +80,11 @@ public class WeixinFileUtil extends BaseAction {
 			sb.append("\r\n");
 			sb.append("Content-Disposition: form-data;name=\"media\";filename=\"" + tmpFile.getFile().getName() + "\"\r\n");
 			sb.append("Content-Type:application/octet-stream\r\n\r\n");
-
 			byte[] head = sb.toString().getBytes("utf-8");
-
 			// 获得输出流
 
 			OutputStream out = new DataOutputStream(conn.getOutputStream());
 			out.write(head);
-
 			// 文件正文部分
 			DataInputStream in = new DataInputStream(new FileInputStream(tmpFile.getFile()));
 			int bytes = 0;
@@ -103,15 +93,11 @@ public class WeixinFileUtil extends BaseAction {
 				out.write(bufferOut, 0, bytes);
 			}
 			in.close();
-
 			// 结尾部分
 			byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes("utf-8");// 定义最后数据分隔线
-
 			out.write(foot);
-
 			out.flush();
 			out.close();
-
 			/**
 			 * 读取服务器响应，必须读取,否则提交不成功
 			 */
@@ -142,7 +128,6 @@ public class WeixinFileUtil extends BaseAction {
 			js.put("msg", "");
 			return Json.toJson(js);
 		}
-
 	}
 
 	/**

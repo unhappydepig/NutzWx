@@ -45,7 +45,7 @@ public class WeixinUtil extends BaseAction {
 	 *            文本内容
 	 * @return
 	 */
-	public static String PushTxt(Dao dao, int appid, String toUser, String content) {
+	public static String PushTxt(String access_token, int appid, String toUser, String content) {
 		try {
 			Map<String, Object> obj = new HashMap<String, Object>();
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -53,7 +53,6 @@ public class WeixinUtil extends BaseAction {
 			obj.put("touser", toUser);
 			obj.put("msgtype", "text");
 			obj.put("text", contentMap);
-			String access_token = getGloalsAccessToken(dao, appid);
 			Request req = Request.create("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + access_token, Request.METHOD.POST);
 			req.setData(Json.toJson(obj));
 			// System.out.println(Json.toJson(obj));
@@ -80,11 +79,10 @@ public class WeixinUtil extends BaseAction {
 	 *            文章列表
 	 * @return
 	 */
-	public static String PushNews(Dao dao, int appid, List<Object> list) {
+	public static String PushNews(String access_token, List<Object> list) {
 		try {
 			Map<String, Object> obj = new HashMap<String, Object>();
 			obj.put("articles", list);
-			String access_token = getGloalsAccessToken(dao, appid);
 			Request req = Request.create("https://api.weixin.qq.com/cgi-bin/media/uploadnews?access_token=" + access_token, Request.METHOD.POST);
 			req.setData(Json.toJson(obj));
 			System.out.println(Json.toJson(obj));
@@ -111,10 +109,8 @@ public class WeixinUtil extends BaseAction {
 	 *            推送内容
 	 * @return
 	 */
-	public static String PushUser(Dao dao, int appid, Map<String, Object> obj) {
+	public static String PushUser(String access_token, Map<String, Object> obj) {
 		try {
-
-			String access_token = getGloalsAccessToken(dao, appid);
 			Request req = Request.create("https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=" + access_token, Request.METHOD.POST);
 			req.setData(Json.toJson(obj));
 			log.debug(Json.toJson(obj));
@@ -142,13 +138,12 @@ public class WeixinUtil extends BaseAction {
 	 * @param description
 	 * @return
 	 */
-	public static String PushVideo(Dao dao, int appid, String media_id, String title, String description) {
+	public static String PushVideo(String access_token, String media_id, String title, String description) {
 		try {
 			Map<String, Object> obj = new HashMap<String, Object>();
 			obj.put("media_id", media_id);
 			obj.put("title", title);
 			obj.put("description", description);
-			String access_token = getGloalsAccessToken(dao, appid);
 			Request req = Request.create("https://api.weixin.qq.com/cgi-bin/media/uploadvideo?access_token=" + access_token, Request.METHOD.POST);
 			req.setData(Json.toJson(obj));
 			System.out.println(Json.toJson(obj));
@@ -164,33 +159,6 @@ public class WeixinUtil extends BaseAction {
 		return "{\"errcode\":1002,\"errmsg\":\"system unkown\"}";
 	}
 
-	/**
-	 * 获取全局access_token，超过7200ms重新获取，否则返回上次值
-	 * 
-	 * @param dao
-	 * @param appid
-	 * @return
-	 */
-	public static String getGloalsAccessToken(Dao dao, int appid) {
-		String access_token = "";
-		boolean resetAccesstoken = false;
-		long now = System.currentTimeMillis();
-		App_info appInfo = daoCtl.detailById(dao, App_info.class, appid);
-		if (!Strings.isBlank(appInfo.getAccess_token())) {
-			long ftime = NumberUtils.toLong(Strings.sNull(appInfo.getAccess_time()));
-			if ((now - ftime) > 7150 * 1000) {
-				resetAccesstoken = true;
-			} else {
-				access_token = Strings.sNull(appInfo.getAccess_token());
-			}
-		} else
-			resetAccesstoken = true;
-		if (resetAccesstoken) {
-			access_token = getAccess_token(appInfo);
-			daoCtl.update(dao, App_info.class, Chain.make("access_time", String.valueOf(now)).add("access_token", access_token), Cnd.where("id", "=", appid));
-		}
-		return access_token;
-	}
 
 	/**
 	 * 获取access_token

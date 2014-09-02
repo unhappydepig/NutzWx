@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.dao.sql.Sql;
@@ -22,25 +21,30 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.Attr;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 import org.nutz.mvc.upload.UploadAdaptor;
 import org.nutz.trans.Atom;
 import org.nutz.trans.Trans;
+import org.nutz.web.Webs;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.file.FileType;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.common.util.DecodeUtil;
 import cn.xuetang.common.util.StringUtil;
-import cn.xuetang.modules.app.bean.App_info;
-import cn.xuetang.modules.app.bean.App_project;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.wx.bean.Weixin_channel;
 import cn.xuetang.modules.wx.bean.Weixin_channel_attr;
 import cn.xuetang.modules.wx.bean.Weixin_content;
 import cn.xuetang.modules.wx.bean.Weixin_content_txt;
 import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.AppProjectService;
+import cn.xuetang.service.WeixinContentAttrService;
+import cn.xuetang.service.WeixinContentService;
+import cn.xuetang.service.WeixinContentTXTService;
+import cn.xuetang.service.wx.WeixinChannelAttrService;
+import cn.xuetang.service.wx.WeixinChannelService;
 
 /**
  * @author Wizzer
@@ -48,24 +52,33 @@ import cn.xuetang.service.AppInfoService;
  */
 @IocBean
 @At("/private/wx/content")
-public class Weixin_contentAction extends BaseAction {
+public class Weixin_contentAction{
 	@Inject
-	protected Dao dao;
+	private WeixinChannelService weixinChannelService;
 	@Inject
-	protected UploadAdaptor upload;
+	private WeixinChannelAttrService weixinChannelAttrService;
+	@Inject
+	private WeixinContentAttrService weixinContentAttrService;
+	@Inject
+	private AppProjectService appProjectService;
+	@Inject
+	private WeixinContentTXTService weixinContentTXTService;
+	@Inject
+	private WeixinContentService weixinContentService; 
+	@Inject
+	private UploadAdaptor upload;
 	private final static Log log = Logs.get();
 	@Inject
 	private AppInfoService appInfoService;
 
 	@At("")
 	@Ok("vm:template.private.wx.Weixin_content")
-	public void index(@Param("sys_menu") String sys_menu, HttpSession session, HttpServletRequest req) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
+	public void index(@Attr(Webs.ME)Sys_user user,@Param("sys_menu") String sys_menu, HttpSession session, HttpServletRequest req) {
 		if (user.getSysrole()) {
-			req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("1", "=", 1).asc("id")));
+			req.setAttribute("pro", appProjectService.listByCnd(Cnd.where("1", "=", 1).asc("id")));
 
 		} else {
-			req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("id", "in", user.getProlist()).asc("id")));
+			req.setAttribute("pro", appProjectService.listByCnd(Cnd.where("id", "in", user.getProlist()).asc("id")));
 		}
 		req.setAttribute("sys_menu", sys_menu);
 	}
@@ -73,8 +86,8 @@ public class Weixin_contentAction extends BaseAction {
 	@At
 	@Ok("raw")
 	public boolean del(@Param("ids") String[] ids) {
-		return daoCtl.update(dao, Weixin_content.class, Chain.make("status", -1), Cnd.where("id", "in", ids));
-
+		weixinContentService.update(Chain.make("status", -1), Cnd.where("id", "in", ids));
+		return true;
 	}
 
 	@At
@@ -84,19 +97,16 @@ public class Weixin_contentAction extends BaseAction {
 			for (int i = 0; i < ids.length; i++) {
 				int id = NumberUtils.toInt(ids[i]);
 				if ("pub".equals(Strings.sNull(type))) {
-					daoCtl.update(dao, Weixin_content.class, Chain.make("status", 1).add("send_type", 0), Cnd.where("id", "=", id));
+					weixinContentService.update(Chain.make("status", 1).add("send_type", 0), Cnd.where("id", "=", id));
 				} else if ("push".equals(Strings.sNull(type))) {
-					daoCtl.update(dao, Weixin_content.class, Chain.make("status", 1).add("send_type", 1), Cnd.where("id", "=", id));
+					weixinContentService.update(Chain.make("status", 1).add("send_type", 1), Cnd.where("id", "=", id));
 
 				} else if ("recall".equals(type)) {
-					daoCtl.update(dao, Weixin_content.class, Chain.make("status", 0).add("send_type", 0), Cnd.where("id", "=", id));
-					daoCtl.exeUpdateBySql(dao, Sqls.create("update Weixin_content_push set status=1 where id=" + id));
-
+					weixinContentService.update(Chain.make("status", 0).add("send_type", 0), Cnd.where("id", "=", id));
+					weixinContentService.exeUpdateBySql(Sqls.create("update Weixin_content_push set status=1 where id=" + id));
 				}
-
 			}
 		} catch (Exception e) {
-
 			return false;
 		}
 		return true;
@@ -106,20 +116,20 @@ public class Weixin_contentAction extends BaseAction {
 	@At
 	@Ok("vm:template.private.wx.Weixin_contentPush")
 	public void topush(@Param("pid") int pid, HttpServletRequest req) {
-		req.setAttribute("applist", daoCtl.list(dao, App_info.class, Cnd.where("pid", "=", pid).and("app_type", "=", "01")));
+		req.setAttribute("applist", appInfoService.listByCnd(Cnd.where("pid", "=", pid).and("app_type", "=", "01")));
 	}
 
 	@At
 	@Ok("vm:template.private.wx.Weixin_contentEdit")
 	public void edit(@Param("id") int id, @Param("pid") int pid, @Param("channel_id") String channel_id, HttpServletRequest req) {
 		if (id > 0) {
-			req.setAttribute("content", daoCtl.detailById(dao, Weixin_content.class, id));
-			Weixin_content_txt txt = daoCtl.detailById(dao, Weixin_content_txt.class, id);
+			req.setAttribute("content", weixinContentService.fetch(id));
+			Weixin_content_txt txt = weixinContentTXTService.fetch(id);
 			if (txt != null) {
 				req.setAttribute("ctxt", txt);
 			}
 			req.setAttribute("id", id);
-			Map<String, String> attrMap = daoCtl.getHashMap(dao, Sqls.create("select attr_code,attr_value from Weixin_content_attr where gid=" + id));
+			Map<String, String> attrMap = weixinContentAttrService.getHashMap(Sqls.create("select attr_code,attr_value from Weixin_content_attr where gid=" + id));
 			req.setAttribute("attrMap", attrMap);
 		}
 		req.setAttribute("pid", pid);
@@ -133,7 +143,7 @@ public class Weixin_contentAction extends BaseAction {
 		req.setAttribute("file_password", DecodeUtil.Encrypt(appInfoService.getSYS_CONFIG().get("file_password"), "file"));
 		req.setAttribute("file_uploadurl", appInfoService.getSYS_CONFIG().get("file_uploadurl"));
 		req.setAttribute("file_domain", appInfoService.getSYS_CONFIG().get("file_domain"));
-		List<Weixin_channel_attr> attrList = daoCtl.list(dao, Weixin_channel_attr.class, Cnd.where("classid", "=", channel_id).asc("attr_code"));
+		List<Weixin_channel_attr> attrList = weixinChannelAttrService.listByCnd(Cnd.where("classid", "=", channel_id).asc("attr_code"));
 		req.setAttribute("attrList", attrList);
 		req.setAttribute("StringUtil", new StringUtil());
 
@@ -141,8 +151,7 @@ public class Weixin_contentAction extends BaseAction {
 
 	@At
 	@Ok("raw")
-	public int doSave(@Param("::attr.") final Map<String, String> map2, @Param("status") final int status, @Param("appid") final int appid, @Param("type") final int type, @Param("::content.") final Weixin_content content1, @Param("::contenttxt.") final Weixin_content_txt txt1, final HttpSession session, final HttpServletRequest req) {
-		final Sys_user user = (Sys_user) session.getAttribute("userSession");
+	public int doSave(final @Attr(Webs.ME)Sys_user user,@Param("::attr.") final Map<String, String> map2, @Param("status") final int status, @Param("appid") final int appid, @Param("type") final int type, @Param("::content.") final Weixin_content content1, @Param("::contenttxt.") final Weixin_content_txt txt1, final HttpSession session, final HttpServletRequest req) {
 		try {
 			final ThreadLocal<Integer> re = new ThreadLocal<Integer>();
 			Trans.exec(new Atom() {
@@ -154,9 +163,9 @@ public class Weixin_contentAction extends BaseAction {
 						content.setAdd_userid(user.getUserid());
 						content.setStatus(status);
 						content.setSend_type(type);
-						Weixin_content c = null;
+						Weixin_content c = content;
 						try {
-							c = daoCtl.addT(dao, content);
+							weixinContentService.insert(content);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -169,11 +178,11 @@ public class Weixin_contentAction extends BaseAction {
 									sqlattr.params().set("c", entry.getValue());
 									sqlattr.addBatch();
 								}
-								daoCtl.exeUpdateBySql(dao, sqlattr);
+								weixinContentAttrService.exeUpdateBySql(sqlattr);
 							}
 							Weixin_content_txt t = txt1;
 							t.setId(c.getId());
-							daoCtl.add(dao, t);
+							weixinContentTXTService.insert(t);
 							// if (type == 1) {
 							// Weixin_content_push push = new
 							// Weixin_content_push();
@@ -191,8 +200,8 @@ public class Weixin_contentAction extends BaseAction {
 						content.setAdd_userid(user.getUserid());
 						content.setStatus(status);
 						content.setSend_type(type);
-						daoCtl.update(dao, content);
-						daoCtl.delete(dao, "Weixin_content_attr", Cnd.where("gid", "=", content.getId()));
+						weixinContentService.update(content);
+						weixinContentAttrService.delete("Weixin_content_attr", Cnd.where("gid", "=", content.getId()));
 						if (map != null) {
 							Sql sqlattr = Sqls.create("insert into Weixin_content_attr(gid,attr_code,attr_value) values(@a,@b,@c)");
 							for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -201,14 +210,12 @@ public class Weixin_contentAction extends BaseAction {
 								sqlattr.params().set("c", entry.getValue());
 								sqlattr.addBatch();
 							}
-							daoCtl.exeUpdateBySql(dao, sqlattr);
+							weixinContentAttrService.exeUpdateBySql(sqlattr);
 						}
 						Weixin_content_txt t = txt1;
 						t.setId(content.getId());
-						daoCtl.update(dao, t);
-
+						weixinContentTXTService.update(t);
 						re.set(content.getId());
-
 					}
 				}
 			});
@@ -237,12 +244,12 @@ public class Weixin_contentAction extends BaseAction {
 	@At
 	@Ok("vm:template.private.wx.Weixin_contentUpdate")
 	public Weixin_content toupdate(@Param("id") int id, HttpServletRequest req) {
-		return daoCtl.detailById(dao, Weixin_content.class, id);// html:obj
+		return weixinContentService.fetch(id);// html:obj
 	}
 
 	@At
 	public boolean update(@Param("..") Weixin_content weixin_content) {
-		return daoCtl.update(dao, weixin_content);
+		return weixinContentService.update(weixin_content);
 	}
 
 	@At
@@ -282,8 +289,7 @@ public class Weixin_contentAction extends BaseAction {
 		} else if (queryOrderBy == 3) {
 			cri.getOrderBy().asc("pub_time");
 		}
-
-		return daoCtl.listPageJson(dao, Weixin_content.class, curPage, pageSize, cri);
+		return weixinContentService.listPageJson(curPage, pageSize, cri);
 	}
 
 	@At
@@ -322,7 +328,7 @@ public class Weixin_contentAction extends BaseAction {
 
 		}
 
-		List<Weixin_channel> list = daoCtl.list(dao, Weixin_channel.class, sql);
+		List<Weixin_channel> list = weixinChannelService.list(sql);
 		for (int i = 0; i < list.size(); i++) {
 			Weixin_channel ch = list.get(i);
 			boolean sign = false;
@@ -332,7 +338,7 @@ public class Weixin_contentAction extends BaseAction {
 			sql = Sqls.create("select count(*) from weixin_channel where pid=@s and id like @c");
 			sql.params().set("s", ch.getPid());
 			sql.params().set("c", ch.getId() + "____");
-			int num = daoCtl.getIntRowValue(dao, sql);
+			int num = weixinChannelService.getIntRowValue(sql);
 			if (num > 0)
 				sign = true;
 			Map<String, Object> obj = new HashMap<String, Object>();

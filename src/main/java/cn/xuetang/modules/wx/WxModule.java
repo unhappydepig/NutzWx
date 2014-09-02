@@ -4,11 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.nutz.dao.Dao;
-import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
-import org.nutz.log.Log;
-import org.nutz.log.Logs;
 import org.nutz.mvc.View;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Fail;
@@ -21,9 +17,6 @@ import org.nutz.weixin.util.Wxs;
 @IocBean(fields = "wxHandler")
 public class WxModule {
 	protected WxHandler wxHandler;
-	private final static Log log = Logs.get();
-	@Inject
-	protected Dao dao;
 
 	public WxModule() {
 		Wxs.enableDevMode(); // 开启debug模式,这样就会把接收和发送的内容统统打印,方便查看

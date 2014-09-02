@@ -46,9 +46,9 @@ public class LoginAction {
 		} catch (LockedAccountException e) {
 			return Message.error("common.error.account.locked", req);
 		} catch (AuthenticationException e) {
-			return Message.error("e.getMessage()", req);
+			return Message.error(e.getMessage(), req);
 		} catch (Exception e) {
-			return Message.error("e.getMessage()", req);
+			return Message.error(e.getMessage(), req);
 		}
 	}
 

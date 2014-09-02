@@ -13,6 +13,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
+import org.nutz.dao.QueryResult;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.entity.Entity;
 import org.nutz.dao.pager.Pager;
@@ -235,19 +236,20 @@ public class BaseService<T> extends IdEntityService<T> {
 		dao().execute(sql);
 		return hashMap;
 	}
-	
-    public String listPageJsonSql(Sql sql, int curPage, int pageSize, int count) {
-        Pager pager = dao().createPager(curPage, pageSize);
-        pager.setRecordCount(count);// 记录数需手动设置
-        sql.setPager(pager);
-        sql.setCallback(Sqls.callback.records());
-        dao().execute(sql);
-        Map<String, Object> jsonobj = new HashMap<String, Object>();
-        jsonobj.put("total", pager.getRecordCount());
-        jsonobj.put("rows", sql.getList(Map.class));
-        return Json.toJson(jsonobj);
-    }
-    public String getSubMenuId(String tableName, String cloName, String value) {
+
+	public String listPageJsonSql(Sql sql, int curPage, int pageSize, int count) {
+		Pager pager = dao().createPager(curPage, pageSize);
+		pager.setRecordCount(count);// 记录数需手动设置
+		sql.setPager(pager);
+		sql.setCallback(Sqls.callback.records());
+		dao().execute(sql);
+		Map<String, Object> jsonobj = new HashMap<String, Object>();
+		jsonobj.put("total", pager.getRecordCount());
+		jsonobj.put("rows", sql.getList(Map.class));
+		return Json.toJson(jsonobj);
+	}
+
+	public String getSubMenuId(String tableName, String cloName, String value) {
 		final String val = value;
 		Sql sql = Sqls.create("select " + cloName + " from " + tableName + " where " + cloName + " like '" + value + "____' order by " + cloName + " desc");
 		sql.setCallback(new SqlCallback() {
@@ -265,13 +267,40 @@ public class BaseService<T> extends IdEntityService<T> {
 		dao().execute(sql);
 		return sql.getString();
 	}
-    
-    public List<T> list(Sql sql) {
-        Entity<T> entity = dao().getEntity(getEntityClass());
-        sql.setEntity(entity);
-        sql.setCallback(Sqls.callback.entities());
-        dao().execute(sql);
-        return sql.getList(getEntityClass());
 
+	public List<T> list(Sql sql) {
+		Entity<T> entity = dao().getEntity(getEntityClass());
+		sql.setEntity(entity);
+		sql.setCallback(Sqls.callback.entities());
+		dao().execute(sql);
+		return sql.getList(getEntityClass());
+	}
+
+	public QueryResult listPageSql(Sql sql, int curPage, int pageSize, int count) {
+		Pager pager = dao().createPager(curPage, pageSize);
+		pager.setRecordCount(count);// 记录数需手动设置
+		sql.setPager(pager);
+		sql.setCallback(Sqls.callback.records());
+		dao().execute(sql);
+		return new QueryResult(sql.getList(Map.class), pager);
+	}
+
+	public QueryResult listPage(int curPage, int pageSize, Condition cnd) {
+		Pager pager = dao().createPager(curPage, pageSize);
+		List<T> list = dao().query(getEntityClass(), cnd, pager);
+		pager.setRecordCount(dao().count(getEntityClass(), cnd));// 记录数需手动设置
+		return new QueryResult(list, pager);
+	}
+	
+    public QueryResult listPagerSql(Sql sql, Pager pager) {
+        sql.setPager(pager);
+        sql.setCallback(Sqls.callback.records());
+        dao().execute(sql);
+        return new QueryResult(sql.getList(Map.class), pager);
+    }
+    public List<Map> listMap(Sql sql) {
+        sql.setCallback(Sqls.callback.records());
+        dao().execute(sql);
+        return sql.getList(Map.class);
     }
 }

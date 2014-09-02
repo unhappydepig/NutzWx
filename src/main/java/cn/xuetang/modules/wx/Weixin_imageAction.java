@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.dao.QueryResult;
 import org.nutz.dao.Sqls;
 import org.nutz.dao.pager.Pager;
@@ -24,17 +23,19 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.Attr;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
+import org.nutz.web.Webs;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.common.config.Dict;
 import cn.xuetang.common.util.DateUtil;
-import cn.xuetang.modules.app.bean.App_project;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_info;
-import cn.xuetang.modules.wx.bean.Weixin_image;
 import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.AppProjectService;
+import cn.xuetang.service.WeixinImageService;
+import cn.xuetang.service.user.UserInfoService;
 
 /**
  * @author Wizzer
@@ -42,42 +43,47 @@ import cn.xuetang.service.AppInfoService;
  */
 @IocBean
 @At("/private/wx/image")
-public class Weixin_imageAction extends BaseAction {
+public class Weixin_imageAction {
 	@Inject
-	protected Dao dao;
+	private AppProjectService appProjectService;
 	private final static Log log = Logs.get();
+	@Inject
+	private WeixinImageService weixinImageService;
+	@Inject
+	private UserInfoService userInfoService;
 	@Inject
 	private AppInfoService appInfoService;
 
 	@At("")
 	@Ok("vm:template.private.wx.Weixin_image")
-	public void index(@Param("sys_menu") String sys_menu, HttpServletRequest req, HttpSession session) {
+	public void index(@Attr(Webs.ME)Sys_user user,@Param("sys_menu") String sys_menu, HttpServletRequest req, HttpSession session) {
 		Pager pager = new Pager();
 		pager.setPageNumber(1);
 		pager.setPageSize(8);
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
-		req.setAttribute("pro", daoCtl.list(dao, App_project.class, Cnd.where("id", "in", user.getProlist()).asc("id")));
+		req.setAttribute("pro", appProjectService.listByCnd(Cnd.where("id", "in", user.getProlist()).asc("id")));
 		req.setAttribute("sys_menu", sys_menu);
 	}
 
 	@At
 	public boolean move(@Param("tvid") int tvid, @Param("totvid") int totvid, @Param("id") Integer[] id) {
-		return daoCtl.update(dao, Weixin_image.class, Chain.make("tvid", totvid), Cnd.where("id", "in", id));
+		weixinImageService.update(Chain.make("tvid", totvid), Cnd.where("id", "in", id));
+		return true;
 	}
 
 	@At
 	public boolean deleteIds(@Param("ids") Integer[] ids) {
-		return daoCtl.delete(dao, Weixin_image.class, Cnd.where("id", "in", ids)) > 0;
+		return weixinImageService.delete(Cnd.where("id", "in", ids)) > 0;
 	}
 
 	@At
 	public int getRow(@Param("id") int id) {
-		return daoCtl.detailById(dao, Weixin_image.class, id).getStatus();
+		return weixinImageService.fetch(id).getStatus();
 	}
 
 	@At
 	public boolean changeStatus(@Param("id") int id, @Param("status") int status) {
-		return daoCtl.update(dao, Weixin_image.class, Chain.make("status", status), Cnd.where("id", "=", id));
+		weixinImageService.update(Chain.make("status", status), Cnd.where("id", "=", id));
+		return true;
 	}
 
 	@At
@@ -129,12 +135,12 @@ public class Weixin_imageAction extends BaseAction {
 		sql.vars().set("sql", str);
 		int count;
 		if (isCountBaby) {
-			count = daoCtl.getIntRowValue(dao, Sqls.create("SELECT COUNT(1) " + sql.toString().substring(sql.toString().indexOf("FROM"), sql.toString().indexOf("order"))));
+			count = weixinImageService.getIntRowValue(Sqls.create("SELECT COUNT(1) " + sql.toString().substring(sql.toString().indexOf("FROM"), sql.toString().indexOf("order"))));
 		} else {
-			count = daoCtl.getIntRowValue(dao, Sqls.create(countStr));
+			count = weixinImageService.getIntRowValue(Sqls.create(countStr));
 		}
 		// 获得图片及宝贝资料
-		QueryResult qr = daoCtl.listPageSql(dao, sql, curPage, pageSize, count);
+		QueryResult qr = weixinImageService.listPageSql(sql, curPage, pageSize, count);
 		List<Integer> list = new ArrayList<Integer>();
 		List<Integer> tvlist = new ArrayList<Integer>();
 		for (Map info : qr.getList(Map.class)) {
@@ -150,7 +156,7 @@ public class Weixin_imageAction extends BaseAction {
 		// 获得用户资料
 		Map<Integer, Object> map = new HashMap<Integer, Object>();
 		if (list.size() > 0) {
-			List<User_info> userInfoList = daoCtl.list(dao, User_info.class, Cnd.where("uid", "in", list));
+			List<User_info> userInfoList = userInfoService.listByCnd(Cnd.where("uid", "in", list));
 			for (User_info info : userInfoList) {
 				map.put(info.getUid(), info);
 			}
@@ -175,7 +181,6 @@ public class Weixin_imageAction extends BaseAction {
 				objectMap.put("mobile", Strings.sNull(userInfo.getMobile()));
 				objectMap.put("postcode", Strings.sNull(userInfo.getPostcode()));
 			}
-
 			listjson.add(objectMap);
 		}
 		Map<String, Object> jsonobj = new HashMap<String, Object>();
@@ -184,5 +189,4 @@ public class Weixin_imageAction extends BaseAction {
 		log.debug("/private/wx/image/list Load in " + (System.currentTimeMillis() - a) + "ms");
 		return Json.toJson(jsonobj);
 	}
-
 }

@@ -4,16 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.NumberUtils;
+import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.Sqls;
 import org.nutz.filepool.FilePool;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.quartz.Scheduler;
 
 import cn.xuetang.common.config.Dict;
+import cn.xuetang.common.util.WeixinUtil;
 import cn.xuetang.modules.app.bean.App_info;
 import cn.xuetang.modules.sys.bean.Sys_config;
 
@@ -182,5 +186,35 @@ public class AppInfoService extends BaseService<App_info> {
 
 	public Object getType(String type) {
 		return app.dataDictGet(type);
+	}
+	
+	public String getGloalsAccessToken(App_info appInfo) {
+		String access_token = "";
+		boolean resetAccesstoken = false;
+		long now = System.currentTimeMillis();
+		if (!Strings.isBlank(appInfo.getAccess_token())) {
+			long ftime = NumberUtils.toLong(Strings.sNull(appInfo.getAccess_time()));
+			if ((now - ftime) > 7150 * 1000) {
+				resetAccesstoken = true;
+			} else {
+				access_token = Strings.sNull(appInfo.getAccess_token());
+			}
+		} else
+			resetAccesstoken = true;
+		if (resetAccesstoken) {
+			access_token = WeixinUtil.getAccess_token(appInfo);
+			dao().update(getEntityClass(),Chain.make("access_time", String.valueOf(now)).add("access_token", access_token), Cnd.where("id", "=", appInfo.getId()));
+		}
+		return access_token;
+	}
+	/**
+	 * 获取全局access_token，超过7200ms重新获取，否则返回上次值
+	 * 
+	 * @param dao
+	 * @param appid
+	 * @return
+	 */
+	public String getGloalsAccessToken(int appid) {
+		return getGloalsAccessToken(appid);
 	}
 }
