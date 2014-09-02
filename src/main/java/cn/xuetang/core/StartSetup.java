@@ -1,4 +1,4 @@
-package cn.xuetang.modules;
+package cn.xuetang.core;
 
 import java.io.IOException;
 import java.util.Properties;
