@@ -7,11 +7,10 @@ var Login = {
         this.handleLogin();
     },
     initLogin: function () {
-        var username = $.cookie("username");
-        if (username) {
-            $("#username").val(username);
-            $("#remember").prop("checked", true);
-            $("#remember").parent().addClass("checked");
+        var rememberMe = $.cookie("rememberMe");
+        if (rememberMe) {
+            $("#rememberMe").prop("checked", true);
+            $("#rememberMe").parent().addClass("checked");
         }
     },
     handleLogin: function () {
@@ -52,13 +51,15 @@ var Login = {
                 username: {
                     required: true
                 },
-                captcha: 'required'
+                captcha:  {
+                    required: true
+                }
             },
 
             messages: {
                 username: "用户名不能为空",
                 password: "密码不能为空",
-                verifyCode: '验证码不能为空'
+                captcha: '验证码不能为空'
             },
             invalidHandler: function (event, validator) {
             },
@@ -82,6 +83,11 @@ var Login = {
                     success: function (data) {
                         spinner.spin();
                         if (data.type == "success") {
+                            if($("#rememberMe").is(":checked")){
+                                $.cookie("rememberMe", "true", { expires: 24 });
+                            }else{
+                                $.cookie("rememberMe","");
+                            }
                             window.location = APP_BASE+"/private/index";
                         } else {
                             bootbox.alert(data.content);
