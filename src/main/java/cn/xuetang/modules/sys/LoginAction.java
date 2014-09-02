@@ -1,10 +1,10 @@
 package cn.xuetang.modules.sys;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -47,13 +47,15 @@ public class LoginAction {
 			return Message.success("common.success", req);
 		} catch (LockedAccountException e) {
 			return Message.error(e.getMessage(), req);
-		}catch(UnknownAccountException e){
+		} catch (UnknownAccountException e) {
 			return Message.error(e.getMessage(), req);
 		} catch (IncorrectCaptchaException e) {
 			return Message.error(e.getMessage(), req);
+		}catch(IncorrectCredentialsException e){
+			return Message.error("common.error.login.password", req);
 		} catch (AuthenticationException e) {
 			return Message.error(e.getMessage(), req);
-		}catch(Exception e){
+		} catch (Exception e) {
 			return Message.error("common.error.login", req);
 		}
 	}
