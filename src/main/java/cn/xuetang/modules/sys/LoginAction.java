@@ -46,13 +46,13 @@ public class LoginAction {
 			subject.login(token);
 			return Message.success("common.success", req);
 		} catch (LockedAccountException e) {
-			return Message.error("common.error.account.locked", req);
+			return Message.error(e.getMessage(), req);
 		}catch(UnknownAccountException e){
-			return Message.error("common.error.account.not.found", req);
+			return Message.error(e.getMessage(), req);
 		} catch (IncorrectCaptchaException e) {
-			return Message.error("common.error.account.captcha", req);
+			return Message.error(e.getMessage(), req);
 		} catch (AuthenticationException e) {
-			return Message.error("common.error.account.null", req);
+			return Message.error(e.getMessage(), req);
 		}catch(Exception e){
 			return Message.error("common.error.login", req);
 		}

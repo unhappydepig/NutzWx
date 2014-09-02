@@ -81,7 +81,6 @@ var Login = {
                     data: $(form).serialize(),
                     success: function (data) {
                         spinner.spin();
-                        bootbox.alert("data:::"+data);
                         if (data.type == "success") {
                             window.location = APP_BASE+"/private/index";
                         } else {

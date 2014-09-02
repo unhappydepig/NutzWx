@@ -36,23 +36,23 @@ public class NutDaoRealm extends AbstractNutAuthoRealm {
 		CaptchaUsernamePasswordToken authcToken = (CaptchaUsernamePasswordToken) token;
 		boolean isCaptchaBlank = StringUtils.isBlank(authcToken.getCaptcha());
 		if (isCaptchaBlank) {
-			throw Lang.makeThrow(IncorrectCaptchaException.class, "验证码不可以为空!");
+			throw Lang.makeThrow(IncorrectCaptchaException.class, "common.error.account.captcha");
 		}
 		String sessionID = SecurityUtils.getSubject().getSession(true).getId().toString();
 		boolean isRight = getImageCaptchaService().validateResponseForID(sessionID, StringUtils.upperCase(authcToken.getCaptcha()));
 		if (!isRight) {
-			throw Lang.makeThrow(IncorrectCaptchaException.class, "验证码错误!");
+			throw Lang.makeThrow(IncorrectCaptchaException.class, "common.error.account.captcha");
 		}
 		String accountName = authcToken.getUsername();
 		if (StringUtils.isBlank(accountName)) {
-			throw Lang.makeThrow(AuthenticationException.class, "Account is empty");
+			throw Lang.makeThrow(AuthenticationException.class, "common.error.account.null");
 		}
 		Sys_user user = getUserService().fetchByName(authcToken.getUsername());
 		if (Lang.isEmpty(user)) {
-			throw Lang.makeThrow(UnknownAccountException.class, "Account [ %s ] not found", authcToken.getUsername());
+			throw Lang.makeThrow(UnknownAccountException.class, "common.error.account.not.found");
 		}
 		if (user.isLocked()) {
-			throw Lang.makeThrow(LockedAccountException.class, "Account [ %s ] is locked.", authcToken.getUsername());
+			throw Lang.makeThrow(LockedAccountException.class, "common.error.account.locked");
 		}
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), getName());
 		ByteSource salt = ByteSource.Util.bytes(user.getSalt());
