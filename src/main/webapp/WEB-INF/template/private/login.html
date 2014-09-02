@@ -27,6 +27,12 @@
     <script src="${base}/themes/ace/assets/js/html5shiv.js"></script>
     <script src="${base}/themes/ace/assets/js/respond.min.js"></script>
     <![endif]-->
+    <script type="text/javascript">
+	    this.tochange=function()
+	    {
+	        $("#captchaid").attr("src","${base}/captcha?rnd=" + new Date().getTime());
+	    } 
+    </script>
 </head>
 
 <body class="login-layout">
@@ -77,7 +83,7 @@
 
                         <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                                <img alt="验证码" title="点击切换" style="cursor:pointer;position:absolute;left:0;height:34px;padding-top:1px;" data-rel="tooltip" data-placement="bottom" id="yw0" src="${base}/captcha" />
+                                <img src="${base}/captcha" name="captchaid" id="captchaid" title="点击刷新验证码" align="middle" onclick="tochange()" style="cursor:pointer;position:absolute;left:0;height:34px;padding-top:1px;" data-rel="tooltip" data-placement="bottom" />
                                 <input style="padding-left: 92px;" type="text" name="verifyCode" id="verifyCode" class="form-control" placeholder="Captcha" />
                                 <i class="icon-tint"></i>
                             </span>
