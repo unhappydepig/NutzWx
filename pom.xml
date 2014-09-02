@@ -311,7 +311,7 @@
 					<archiveClasses>true</archiveClasses>
 					<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
 					<warSourceExcludes>game.html</warSourceExcludes>
-					<warSourceExcludes>WEB-INF/classes/com/**</warSourceExcludes>
+					<warSourceExcludes>WEB-INF/classes/cn/**,WEB-INF/classes/org/**</warSourceExcludes>
 					<webResources>
 				      <resource>  
 				        <directory>src/main/resources</directory>  
