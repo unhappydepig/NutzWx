@@ -6,7 +6,7 @@
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>nutz_wx</name>
-	<url>http://www.rekoe.com</url>
+	<url>http://www.nutzwx.com</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
