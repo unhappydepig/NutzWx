@@ -27,8 +27,16 @@
     <script src="${base}/themes/ace/assets/js/html5shiv.js"></script>
     <script src="${base}/themes/ace/assets/js/respond.min.js"></script>
     <![endif]-->
+<<<<<<< HEAD
     <script language="JavaScript">
         var APP_BASE="${base}";
+=======
+    <script type="text/javascript">
+	    this.tochange=function()
+	    {
+	        $("#captchaid").attr("src","${base}/captcha?rnd=" + new Date().getTime());
+	    } 
+>>>>>>> 5eaf9db193e55455f7825cdc0530b81ab5418e40
     </script>
 </head>
 
@@ -80,8 +88,13 @@
 
                         <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
+<<<<<<< HEAD
                                 <img alt="验证码" title="点击切换" style="cursor:pointer;position:absolute;left:0;height:34px;padding-top:1px;" data-rel="tooltip" data-placement="bottom" id="yw0" src="${base}/captcha" />
                                 <input style="padding-left: 93px;" type="text" name="captcha" id="captcha" class="form-control" placeholder="Captcha" />
+=======
+                                <img src="${base}/captcha" name="captchaid" id="captchaid" title="点击刷新验证码" align="middle" onclick="tochange()" style="cursor:pointer;position:absolute;left:0;height:34px;padding-top:1px;" data-rel="tooltip" data-placement="bottom" />
+                                <input style="padding-left: 92px;" type="text" name="verifyCode" id="verifyCode" class="form-control" placeholder="Captcha" />
+>>>>>>> 5eaf9db193e55455f7825cdc0530b81ab5418e40
                                 <i class="icon-tint"></i>
                             </span>
                         </label>
