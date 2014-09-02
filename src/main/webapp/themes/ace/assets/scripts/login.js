@@ -77,7 +77,17 @@ var Login = {
                         if (data.type == "success") {
                             window.location = APP_BASE+"/private/index";
                         } else {
-                            bootbox.alert(data.content);
+                            var res=data.content;
+                            if(res=="账号已锁"||res=="账号为空"||res=="账号不存在"){
+                                $("#username").closest('label').removeClass('has-info').addClass('has-error');
+                                $('<div for="username" class="help-block">'+data.content+'</div>').insertAfter($("#username").parent());
+                            }else if(res=="验证码错误"){
+                                $("#captcha").closest('label').removeClass('has-info').addClass('has-error');
+                                $('<div for="captcha" class="help-block">'+data.content+'</div>').insertAfter($("#captcha").parent());
+                            }else{
+                                $("#password").closest('label').removeClass('has-info').addClass('has-error');
+                                $('<div for="password" class="help-block">'+data.content+'</div>').insertAfter($("#password").parent());
+                            }
                             $('#captcha').val("");
                             Login.refreshCaptcha();
                         }
