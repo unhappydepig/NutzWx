@@ -11,7 +11,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.modules.wx.bean.Weixin_push_user;
-import cn.xuetang.service.WeixinPushUserService;
+import cn.xuetang.service.wx.WeixinPushUserService;
 
 /**
  * @author Wizzer

@@ -11,7 +11,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.modules.app.bean.App_project;
-import cn.xuetang.service.AppProjectService;
+import cn.xuetang.service.sys.AppProjectService;
 
 /**
  * @author Wizzer

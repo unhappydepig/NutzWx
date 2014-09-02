@@ -24,7 +24,7 @@ import cn.xuetang.common.task.LoadTask;
 import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.Permission;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * 类描述： 创建人：Wizzer 联系方式：www.wizzer.cn 创建时间：2013-11-26 下午2:11:13

@@ -23,7 +23,7 @@ import cn.xuetang.common.util.EmojiFilter;
 import cn.xuetang.common.util.UrlUtil;
 import cn.xuetang.modules.app.bean.App_info;
 import cn.xuetang.modules.user.bean.User_conn_wx;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 import cn.xuetang.service.user.UserConnWXService;
 
 /**

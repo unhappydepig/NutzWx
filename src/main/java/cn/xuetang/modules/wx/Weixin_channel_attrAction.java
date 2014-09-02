@@ -16,7 +16,7 @@ import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.config.Dict;
 import cn.xuetang.modules.wx.bean.Weixin_channel_attr;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 import cn.xuetang.service.wx.WeixinChannelAttrService;
 
 /**

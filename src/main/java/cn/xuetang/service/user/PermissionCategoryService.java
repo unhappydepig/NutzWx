@@ -1,4 +1,4 @@
-package cn.xuetang.service;
+package cn.xuetang.service.user;
 
 import java.util.List;
 

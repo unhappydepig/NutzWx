@@ -1,4 +1,4 @@
-package cn.xuetang.service;
+package cn.xuetang.service.sys;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import cn.xuetang.modules.app.bean.App_project;
+import cn.xuetang.service.BaseService;
 
 @IocBean(fields = { "dao" })
 public class AppProjectService extends BaseService<App_project> {

@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.xuetang.service.AppInfoService;
 import cn.xuetang.service.BaseService;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;

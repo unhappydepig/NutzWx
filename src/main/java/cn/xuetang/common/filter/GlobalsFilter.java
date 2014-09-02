@@ -6,7 +6,7 @@ import org.nutz.mvc.ActionContext;
 import org.nutz.mvc.ActionFilter;
 import org.nutz.mvc.View;
 
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * @author Wizzer.cn

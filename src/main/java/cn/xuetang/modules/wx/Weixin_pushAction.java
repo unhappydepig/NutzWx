@@ -35,13 +35,13 @@ import cn.xuetang.modules.user.bean.User_conn_wx;
 import cn.xuetang.modules.wx.bean.Weixin_push;
 import cn.xuetang.modules.wx.bean.Weixin_push_content;
 import cn.xuetang.modules.wx.bean.Weixin_push_user;
-import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.WeixinPushContentService;
-import cn.xuetang.service.WeixinPushService;
-import cn.xuetang.service.WeixinPushUserService;
+import cn.xuetang.service.sys.AppInfoService;
+import cn.xuetang.service.sys.AppProjectService;
 import cn.xuetang.service.sys.SysDictService;
 import cn.xuetang.service.user.UserConnWXService;
+import cn.xuetang.service.wx.WeixinPushContentService;
+import cn.xuetang.service.wx.WeixinPushService;
+import cn.xuetang.service.wx.WeixinPushUserService;
 
 /**
  * @author Wizzer

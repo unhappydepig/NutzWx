@@ -38,13 +38,13 @@ import cn.xuetang.modules.wx.bean.Weixin_channel;
 import cn.xuetang.modules.wx.bean.Weixin_channel_attr;
 import cn.xuetang.modules.wx.bean.Weixin_content;
 import cn.xuetang.modules.wx.bean.Weixin_content_txt;
-import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.WeixinContentAttrService;
-import cn.xuetang.service.WeixinContentService;
-import cn.xuetang.service.WeixinContentTXTService;
+import cn.xuetang.service.sys.AppInfoService;
+import cn.xuetang.service.sys.AppProjectService;
 import cn.xuetang.service.wx.WeixinChannelAttrService;
 import cn.xuetang.service.wx.WeixinChannelService;
+import cn.xuetang.service.wx.WeixinContentAttrService;
+import cn.xuetang.service.wx.WeixinContentService;
+import cn.xuetang.service.wx.WeixinContentTXTService;
 
 /**
  * @author Wizzer

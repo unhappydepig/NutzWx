@@ -27,7 +27,7 @@ import cn.xuetang.common.file.FileType;
 import cn.xuetang.common.filter.GlobalsFilter;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.common.util.DecodeUtil;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * 类描述： 创建人：Wizzer 联系方式：www.wizzer.cn 创建时间：2013-12-17 下午1:12:37

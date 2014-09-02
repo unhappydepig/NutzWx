@@ -14,7 +14,7 @@ import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.common.util.DecodeUtil;
 import cn.xuetang.common.util.SyncUtil;
 import cn.xuetang.modules.app.bean.App_info;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * @author Wizzer

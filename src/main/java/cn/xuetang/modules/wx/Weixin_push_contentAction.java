@@ -17,8 +17,8 @@ import org.nutz.web.Webs;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.wx.bean.Weixin_push_content;
-import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.WeixinPushContentService;
+import cn.xuetang.service.sys.AppInfoService;
+import cn.xuetang.service.wx.WeixinPushContentService;
 
 /**
  * @author Wizzer

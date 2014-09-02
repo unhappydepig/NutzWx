@@ -9,7 +9,7 @@ import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * Created by Wizzer on 14-5-21.

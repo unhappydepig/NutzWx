@@ -24,8 +24,8 @@ import cn.xuetang.common.config.Dict;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.wx.bean.Weixin_channel;
-import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.AppProjectService;
+import cn.xuetang.service.sys.AppInfoService;
+import cn.xuetang.service.sys.AppProjectService;
 import cn.xuetang.service.wx.WeixinChannelService;
 
 /**

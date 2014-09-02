@@ -10,7 +10,7 @@ import org.nutz.weixin.impl.AbstractWxHandler;
 import org.nutz.weixin.util.Wxs;
 
 import cn.xuetang.modules.app.bean.App_info;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * Created by Wizzer on 14-8-11.

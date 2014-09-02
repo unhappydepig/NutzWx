@@ -37,7 +37,7 @@ import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_unit;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.sys.bean.Sys_user_role;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 import cn.xuetang.service.sys.SysRoleService;
 import cn.xuetang.service.sys.SysUnitService;
 import cn.xuetang.service.sys.SysUserRoleService;

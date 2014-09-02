@@ -20,7 +20,7 @@ import cn.xuetang.common.util.ErrorUtil;
 import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.common.util.UrlUtil;
 import cn.xuetang.modules.app.bean.App_info;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * Created by Wizzer on 14-4-1.

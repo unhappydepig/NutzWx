@@ -11,7 +11,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.modules.wx.bean.Weixin_content_attr;
-import cn.xuetang.service.WeixinContentAttrService;
+import cn.xuetang.service.wx.WeixinContentAttrService;
 
 /**
  * @author Wizzer

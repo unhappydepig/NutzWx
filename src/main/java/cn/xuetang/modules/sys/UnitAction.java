@@ -27,7 +27,7 @@ import org.nutz.mvc.annotation.Param;
 import cn.xuetang.modules.sys.bean.Sys_role_resource;
 import cn.xuetang.modules.sys.bean.Sys_unit;
 import cn.xuetang.modules.sys.bean.Sys_user;
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 import cn.xuetang.service.sys.SysRoleResourceService;
 import cn.xuetang.service.sys.SysUnitService;
 

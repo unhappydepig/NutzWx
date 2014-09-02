@@ -32,10 +32,10 @@ import cn.xuetang.common.config.Dict;
 import cn.xuetang.common.util.DateUtil;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_info;
-import cn.xuetang.service.AppInfoService;
-import cn.xuetang.service.AppProjectService;
-import cn.xuetang.service.WeixinImageService;
+import cn.xuetang.service.sys.AppInfoService;
+import cn.xuetang.service.sys.AppProjectService;
 import cn.xuetang.service.user.UserInfoService;
+import cn.xuetang.service.wx.WeixinImageService;
 
 /**
  * @author Wizzer

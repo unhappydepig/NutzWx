@@ -23,7 +23,7 @@ import org.nutz.mvc.impl.AdaptorErrorContext;
 import org.nutz.mvc.upload.TempFile;
 import org.nutz.mvc.upload.UploadAdaptor;
 
-import cn.xuetang.service.AppInfoService;
+import cn.xuetang.service.sys.AppInfoService;
 
 /**
  * Created by Wizzer on 14-4-29.

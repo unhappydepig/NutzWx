@@ -1,4 +1,4 @@
-package cn.xuetang.service;
+package cn.xuetang.service.sys;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +20,7 @@ import cn.xuetang.common.config.Dict;
 import cn.xuetang.common.util.WeixinUtil;
 import cn.xuetang.modules.app.bean.App_info;
 import cn.xuetang.modules.sys.bean.Sys_config;
+import cn.xuetang.service.BaseService;
 
 @IocBean(fields = { "dao" })
 public class AppInfoService extends BaseService<App_info> {
