@@ -69,7 +69,6 @@ public class LoginAction {
 	@Ok("vm:template.private.login")
 	@RequiresGuest
 	public void login() {
-
 	}
 
 	@At

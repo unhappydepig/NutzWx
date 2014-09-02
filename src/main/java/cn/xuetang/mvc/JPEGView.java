@@ -7,6 +7,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 import org.nutz.mvc.View;
 
 import com.octo.captcha.service.CaptchaServiceException;
@@ -14,6 +16,7 @@ import com.octo.captcha.service.image.ImageCaptchaService;
 
 public class JPEGView implements View {
 	private ImageCaptchaService imageCaptchaService;
+	private final static Log log = Logs.get();
 
 	public JPEGView(ImageCaptchaService imageCaptchaService) {
 		this.imageCaptchaService = imageCaptchaService;
@@ -32,6 +35,7 @@ public class JPEGView implements View {
 			ImageIO.write(challenge, "jpg", out);
 			out.flush();
 		} catch (CaptchaServiceException e) {
+			log.error(e.getMessage(), e);
 		} finally {
 			out.close();
 		}

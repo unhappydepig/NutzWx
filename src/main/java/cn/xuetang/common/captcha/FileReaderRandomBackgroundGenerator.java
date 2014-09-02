@@ -40,23 +40,21 @@ public class FileReaderRandomBackgroundGenerator implements BackgroundGenerator 
 		this.height = height;
 		List<NutResource> list = Scans.me().scan(rootPath, ".+\\.jpg");
 		for (NutResource resource : list) {
-			BufferedImage out = null;
 			try {
-				out = getImage(resource.getInputStream());
+				BufferedImage out = getImage(resource.getInputStream());
+				this.images.add(out);
 			} catch (IOException e) {
 				log.error(e);
 			}
-			if (out != null) {
-				this.images.add(this.images.size(), out);
+		}
+		int len = this.images.size();
+		if (len > 0) {
+			for (int i = 0; i < len; ++i) {
+				BufferedImage bufferedImage = (BufferedImage) this.images.get(i);
+				this.images.set(i, tile(bufferedImage));
 			}
-			if (this.images.size() != 0)
-				for (int i = 0; i < this.images.size(); ++i) {
-					BufferedImage bufferedImage = (BufferedImage) this.images.get(i);
-					this.images.set(i, tile(bufferedImage));
-				}
-			else {
-				throw new CaptchaException("Root path directory is valid but does not contains any image (jpg) files");
-			}
+		} else {
+			throw new CaptchaException("Root path directory is valid but does not contains any image (jpg) files");
 		}
 	}
 
