@@ -1,4 +1,4 @@
-package cn.xuetang.common.dao;
+package cn.xuetang.common.util;
 
 import java.io.BufferedReader;
 import java.sql.ResultSet;

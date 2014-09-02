@@ -7,7 +7,7 @@ var ioc = {
 		fields:{
 			url:"jdbc:mysql://127.0.0.1:3306/weixin?useUnicode=true&characterEncoding=utf8",
 			username:"root",
-			password:"pass",
+			password:"root",
 			maxActive:20,
 			testWhileIdle:true,
 			validationQuery : "SELECT 'x'",

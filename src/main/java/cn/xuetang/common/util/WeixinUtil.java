@@ -11,10 +11,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang.math.NumberUtils;
-import org.nutz.dao.Chain;
-import org.nutz.dao.Cnd;
-import org.nutz.dao.Dao;
 import org.nutz.http.Request;
 import org.nutz.http.Response;
 import org.nutz.http.Sender;
@@ -23,13 +19,12 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
-import cn.xuetang.common.action.BaseAction;
 import cn.xuetang.modules.app.bean.App_info;
 
 /**
  * 微信接口工具类 Created by Wizzer on 14-4-4.
  */
-public class WeixinUtil extends BaseAction {
+public class WeixinUtil{
 	private final static Log log = Logs.get();
 
 	/**

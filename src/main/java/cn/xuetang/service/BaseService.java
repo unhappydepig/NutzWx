@@ -25,7 +25,7 @@ import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.service.IdEntityService;
 
-import cn.xuetang.common.dao.DBObject;
+import cn.xuetang.common.util.DBObject;
 
 public class BaseService<T> extends IdEntityService<T> {
 
