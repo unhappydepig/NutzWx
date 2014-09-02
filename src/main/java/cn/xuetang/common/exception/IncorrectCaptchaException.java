@@ -1,8 +1,7 @@
 package cn.xuetang.common.exception;
 
-import org.apache.shiro.authc.AuthenticationException;
 
-public class IncorrectCaptchaException extends AuthenticationException {
+public class IncorrectCaptchaException extends org.apache.shiro.ShiroException {
 
 	private static final long serialVersionUID = 3315875923669742156L;
 
