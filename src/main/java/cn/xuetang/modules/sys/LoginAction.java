@@ -60,7 +60,8 @@ public class LoginAction {
 
 	@At
 	@Ok(">>:/private/login")
-	public void logout(HttpSession session) {
+	@RequiresAuthentication
+	public void logout() {
 		Subject currentUser = SecurityUtils.getSubject();
 		try {
 			currentUser.logout();

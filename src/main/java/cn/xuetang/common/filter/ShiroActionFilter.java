@@ -51,19 +51,16 @@ public class ShiroActionFilter extends GlobalsFilter {
 				}
 			});
 		} catch (UnauthenticatedException e) {
-			e.printStackTrace();
 			return whenAuthFail(actionContext, e);
 		} catch (UnauthorizedException e) {
-			e.printStackTrace();
 			return permissionFail(actionContext, e);
 		} catch (AuthorizationException e) {
-			e.printStackTrace();
 			return permissionFail(actionContext, e);
 		}
 		return null;
 	}
 
-	private View view = new ServerRedirectView("/private/login");
+	private View view = new ServerRedirectView("/private/logout");
 	private View NOT_PERMISSION = new ServerRedirectView("/admin/common/forbit.rk");
 
 	private View whenAuthFail(ActionContext ctx, AuthorizationException e) {
