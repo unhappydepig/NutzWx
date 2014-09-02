@@ -2,6 +2,7 @@ package cn.xuetang.mvc;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,11 @@ public class VelocityLayoutView extends AbstractPathView {
 			context.put("request", req);
 			context.put("session", req.getSession());
 			context.put("shiro", permission);
+			Enumeration<?> reqs = req.getAttributeNames();
+			while (reqs.hasMoreElements()) {
+				String strKey = (String) reqs.nextElement();
+				context.put(strKey, req.getAttribute(strKey));
+			}
 			Template template = Velocity.getTemplate(getPath(path));
 			template.merge(context, sw);
 			internalRenderTemplate(template, context, resp.getWriter());
