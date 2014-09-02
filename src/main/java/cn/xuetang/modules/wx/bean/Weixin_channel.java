@@ -1,8 +1,10 @@
 package cn.xuetang.modules.wx.bean;
 
 import org.nutz.dao.entity.annotation.Column;
-import org.nutz.dao.entity.annotation.Table;
+import org.nutz.dao.entity.annotation.EL;
 import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.Prev;
+import org.nutz.dao.entity.annotation.Table;
 
 /**
  * @author Wizzer
@@ -10,8 +12,8 @@ import org.nutz.dao.entity.annotation.Name;
  */
 @Table("weixin_channel")
 public class Weixin_channel {
-	@Column
 	@Name
+	@Prev(els = { @EL("uuid()") })
 	private String id;
 	@Column
 	private int pid;

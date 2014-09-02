@@ -1,8 +1,9 @@
 package cn.xuetang.common.util;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.nutz.lang.Strings;
-import java.util.List;
 
 /**
  * Created by Wizzer on 14-3-25.

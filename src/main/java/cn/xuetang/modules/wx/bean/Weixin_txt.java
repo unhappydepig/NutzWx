@@ -1,8 +1,8 @@
 package cn.xuetang.modules.wx.bean;
 
-import org.nutz.dao.entity.annotation.*;
-import org.nutz.dao.DB;
-import org.nutz.repo.Base64;
+import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.Id;
+import org.nutz.dao.entity.annotation.Table;
 
 /**
 * @author Wizzer
@@ -11,11 +11,7 @@ import org.nutz.repo.Base64;
 @Table("weixin_txt")
 public class Weixin_txt 
 {
-	@Column
 	@Id
-	@Prev({
-		@SQL(db = DB.ORACLE, value="SELECT WEIXIN_TXT_S.nextval FROM dual")
-	})
 	private long id;
 	@Column
 	private int pid;

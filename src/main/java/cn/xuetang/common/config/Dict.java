@@ -1,7 +1,5 @@
 package cn.xuetang.common.config;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Wizzer on 14-3-31.

@@ -1,7 +1,9 @@
 package cn.xuetang.modules.sys.bean;
 
 import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.EL;
 import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.Prev;
 import org.nutz.dao.entity.annotation.Table;
 /**
 * @author 
@@ -10,8 +12,8 @@ import org.nutz.dao.entity.annotation.Table;
 @Table("sys_dict")
 public class Sys_dict 
 {
-	@Column
     @Name
+    @Prev(els = { @EL("uuid()") })
 	private String id;
 	@Column
 	private String dkey;

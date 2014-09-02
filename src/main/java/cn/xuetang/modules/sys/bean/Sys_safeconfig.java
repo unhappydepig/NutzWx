@@ -11,7 +11,6 @@ import org.nutz.dao.entity.annotation.Table;
  */
 @Table("sys_safeconfig")
 public class Sys_safeconfig {
-	@Column
 	@Id(auto = false)
 	private int id;
 	@Column

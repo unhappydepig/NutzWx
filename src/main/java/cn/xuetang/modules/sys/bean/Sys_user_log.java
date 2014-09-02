@@ -1,10 +1,7 @@
 package cn.xuetang.modules.sys.bean;
 
-import org.nutz.dao.DB;
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
-import org.nutz.dao.entity.annotation.Prev;
-import org.nutz.dao.entity.annotation.SQL;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
@@ -14,9 +11,7 @@ import org.nutz.dao.entity.annotation.Table;
  */
 @Table("sys_user_log")
 public class Sys_user_log {
-	@Column
 	@Id
-	@Prev({ @SQL(db = DB.ORACLE, value = "SELECT SYS_USER_LOG_S.nextval FROM dual") })
 	private long id;
 	@Column
 	private long userid;

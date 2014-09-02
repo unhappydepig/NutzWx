@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.xuetang.service.BaseService;
-
 import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -24,6 +22,7 @@ import org.nutz.lang.Strings;
 import cn.xuetang.common.config.Dict;
 import cn.xuetang.common.util.ErrorUtil;
 import cn.xuetang.modules.sys.bean.Sys_dict;
+import cn.xuetang.service.BaseService;
 
 @IocBean(fields = { "dao" })
 public class SysDictService extends BaseService<Sys_dict> {

@@ -3,7 +3,6 @@ package cn.xuetang.modules.sys;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,11 +35,9 @@ import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_unit;
 import cn.xuetang.modules.sys.bean.Sys_user;
-import cn.xuetang.modules.sys.bean.Sys_user_role;
 import cn.xuetang.service.sys.AppInfoService;
 import cn.xuetang.service.sys.SysRoleService;
 import cn.xuetang.service.sys.SysUnitService;
-import cn.xuetang.service.sys.SysUserRoleService;
 import cn.xuetang.service.sys.SysUserService;
 
 /**
@@ -51,8 +48,6 @@ import cn.xuetang.service.sys.SysUserService;
 @At("/private/sys/user")
 public class UserAction{
 
-	@Inject
-	private SysUserRoleService sysUserRoleService;
 	@Inject
 	private SysRoleService sysRoleService;
 	@Inject
@@ -298,12 +293,12 @@ public class UserAction{
 			user.setSalt(salt);
 			user.setLoginTime(Times.now());
 			if (sysUserService.insert(user)) {
-				for (int i = 0; i < ids.length && (!"".equals(ids[0])); i++) {
+				/*for (int i = 0; i < ids.length && (!"".equals(ids[0])); i++) {
 					Sys_user_role syr = new Sys_user_role();
 					syr.setUserid(user.getUserid());
 					syr.setRoleid(NumberUtils.toInt(Strings.sNull(ids[i])));
 					sysUserRoleService.insert(syr);
-				}
+				}*/
 				return true;
 			}
 		} catch (Exception e) {
@@ -316,7 +311,7 @@ public class UserAction{
 	@At
 	@Ok("vm:template.private.sys.userUpdate")
 	public void toupdate(@Attr(Webs.ME) Sys_user user,@Param("userid") long userid, HttpSession session, HttpServletRequest req) {
-		Sys_user obj = sysUserService.fetch(userid);
+		/*Sys_user obj = sysUserService.fetch(userid);
 		Sys_unit unit = sysUnitService.detailByName(obj.getUnitid());
 		req.setAttribute("obj", obj);
 		req.setAttribute("unit", unit);
@@ -434,7 +429,7 @@ public class UserAction{
 				array.add(jsonobj);
 			}
 		}
-		req.setAttribute("str", Json.toJson(array));
+		req.setAttribute("str", Json.toJson(array));*/
 	}
 
 	@At
@@ -449,13 +444,13 @@ public class UserAction{
 			user.setLoginTime(Times.now());
 			result = sysUserService.update(user);
 			if (result) {
-				sysUserRoleService.delete("sys_user_role", Cnd.where("userid", "=", user.getUserid()));
+				/*sysUserRoleService.delete("sys_user_role", Cnd.where("userid", "=", user.getUserid()));
 				for (int i = 0; i < checkids.length && (!"".equals(checkids[0])); i++) {
 					Sys_user_role syr = new Sys_user_role();
 					syr.setUserid(user.getUserid());
 					syr.setRoleid(NumberUtils.toInt(Strings.sNull(checkids[i])));
 					sysUserRoleService.insert(syr);
-				}
+				}*/
 			}
 			return result;
 		} catch (Exception e) {

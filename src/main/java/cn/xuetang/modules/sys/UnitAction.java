@@ -24,11 +24,9 @@ import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 
-import cn.xuetang.modules.sys.bean.Sys_role_resource;
 import cn.xuetang.modules.sys.bean.Sys_unit;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.service.sys.AppInfoService;
-import cn.xuetang.service.sys.SysRoleResourceService;
 import cn.xuetang.service.sys.SysUnitService;
 
 /**
@@ -45,8 +43,6 @@ public class UnitAction {
 	@Inject
 	private SysUnitService sysUnitService;
 	@Inject
-	private SysRoleResourceService sysRoleResourceService;
-	@Inject
 	private AppInfoService appInfoService;
 
 	@At
@@ -55,9 +51,9 @@ public class UnitAction {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		String[] mp = StringUtils.split(user.getBtnmap().get("/private/sys/unit"), ";");
 		req.setAttribute("btnmap", mp);
-		List<Sys_role_resource> reslist = sysRoleResourceService.listByCnd(Cnd.wrap("resourceid = '000100010001'"));
+		//List<Sys_role_resource> reslist = sysRoleResourceService.listByCnd(Cnd.wrap("resourceid = '000100010001'"));
 		HashSet<String> set = new HashSet<String>();
-		for (Sys_role_resource resource : reslist) {
+		/*for (Sys_role_resource resource : reslist) {
 			if (user.getRolelist().contains(resource.getRoleid())) {
 				String button = resource.getButton();
 				if (!"".equals(button) && button != null) {
@@ -67,7 +63,7 @@ public class UnitAction {
 					}
 				}
 			}
-		}
+		}*/
 		req.setAttribute("buttonset", set);
 	}
 

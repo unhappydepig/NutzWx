@@ -1,15 +1,11 @@
 package cn.xuetang.common.shiro.realm;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.brickred.socialauth.Profile;
 import org.nutz.lang.Lang;
-
-import cn.xuetang.modules.sys.bean.Sys_user;
 
 public class NutAuthoDaoRealm extends AbstractNutAuthoRealm {
 

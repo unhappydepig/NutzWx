@@ -1,12 +1,12 @@
 package cn.xuetang.service.user;
 
-import cn.xuetang.service.BaseService;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.sql.Criteria;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import cn.xuetang.modules.user.bean.User_address;
+import cn.xuetang.service.BaseService;
 
 @IocBean(fields = { "dao" })
 public class UserAddressService extends BaseService<User_address> {

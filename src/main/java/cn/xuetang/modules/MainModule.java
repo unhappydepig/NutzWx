@@ -11,13 +11,11 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.SetupBy;
 import org.nutz.mvc.annotation.Views;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
-
-import cn.xuetang.mvc.JPEGViewMaker;
-import cn.xuetang.mvc.VelocityViewMaker;
-
 import org.nutz.weixin.mvc.WxViewMaker;
 
 import cn.xuetang.common.filter.ShiroActionFilter;
+import cn.xuetang.mvc.JPEGViewMaker;
+import cn.xuetang.mvc.VelocityViewMaker;
 
 /**
  * 类描述： 创建人：Wizzer 联系方式：www.wizzer.cn 创建时间：2013-11-26 下午2:08:37
