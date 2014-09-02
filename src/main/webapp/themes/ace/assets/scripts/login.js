@@ -3,15 +3,7 @@
  */
 var Login = {
     init: function () {
-        this.initLogin();
         this.handleLogin();
-    },
-    initLogin: function () {
-        var rememberMe = $.cookie("rememberMe");
-        if (rememberMe) {
-            $("#rememberMe").prop("checked", true);
-            $("#rememberMe").parent().addClass("checked");
-        }
     },
     handleLogin: function () {
         var opts = {
@@ -83,11 +75,6 @@ var Login = {
                     success: function (data) {
                         spinner.spin();
                         if (data.type == "success") {
-                            if($("#rememberMe").is(":checked")){
-                                $.cookie("rememberMe", "true", { expires: 24 });
-                            }else{
-                                $.cookie("rememberMe","");
-                            }
                             window.location = APP_BASE+"/private/index";
                         } else {
                             bootbox.alert(data.content);
