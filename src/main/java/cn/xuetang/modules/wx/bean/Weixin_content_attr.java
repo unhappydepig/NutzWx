@@ -1,6 +1,7 @@
 package cn.xuetang.modules.wx.bean;
 
 import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 /**
 * @author Wizzer
@@ -9,7 +10,7 @@ import org.nutz.dao.entity.annotation.Table;
 @Table("weixin_content_attr")
 public class Weixin_content_attr 
 {
-	@Column
+	@Id
 	private int gid;
 	@Column
 	private String attr_code;

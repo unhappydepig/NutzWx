@@ -1,15 +1,15 @@
 package cn.xuetang.common.util;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Ordering;
-import org.apache.commons.lang.math.NumberUtils;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Random;
+
 import org.nutz.json.Json;
 import org.nutz.json.JsonFormat;
 import org.nutz.repo.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * @author Wizzer.cn

@@ -10,7 +10,6 @@ import org.nutz.dao.entity.annotation.Table;
  */
 @Table("user_score")
 public class User_score {
-	@Column
 	@Id(auto = false)
 	private int uid;
 	@Column

@@ -1,11 +1,8 @@
 package cn.xuetang.modules.user.bean;
 
 import org.nutz.dao.entity.annotation.Column;
-import org.nutz.dao.entity.annotation.Table;
 import org.nutz.dao.entity.annotation.Id;
-import org.nutz.dao.entity.annotation.Prev;
-import org.nutz.dao.entity.annotation.SQL;
-import org.nutz.dao.DB;
+import org.nutz.dao.entity.annotation.Table;
 
 /**
  * @author Wizzer
@@ -13,9 +10,7 @@ import org.nutz.dao.DB;
  */
 @Table("user_account")
 public class User_account {
-	@Column
 	@Id
-	@Prev({ @SQL(db = DB.ORACLE, value = "SELECT USER_ACCOUNT_S.nextval FROM dual") })
 	private int uid;
 	@Column
 	private int pid;

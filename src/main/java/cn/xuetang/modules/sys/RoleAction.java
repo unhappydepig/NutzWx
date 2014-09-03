@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
 import org.nutz.dao.Sqls;
@@ -31,19 +30,15 @@ import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.common.util.StringUtil;
 import cn.xuetang.modules.sys.bean.Sys_resource;
 import cn.xuetang.modules.sys.bean.Sys_role;
-import cn.xuetang.modules.sys.bean.Sys_role_resource;
 import cn.xuetang.modules.sys.bean.Sys_unit;
 import cn.xuetang.modules.sys.bean.Sys_user;
-import cn.xuetang.modules.sys.bean.Sys_user_role;
 import cn.xuetang.modules.wx.bean.Weixin_channel;
 import cn.xuetang.modules.wx.bean.Weixin_channel_role;
 import cn.xuetang.service.sys.AppInfoService;
 import cn.xuetang.service.sys.AppProjectService;
 import cn.xuetang.service.sys.SysResourceService;
-import cn.xuetang.service.sys.SysRoleResourceService;
 import cn.xuetang.service.sys.SysRoleService;
 import cn.xuetang.service.sys.SysUnitService;
-import cn.xuetang.service.sys.SysUserRoleService;
 import cn.xuetang.service.sys.SysUserService;
 import cn.xuetang.service.wx.WeixinChannelRoleService;
 import cn.xuetang.service.wx.WeixinChannelService;
@@ -64,13 +59,9 @@ public class RoleAction {
 	@Inject
 	private AppProjectService appProjectService;
 	@Inject
-	private SysUserRoleService sysUserRoleService;
-	@Inject
 	private SysRoleService sysRoleService;
 	@Inject
 	private SysResourceService sysResourceService;
-	@Inject
-	private SysRoleResourceService sysRoleResourceService;
 	@Inject
 	private WeixinChannelService weixinChannelService;
 	@Inject
@@ -382,23 +373,11 @@ public class RoleAction {
 	 */
 	@At
 	public boolean menu(@Param("checkids") String checkids, @Param("roleid") int roleid) {
-		try {
+		/*try {
 			if (!"".equals(checkids)) {
 				String[] ids = StringUtils.split(checkids, ";");
 				Condition c = Cnd.where("roleid", "=", roleid);
 				sysRoleResourceService.delete("SYS_ROLE_RESOURCE", c);
-				for (int i = 0; i < ids.length; i++) {
-					Sys_role_resource resource = new Sys_role_resource();
-					String[] id_Button = StringUtils.split(ids[i], ":");
-					resource.setRoleid(roleid);
-					resource.setResourceid(id_Button[0]);
-					if (id_Button.length < 2) {
-						resource.setButton("");
-					} else {
-						resource.setButton(id_Button[1]);
-					}
-					sysRoleResourceService.insert(resource);
-				}
 			} else {
 				Condition c = Cnd.where("roleid", "=", roleid);
 				sysRoleResourceService.delete("SYS_ROLE_RESOURCE", c);
@@ -409,7 +388,7 @@ public class RoleAction {
 			e.printStackTrace();
 		} finally {
 
-		}
+		}*/
 		return false;
 	}
 
@@ -495,13 +474,6 @@ public class RoleAction {
 		try {
 			int result = 0;
 			String[] ids = StringUtils.split(checkids, ",");
-			for (int i = 0; i < ids.length; i++) {
-				Sys_user_role s = new Sys_user_role();
-				s.setUserid(NumberUtils.toLong(Strings.sNull(ids[i])));
-				s.setRoleid(roleid);
-				sysUserRoleService.insert(s);
-				result++;
-			}
 			if (result > 0) {
 				msg = "true";
 			}
@@ -516,21 +488,21 @@ public class RoleAction {
 	 */
 	@At
 	public String delroleuser(@Param("checkids") String checkids, @Param("roleid") int roleid) {
-		String[] userids = StringUtils.split(checkids, ",");
+		/*String[] userids = StringUtils.split(checkids, ",");
 		for (int i = 0; i < userids.length; i++) {
 			Condition cnd = Cnd.where("roleid", "=", roleid).and("userid", "=", userids[i]);
 			sysUserRoleService.delete("sys_user_role", cnd);
-		}
+		}*/
 		return "true";
 	}
 
 	@At("")
 	@Ok("vm:template.private.sys.role")
 	public void role(HttpSession session, @Param("unitid") String unitid1, HttpServletRequest req) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
+		/*Sys_user user = (Sys_user) session.getAttribute("userSession");
 		Sql sql = Sqls.create("select roleid from sys_user_role where userid=@userid");
 		sql.params().set("userid", user.getUserid());
-		req.setAttribute("roleid", sysUserRoleService.getIntRowValue(sql));
+		req.setAttribute("roleid", sysUserRoleService.getIntRowValue(sql));*/
 	}
 
 	@SuppressWarnings("rawtypes")

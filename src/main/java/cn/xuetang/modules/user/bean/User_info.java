@@ -1,11 +1,8 @@
 package cn.xuetang.modules.user.bean;
 
 import org.nutz.dao.entity.annotation.Column;
-import org.nutz.dao.entity.annotation.Table;
 import org.nutz.dao.entity.annotation.Id;
-import org.nutz.dao.entity.annotation.Prev;
-import org.nutz.dao.entity.annotation.SQL;
-import org.nutz.dao.DB;
+import org.nutz.dao.entity.annotation.Table;
 
 /**
  * @author Wizzer
@@ -13,7 +10,6 @@ import org.nutz.dao.DB;
  */
 @Table("user_info")
 public class User_info {
-    @Column
     @Id(auto=false)
     private int uid;
     @Column

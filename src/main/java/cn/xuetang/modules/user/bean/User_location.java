@@ -1,7 +1,10 @@
 package cn.xuetang.modules.user.bean;
 
-import org.nutz.dao.entity.annotation.*;
-import org.nutz.dao.DB;
+import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.EL;
+import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.Prev;
+import org.nutz.dao.entity.annotation.Table;
 /**
 * @author Wizzer
 * @time   2014-04-05 00:45:11
@@ -9,8 +12,8 @@ import org.nutz.dao.DB;
 @Table("user_location")
 public class User_location 
 {
-	@Column
 	@Name
+	@Prev(els = { @EL("uuid()") })
     private String openid;
 	@Column
 	private int pid;

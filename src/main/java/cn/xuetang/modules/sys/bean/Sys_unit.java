@@ -3,8 +3,10 @@ package cn.xuetang.modules.sys.bean;
 import java.util.List;
 
 import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.EL;
 import org.nutz.dao.entity.annotation.Many;
 import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.Prev;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
@@ -14,8 +16,8 @@ import org.nutz.dao.entity.annotation.Table;
  */
 @Table("sys_unit")
 public class Sys_unit {
-	@Column
 	@Name
+	@Prev(els = { @EL("uuid()") })
 	private String id;
 	@Column
 	private String name;

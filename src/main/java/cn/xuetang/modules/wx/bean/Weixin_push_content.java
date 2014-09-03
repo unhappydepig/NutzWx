@@ -1,10 +1,8 @@
 package cn.xuetang.modules.wx.bean;
 
 import org.nutz.dao.entity.annotation.Column;
-import org.nutz.dao.entity.annotation.Table;
 import org.nutz.dao.entity.annotation.Id;
-import org.nutz.dao.entity.annotation.Prev;
-import org.nutz.dao.entity.annotation.SQL;import org.nutz.dao.DB;
+import org.nutz.dao.entity.annotation.Table;
 /**
 * @author Wizzer
 * @time   2014-04-28 15:23:18
@@ -12,11 +10,7 @@ import org.nutz.dao.entity.annotation.SQL;import org.nutz.dao.DB;
 @Table("weixin_push_content")
 public class Weixin_push_content 
 {
-	@Column
 	@Id
-	@Prev({
-		@SQL(db = DB.ORACLE, value="SELECT WEIXIN_PUSH_CONTENT_S.nextval FROM dual")
-	})
 	private int id;
     @Column
     private int pid;

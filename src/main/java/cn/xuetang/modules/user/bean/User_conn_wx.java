@@ -1,8 +1,10 @@
 package cn.xuetang.modules.user.bean;
 
-import org.nutz.dao.entity.annotation.*;
-import org.nutz.dao.DB;
-import org.nutz.repo.Base64;
+import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.EL;
+import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.Prev;
+import org.nutz.dao.entity.annotation.Table;
 
 /**
  * @author Wizzer
@@ -10,8 +12,8 @@ import org.nutz.repo.Base64;
  */
 @Table("user_conn_wx")
 public class User_conn_wx {
-    @Column
     @Name
+    @Prev(els = { @EL("uuid()") })
     private String openid;
     @Column
     private int id;

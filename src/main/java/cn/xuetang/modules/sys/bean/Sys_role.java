@@ -2,12 +2,9 @@ package cn.xuetang.modules.sys.bean;
 
 import java.util.List;
 
-import org.nutz.dao.DB;
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.ManyMany;
-import org.nutz.dao.entity.annotation.Prev;
-import org.nutz.dao.entity.annotation.SQL;
 import org.nutz.dao.entity.annotation.Table;
 
 import cn.xuetang.modules.user.bean.Permission;
@@ -19,9 +16,7 @@ import cn.xuetang.modules.user.bean.Permission;
  */
 @Table("sys_role")
 public class Sys_role {
-	@Column
 	@Id
-	@Prev({ @SQL(db = DB.ORACLE, value = "SELECT SYS_ROLE_S.nextval FROM dual") })
 	private int id;
 	@Column
 	private String name;

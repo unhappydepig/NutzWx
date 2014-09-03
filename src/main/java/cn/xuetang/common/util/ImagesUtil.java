@@ -1,10 +1,16 @@
 package cn.xuetang.common.util;
 
-import org.nutz.ioc.loader.annotation.IocBean;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
+
+import org.nutz.ioc.loader.annotation.IocBean;
 
 /**
  * Created by Wizzer on 14-5-22.

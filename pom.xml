@@ -6,10 +6,41 @@
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>nutz_wx</name>
-	<url>http://www.rekoe.com</url>
+	<url>http://www.nutzwx.com</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>wendal</id>
+			<name>Wendal Chen</name>
+			<email>wendal1985@gmail.com</email>
+			<url>http://wendal.net/</url>
+		</developer>
+		<developer>
+			<id>Wizzercn</id>
+			<name>wizzer</name>
+			<email>wizzer@qq.com</email>
+			<url>http://Wizzer.cn/</url>
+		</developer>
+		<developer>
+			<id>rekoe</id>
+			<name>rekoe</name>
+			<email>koukou890@gmail.com</email>
+			<url>https://www.rekoe.com/</url>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:https://github.com/Wizzercn/NutzWx.git</connection>
+		<developerConnection>scm:git:https://github.com/Wizzercn/NutzWx.git</developerConnection>
+		<url>https://github.com/Wizzercn/NutzWx.git</url>
+	</scm>
 	<repositories>
 	</repositories>
 	<dependencies>
@@ -311,7 +342,7 @@
 					<archiveClasses>true</archiveClasses>
 					<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
 					<warSourceExcludes>game.html</warSourceExcludes>
-					<warSourceExcludes>WEB-INF/classes/com/**</warSourceExcludes>
+					<warSourceExcludes>WEB-INF/classes/cn/**,WEB-INF/classes/org/**</warSourceExcludes>
 					<webResources>
 				      <resource>  
 				        <directory>src/main/resources</directory>  
@@ -334,4 +365,8 @@
 			</plugin>
 		</plugins>
 	</build>
+	<issueManagement>
+		<system>Github Issue</system>
+		<url>https://github.com/Wizzercn/NutzWx/issues</url>
+	</issueManagement>
 </project>

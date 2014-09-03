@@ -1,9 +1,9 @@
 package cn.xuetang.common.util;
 
-import org.nutz.json.Json;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.nutz.json.Json;
 
 /**
  * Created by Wizzer on 14-4-2.

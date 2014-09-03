@@ -55,8 +55,7 @@ public class IndexAction {
 
 	@At
 	@Ok("raw")
-	public String dounlock(@Param("password") String password, HttpServletRequest req, HttpSession session) {
-		Sys_user user = (Sys_user) session.getAttribute("userSession");
+	public String dounlock(@Attr(Webs.ME)Sys_user user,@Param("password") String password, HttpServletRequest req, HttpSession session) {
 		if (!Lang.digest("MD5", Strings.sNull(password).getBytes(), Strings.sNull(user.getSalt()).getBytes(), 3).equals(user.getPassword())) {
 			return "密码不正确，请输入当前登陆用户密码！";
 		} else {

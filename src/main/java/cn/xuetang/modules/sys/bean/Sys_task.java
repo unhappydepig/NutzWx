@@ -1,11 +1,8 @@
 package cn.xuetang.modules.sys.bean;
 
 import org.nutz.dao.entity.annotation.Column;
-import org.nutz.dao.entity.annotation.Table;
 import org.nutz.dao.entity.annotation.Id;
-import org.nutz.dao.entity.annotation.Prev;
-import org.nutz.dao.entity.annotation.SQL;
-import org.nutz.dao.DB;
+import org.nutz.dao.entity.annotation.Table;
 
 /**
  * @author Wizzer
@@ -13,9 +10,7 @@ import org.nutz.dao.DB;
  */
 @Table("SYS_TASK")
 public class Sys_task {
-	@Column
 	@Id
-	@Prev({ @SQL(db = DB.ORACLE, value = "SELECT SYS_TASK_S.nextval FROM dual") })
 	private int task_id;
 	@Column
 	private String task_code;
