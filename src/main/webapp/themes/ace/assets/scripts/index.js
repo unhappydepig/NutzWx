@@ -1,11 +1,11 @@
 /**
  * Created by Wizzer on 14-9-3.
  */
-var Index={
-    init:function(){
+var Index = {
+    init: function () {
         this.handleIndex();
     },
-    handleIndex:function(){
+    handleIndex: function () {
         var opts = {
             lines: 12, // The number of lines to draw
             length: 7, // The length of each line
@@ -26,11 +26,12 @@ var Index={
         };
         var spinContainer = $("#spin-container").get(0);
         var spinner = new Spinner(opts);
-        $("#page_menu").find("a").each(function(){
-            $(this).click(function(){
-                if($(this).attr("href")&&$(this).attr("href").indexOf("javascript")<0){
+        $("#page_menu").find("a").each(function () {
+            $(this).click(function () {
+                var url = $(this).attr("href");
+                if (url && url.indexOf("javascript") < 0 && url != "index") {
                     spinner.spin(spinContainer);
-                    $("#page-content").load($(this).attr("href"),function(){
+                    $("#page-content").load($(this).attr("href"), function () {
                         spinner.spin();
                     });
                     return false;
