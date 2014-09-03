@@ -350,7 +350,9 @@
         <span class="menu-text"> 控制台 </span>
     </a>
 </li>
-${menulist}
+ #foreach($menu in $obj)
+ 	$menu.name
+ #end
 
 </ul><!-- /.nav-list -->
 
