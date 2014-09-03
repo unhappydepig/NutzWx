@@ -229,6 +229,7 @@ public class StartSetup implements Setup {
 		perCategory.setListIndex(2);
 		perCategory.setLocked(true);
 		perCategory.setName("应用管理");
+        perCategory.setStyle("icon-list-alt");
 		perCategory.setPermissions(pers);
 
 		Permission allPerm = new Permission();
@@ -258,7 +259,8 @@ public class StartSetup implements Setup {
 		perCategory.setListIndex(3);
 		perCategory.setLocked(true);
 		perCategory.setName("会员中心");
-		perCategory.setPermissions(pers);
+        perCategory.setStyle("icon-edit");
+        perCategory.setPermissions(pers);
 
 		Permission allPerm = new Permission();
 		allPerm.setUrl("/private/user/info");

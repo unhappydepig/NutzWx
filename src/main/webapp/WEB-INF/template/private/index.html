@@ -350,15 +350,29 @@
         <span class="menu-text"> 控制台 </span>
     </a>
 </li>
+
  #foreach($menu in $obj)
- 	-$menu.name
- 	<br>
- 	   #foreach($submenu in $menu.permissions)
- 	        #if($submenu.show)
- 	   			-------$submenu.description
- 	   			<br>
- 	   	    #end
- 	   #end
+    <li>
+        <a #if(${menu.url})href="${menu.url}" #else href="javascript:;"#end class="dropdown-toggle">
+         #if(${menu.style})<i class="${menu.style}"></i>#end
+            <span class="menu-text">${menu.name}</span>
+            #if($menu.permissions.size()>0)
+            <b class="arrow icon-angle-down"></b>
+            #end
+        </a>
+        #if($menu.permissions.size()>0)
+        <ul class="submenu">
+ 	        #foreach($submenu in $menu.permissions)
+ 	           #if($submenu.show)
+            <li><a #if(${submenu.url})href="${submenu.url}" #else href="javascript:;"#end>
+                #if(${submenu.style})<i class="${submenu.style}"></i>#end
+                <span class="menu-text">${submenu.description}</span></a></li>
+            <li>
+ 	   	       #end
+ 	       #end
+         </ul>
+        #end
+    </li>
  #end
 
 </ul><!-- /.nav-list -->
