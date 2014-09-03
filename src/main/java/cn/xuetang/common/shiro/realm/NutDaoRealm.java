@@ -57,6 +57,7 @@ public class NutDaoRealm extends AbstractNutAuthoRealm {
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), getName());
 		ByteSource salt = ByteSource.Util.bytes(user.getSalt());
 		info.setCredentialsSalt(salt);
+		Mvcs.getHttpSession().setAttribute(org.nutz.web.Webs.ME, user);
 		return info;
 	}
 }

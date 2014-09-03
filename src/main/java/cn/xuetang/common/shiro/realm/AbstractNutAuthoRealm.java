@@ -75,7 +75,6 @@ public abstract class AbstractNutAuthoRealm extends AuthorizingRealm {
 			for (Sys_role role : user.getRoles()) {
 				info.addStringPermissions(getRoleService().getPermissionNameList(role));
 			}
-			SecurityUtils.getSubject().getSession(true).setAttribute(org.nutz.web.Webs.ME, user);
 			return info;
 		} else {
 			return null;
