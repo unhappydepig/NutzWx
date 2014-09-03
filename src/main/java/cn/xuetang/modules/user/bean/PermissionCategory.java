@@ -32,7 +32,17 @@ public class PermissionCategory {
 	private boolean locked;
 	@Column("page_style")
 	private String style;
+	@Column("action_url")
+	private String url;
 	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public String getStyle() {
 		return style;
 	}
