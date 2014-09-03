@@ -25,6 +25,7 @@ public class PermissionService extends IdEntityService<Permission> {
 		super(dao);
 	}
 
+	
 	public List<Permission> list() {
 		return query(null, null);
 	}
