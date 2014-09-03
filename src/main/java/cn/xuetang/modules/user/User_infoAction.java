@@ -25,7 +25,6 @@ import org.nutz.mvc.annotation.Param;
 
 import cn.xuetang.common.config.Dict;
 import cn.xuetang.common.util.DateUtil;
-import cn.xuetang.common.util.DecodeUtil;
 import cn.xuetang.modules.sys.bean.Sys_dict;
 import cn.xuetang.modules.sys.bean.Sys_user;
 import cn.xuetang.modules.user.bean.User_account;
@@ -114,7 +113,7 @@ public class User_infoAction {
 		boolean res = userInfoService.update(user_info);
 		Chain chain;
 		if (!Strings.isBlank(user_account.getPassword())) {
-			String salt = DecodeUtil.getSalt(6);
+			String salt = "";//DecodeUtil.getSalt(6);
 			String pass = Lang.digest("MD5", user_account.getPassword().getBytes(), salt.getBytes(), 3);
 			chain = Chain.make("password", pass).add("salt", salt).add("status", user_account.getStatus());
 		} else {

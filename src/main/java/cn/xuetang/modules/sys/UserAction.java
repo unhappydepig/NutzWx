@@ -30,7 +30,6 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 import org.nutz.web.Webs;
 
-import cn.xuetang.common.util.DecodeUtil;
 import cn.xuetang.common.util.SortHashtable;
 import cn.xuetang.modules.sys.bean.Sys_role;
 import cn.xuetang.modules.sys.bean.Sys_unit;
@@ -288,7 +287,7 @@ public class UserAction{
 	public boolean add(@Param("..") Sys_user user, @Param("checkids") String checkids, HttpServletRequest req) {
 		try {
 			String[] ids = StringUtils.split(checkids, ",");
-			String salt = DecodeUtil.getSalt(6);
+			String salt ="";// DecodeUtil.getSalt(6);
 			user.setPassword(Lang.digest("MD5", Strings.sNull(user.getPassword()).getBytes(), Strings.sNull(salt).getBytes(), 3));
 			user.setSalt(salt);
 			user.setLoginTime(Times.now());
@@ -436,7 +435,7 @@ public class UserAction{
 	public boolean update(@Param("..") Sys_user user, @Param("checkids") String checkids[], @Param("oldloginname") String oldloginname) {
 		boolean result = false;
 		try {
-			String salt = DecodeUtil.getSalt(6);
+			String salt ="";// DecodeUtil.getSalt(6);
 			if (!Strings.isBlank(user.getPassword())) {
 				user.setPassword(Lang.digest("MD5", Strings.sNull(user.getPassword()).getBytes(), Strings.sNull(salt).getBytes(), 3));
 				user.setSalt(salt);
@@ -514,7 +513,7 @@ public class UserAction{
 		if (Lang.digest("MD5", Strings.sNull(oldpassword).getBytes(), Strings.sNull(olduser.getSalt()).getBytes(), 3).equals(olduser.getPassword())) {
 			if (!"".equals(pass)) {
 				relogin = true;
-				String salt = DecodeUtil.getSalt(6);
+				String salt = "";//DecodeUtil.getSalt(6);
 				olduser.setPassword(Lang.digest("MD5", Strings.sNull(pass).getBytes(), salt.getBytes(), 3));
 				olduser.setSalt(salt);
 			}
