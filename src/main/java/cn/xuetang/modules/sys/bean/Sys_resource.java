@@ -30,7 +30,8 @@ public class Sys_resource {
 	private String descript;
 	@Column
 	private String button;
-
+    @Column
+    private String style;
 	public String getId() {
 		return id;
 	}
@@ -95,4 +96,11 @@ public class Sys_resource {
 		this.button = button;
 	}
 
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
 }
