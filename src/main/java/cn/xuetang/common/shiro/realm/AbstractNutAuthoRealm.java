@@ -1,5 +1,6 @@
 package cn.xuetang.common.shiro.realm;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.Cache;
@@ -74,6 +75,7 @@ public abstract class AbstractNutAuthoRealm extends AuthorizingRealm {
 			for (Sys_role role : user.getRoles()) {
 				info.addStringPermissions(getRoleService().getPermissionNameList(role));
 			}
+			SecurityUtils.getSubject().getSession(true).setAttribute(org.nutz.web.Webs.ME, user);
 			return info;
 		} else {
 			return null;
