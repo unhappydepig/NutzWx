@@ -30,6 +30,16 @@ public class PermissionCategory {
 	@Column("is_locked")
 	@ColDefine(type = ColType.BOOLEAN)
 	private boolean locked;
+	@Column("page_style")
+	private String style;
+	
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
 
 	@Column("list_index")
 	private int listIndex;

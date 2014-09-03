@@ -19,34 +19,56 @@ import cn.xuetang.modules.sys.bean.Sys_role;
 @TableIndexes({ @Index(name = "permission_name_id", fields = { "name" }, unique = true) })
 public class Permission implements Serializable {
 	private static final long serialVersionUID = -8140799124476746216L;
-	
+
 	@Id
 	private Long id;
-	
+
 	@Column
 	@ColDefine(type = ColType.VARCHAR, width = 200)
 	private String name;
-	
+
 	@Column
 	@ColDefine(type = ColType.VARCHAR, width = 500)
 	private String description;
-	
+
 	@ManyMany(target = Sys_role.class, relation = "sys_role_permission", from = "permissionid", to = "roleid")
 	private List<Sys_role> roles;
-	
+
 	@Column("permission_category_id")
 	private String permissionCategoryId;
-	
+
 	@One(target = PermissionCategory.class, field = "permissionCategoryId")
 	private PermissionCategory permissionCategory;
-	
+
 	@Column("is_locked")
 	@ColDefine(type = ColType.BOOLEAN)
 	private boolean locked;
-	
+
 	@Column("is_show")
 	@ColDefine(type = ColType.BOOLEAN)
 	private boolean show;
+
+	@Column("action_url")
+	private String url;
+
+	@Column("page_style")
+	private String style;
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
 
 	public boolean isShow() {
 		return show;
