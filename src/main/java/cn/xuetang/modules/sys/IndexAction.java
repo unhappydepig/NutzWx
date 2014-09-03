@@ -52,7 +52,7 @@ public class IndexAction {
 
 	@At
 	@Ok("vm:template.private.index")
-	public Object index(@Attr(Webs.ME) Sys_user user, HttpServletRequest req) {
+	public void index(@Attr(Webs.ME) Sys_user user, HttpServletRequest req) {
         Sql sql = Sqls
                 .create("select distinct resourceid from sys_role_resource where ( roleid in(select roleid from sys_user_role where userid=@userid) or roleid=1) and resourceid not in(select id from sys_resource where state=1)");
         sql.params().set("userid", user.getUserid());
@@ -77,40 +77,50 @@ public class IndexAction {
         user.setProlist(plist);//设置登陆用户所属角色的项目id 列表（一个用户可以管理多个项目数据，一个项目下可以设置多个公众号）
         //user.getStyle() 用户最后选择的界面样式，原来是有菜单在左和菜单在上的
         req.setAttribute("menulist", "\n" + getMenuList("", user) + "\n");
-		return sysResourceService.listByCnd(null);
 	}
 
     private String getMenuList(String id, Sys_user user) {
         if (user.getReslist() == null || user.getReslist().size() < 1)
             return "";
         List<Sys_resource> list = sysResourceService.listByCnd(Cnd.where("id", "like", id + "____").and("id", "in", user.getReslist()).asc("location"));
-        String str = "\n";
-
+        StringBuilder str = new StringBuilder();
+        str.append("\n");
         for (Sys_resource resource : list) {
             int sub = sysResourceService.getRowCount(Cnd.where("id", "like", resource.getId() + "____").and("id", "in", user.getReslist()));
             if (sub > 0) {
-                str += "\t\n<li>\t\t\n";
+            //有子菜单
+                str.append("\t\n<li>\t\t\n");
                 if (Strings.isBlank(resource.getUrl())) {
-                    str += "<a href=\"javascript:;\">";
+                    str.append("\t\t<a href=\"javascript:;\" class=\"dropdown-toggle\">\n");
                 } else {
-                    str += "<a class=\"ajaxify\" href=\"" + resource.getUrl() + "\">";
+                    str.append("\t\t<a href=\"" + resource.getUrl() + "\" class=\"dropdown-toggle\">\n");
                 }
-                str += "\t\t\t\n<i class=\"" + resource.getStyle() + "\"></i>\t\t\t\n<span class=\"title\">" + resource.getName() + "</span>\t\t\t\n<span class=\"arrow\"></span>";
-
-                str += "\t\t\n</a>\n";
-                str += "\t\t\n<ul class=\"sub-menu\">";
-                str += getMenuList(resource.getId(), user);
-                str += "\t\t\n</ul>\t\n</li>\n";
+                if(!Strings.isBlank(resource.getStyle())){
+                    str.append("\t\t<i class=\""+resource.getStyle()+"\"></i>\n");
+                }
+                str.append(resource.getName());
+                str.append("\t\t<b class=\"arrow icon-angle-down\"></b>\n");
+                str.append("\t\t\n</a>\n");
+                str.append("\t\t\n<ul class=\"submenu\">\n");
+                str.append(getMenuList(resource.getId(), user));
+                str.append("\t\t\n</ul>");
+                str.append("\t\n</li>\t\t\n");
             } else {
-                if (Strings.isBlank(resource.getStyle())) {
-                    str += "\t\n<li>\t\t\n<a class=\"ajaxify\" href=\"" + resource.getUrl() + "\">\t\t\t\n<i class=\"fa\"></i>\t\t\t\n" + resource.getName() + "</a>\n</li>\n";
+                str.append("<li>");
+                if (Strings.isBlank(resource.getUrl())) {
+                    str.append("\t\t<a href=\"javascript:;\">");
                 } else {
-                    str += "\t\n<li>\t\t\n<a class=\"ajaxify\" href=\"" + resource.getUrl() + "\">\t\t\t\n<i class=\"" + resource.getStyle() + "\"></i>\t\t\t\n" + resource.getName() + "</a>\n</li>\n";
+                    str.append("\t\t<a href=\"" + resource.getUrl() + "\">\n");
                 }
+                if(!Strings.isBlank(resource.getStyle())){
+                    str.append("\t\t<i class=\""+resource.getStyle()+"\"></i>\n");
+                }
+                str.append("<span class=\"menu-text\">"+resource.getName()+"</span>");
+                str.append("</a></li>");
             }
         }
-        str += "\n";
-        return str;
+        str.append("\n");
+        return str.toString();
     }
 
 }
