@@ -29,7 +29,10 @@ var Index={
         $("#page_menu").find("a").each(function(){
             $(this).click(function(){
                 if($(this).attr("href")&&$(this).attr("href").indexOf("javascript")<0){
-                    $("#page-content").load($(this).attr("href"));
+                    spinner.spin(spinContainer);
+                    $("#page-content").load($(this).attr("href"),function(){
+                        spinner.spin();
+                    });
                     return false;
                 }
 
