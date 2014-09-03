@@ -55,7 +55,6 @@ public class IndexAction {
 	public Object index(@Attr(Webs.ME) Sys_user user, HttpServletRequest req) {
         Sql sql = Sqls
                 .create("select distinct resourceid from sys_role_resource where ( roleid in(select roleid from sys_user_role where userid=@userid) or roleid=1) and resourceid not in(select id from sys_resource where state=1)");
-        System.out.println("user.getUserid():::"+user.getUserid());
         sql.params().set("userid", user.getUserid());
         user.setReslist(sysResourceService.getStrRowValues(sql));
         Sql role_sql = Sqls.create("select * from sys_role where id in(select roleid from sys_user_role where userid=@userid)");
