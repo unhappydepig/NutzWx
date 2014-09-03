@@ -61,7 +61,6 @@ public class LoginAction {
 
 	@At
 	@Ok(">>:/private/login")
-	@RequiresAuthentication
 	public void logout() {
 		Subject currentUser = SecurityUtils.getSubject();
 		try {
