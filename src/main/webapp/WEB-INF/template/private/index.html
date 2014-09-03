@@ -352,6 +352,11 @@
 </li>
  #foreach($menu in $obj)
  	$menu.name
+ 	   #foreach($submenu in $menu.permissions)
+ 	        #if($submenu.show)
+ 	   			$submenu.description
+ 	   	    #end
+ 	   #end
  #end
 
 </ul><!-- /.nav-list -->
