@@ -70,7 +70,7 @@ public class Weixin_pushAction {
 	@Ok("vm:template.private.wx.Weixin_push")
 	public void index(@Param("sys_menu") String sys_menu, HttpServletRequest req, HttpSession session) {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
-		if (user.getSysrole()) {
+		if (user.isSystem()) {
 			req.setAttribute("pro", appProjectService.listByCnd(Cnd.where("1", "=", 1).asc("id")));
 
 		} else {

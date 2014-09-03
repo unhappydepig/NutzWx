@@ -48,7 +48,7 @@ public class Weixin_channelAction{
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		Map<String, String> map = (Map) appInfoService.getDATA_DICT().get(Dict.FORM_TYPE);
 		req.setAttribute("formmap", map);
-		if (user.getSysrole()) {
+		if (user.isSystem()) {
 			req.setAttribute("pro", appProjectService.listByCnd(Cnd.orderBy().asc("id")));
 
 		} else {
@@ -61,7 +61,7 @@ public class Weixin_channelAction{
 	@Ok("vm:template.private.wx.Weixin_channelAdd")
 	public void toadd(@Param("pid") String pid, HttpServletRequest req, HttpSession session) {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
-		if (user.getSysrole()) {
+		if (user.isSystem()) {
 			req.setAttribute("pro", appProjectService.listByCnd(Cnd.orderBy().asc("id")));
 		} else {
 			req.setAttribute("pro", appProjectService.listByCnd(Cnd.where("id", "in", user.getProlist()).asc("id")));

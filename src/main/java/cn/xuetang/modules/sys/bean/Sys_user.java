@@ -60,7 +60,7 @@ public class Sys_user {
 	private int logincount;
 	@Column
 	private String loginresid;
-	@ManyMany(target = Sys_role.class, relation = "system_user_role", from = "userid", to = "roleid")
+	@ManyMany(target = Sys_role.class, relation = "sys_user_role", from = "userid", to = "roleid")
 	private List<Sys_role> roles;
 	@Column("is_locked")
 	@ColDefine(type = ColType.BOOLEAN)
@@ -94,9 +94,6 @@ public class Sys_user {
 	public void setRoles(List<Sys_role> roles) {
 		this.roles = roles;
 	}
-
-	// 是否超级管理员角色
-	private boolean sysrole;
 
 	private List<Integer> rolelist;
 	private List<Integer> prolist;
@@ -278,14 +275,6 @@ public class Sys_user {
 
 	public void setReslist(List<String> reslist) {
 		this.reslist = reslist;
-	}
-
-	public boolean getSysrole() {
-		return sysrole;
-	}
-
-	public void setSysrole(boolean sysrole) {
-		this.sysrole = sysrole;
 	}
 
 	public Hashtable<String, String> getBtnmap() {

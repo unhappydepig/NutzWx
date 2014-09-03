@@ -69,9 +69,9 @@ public class IndexAction {
                 plist.add(pid);
         }
         if (rolelist1.contains(2)) {//role id中包含2则为超级管理员角色
-            user.setSysrole(true);
+            user.setSystem(true);
         } else {
-            user.setSysrole(false);
+            user.setSystem(false);
         }
         user.setRolelist(rolelist1);//设置登陆用户的role id列表
         user.setProlist(plist);//设置登陆用户所属角色的项目id 列表（一个用户可以管理多个项目数据，一个项目下可以设置多个公众号）

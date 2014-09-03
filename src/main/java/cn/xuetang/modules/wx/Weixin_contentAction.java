@@ -74,7 +74,7 @@ public class Weixin_contentAction{
 	@At("")
 	@Ok("vm:template.private.wx.Weixin_content")
 	public void index(@Attr(Webs.ME)Sys_user user,@Param("sys_menu") String sys_menu, HttpSession session, HttpServletRequest req) {
-		if (user.getSysrole()) {
+		if (user.isSystem()) {
 			req.setAttribute("pro", appProjectService.listByCnd(Cnd.where("1", "=", 1).asc("id")));
 
 		} else {

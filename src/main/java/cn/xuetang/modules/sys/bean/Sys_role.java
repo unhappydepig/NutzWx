@@ -28,9 +28,9 @@ public class Sys_role {
 	private int pid;
 	@Column
 	private int location;
-	@ManyMany(target = Sys_user.class, relation = "system_user_role", from = "roleid", to = "userid")
+	@ManyMany(target = Sys_user.class, relation = "sys_user_role", from = "roleid", to = "userid")
 	private List<Sys_user> users;
-	@ManyMany(target = Permission.class, relation = "system_role_permission", from = "roleid", to = "permissionid")
+	@ManyMany(target = Permission.class, relation = "sys_role_permission", from = "roleid", to = "permissionid")
 	private List<Permission> permissions;
 	
 	public List<Permission> getPermissions() {

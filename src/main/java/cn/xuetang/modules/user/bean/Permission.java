@@ -15,7 +15,7 @@ import org.nutz.dao.entity.annotation.TableIndexes;
 
 import cn.xuetang.modules.sys.bean.Sys_role;
 
-@Table("system_permission")
+@Table("sys_permission")
 @TableIndexes({ @Index(name = "permission_name_id", fields = { "name" }, unique = true) })
 public class Permission implements Serializable{
 	private static final long serialVersionUID = -8140799124476746216L;
@@ -27,7 +27,7 @@ public class Permission implements Serializable{
 	@Column
 	@ColDefine(type = ColType.VARCHAR, width = 500)
 	private String description;
-	@ManyMany(target = Sys_role.class, relation = "system_role_permission", from = "permissionid", to = "roleid")
+	@ManyMany(target = Sys_role.class, relation = "sys_role_permission", from = "permissionid", to = "roleid")
 	private List<Sys_role> roles;
 	@Column("permission_category_id")
 	private String permissionCategoryId;

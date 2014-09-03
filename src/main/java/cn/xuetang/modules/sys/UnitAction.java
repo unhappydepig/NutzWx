@@ -82,7 +82,7 @@ public class UnitAction {
 			array.add(jsonroot);
 		}
 		Criteria cri = Cnd.cri();
-		if (user.getSysrole()) // 判断是否为系统管理员角色
+		if (user.isSystem()) // 判断是否为系统管理员角色
 		{
 			cri.where().and("id", "like", id + "____");
 			cri.getOrderBy().asc("location");
@@ -180,7 +180,7 @@ public class UnitAction {
 	public void sort(@Param("id") String id, HttpServletRequest req, HttpSession session) throws Exception {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		Condition c;
-		if (user.getSysrole()) // 判断是否为系统管理员角色
+		if (user.isSystem()) // 判断是否为系统管理员角色
 		{
 			c = Cnd.where("id", "is not", null).asc("location,id");
 		} else {
@@ -221,7 +221,7 @@ public class UnitAction {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		String[] ids = StringUtils.split(checkids, ",");
 		int initvalue = 0;
-		if (!user.getSysrole()) // 判断是否为系统管理员角色
+		if (!user.isSystem()) // 判断是否为系统管理员角色
 		{
 			initvalue = sysUnitService.getIntRowValue(Sqls.create("select min(location) from sys_unit where id in " + StringUtils.split(checkids, ",")));
 		}

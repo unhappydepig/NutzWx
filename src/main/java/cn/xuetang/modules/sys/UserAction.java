@@ -90,7 +90,7 @@ public class UserAction{
 			array.add(jsonroot);
 		}
 		Criteria cri = Cnd.cri();
-		if (user.getSysrole()) // 判断是否为系统管理员角色
+		if (user.isSystem()) // 判断是否为系统管理员角色
 		{
 			cri.where().and("id", "like", id + "____");
 			cri.getOrderBy().asc("location");
@@ -141,7 +141,7 @@ public class UserAction{
 		if (StringUtils.isNotBlank(unitid)) {
 			cri.where().and("unitid", "like", unitid + "%");
 		} else {
-			if (user.getSysrole()) { // 判断是否为系统管理员角色
+			if (user.isSystem()) { // 判断是否为系统管理员角色
 				cri.where().and("1", "=", 1);
 			} else {
 				cri.where().and("unitid", "like", user.getUnitid() + "%");
