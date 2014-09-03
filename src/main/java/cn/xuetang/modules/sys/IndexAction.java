@@ -98,7 +98,7 @@ public class IndexAction {
                 if(!Strings.isBlank(resource.getStyle())){
                     str.append("\t\t<i class=\""+resource.getStyle()+"\"></i>\n");
                 }
-                str.append(resource.getName());
+                str.append("<span class=\"menu-text\">"+resource.getName()+"</span>");
                 str.append("\t\t<b class=\"arrow icon-angle-down\"></b>\n");
                 str.append("\t\t\n</a>\n");
                 str.append("\t\t\n<ul class=\"submenu\">\n");
