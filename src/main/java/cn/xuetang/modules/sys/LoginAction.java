@@ -80,13 +80,4 @@ public class LoginAction {
 	public void login() {
 	}
 
-	@At
-	@Ok("raw")
-	@RequiresAuthentication
-	public int Online() {
-		Subject currentUser = SecurityUtils.getSubject();
-		OnlineUtil.addUser(currentUser, String.valueOf(1));
-		return OnlineUtil.getOnlineCount(String.valueOf(1));
-	}
-
 }
