@@ -44,7 +44,7 @@ var Index = {
         //修改个人资料
         $("#user-info").click(function(){
             var form = $("<form class='form-inline'><label>个人资料 &nbsp;</label></form>");
-            form.load("/private/sys/user/info");
+            form.load(APP_BASE+"/private/sys/user/info");
             var div = bootbox.dialog({
                 message: form,
                 title:"个人资料",
