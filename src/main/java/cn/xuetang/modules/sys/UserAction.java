@@ -11,6 +11,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Condition;
@@ -507,13 +510,15 @@ public class UserAction{
 	 */
 	@At
 	@Ok("raw")
-	public String updateInfo(@Param("..") Sys_user user, @Param("userid") String userid, @Param("password2") String pass, @Param("oldpassword") String oldpassword) {
-		Sys_user olduser = sysUserService.detailByName("userid", userid);
+	public String updateInfo(@Param("..") Sys_user user, @Param("userid") Long userid, @Param("password2") String pass, @Param("oldpassword") String oldpassword) {
+        RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+        String salt = rng.nextBytes().toBase64();
+        String hashedPasswordBase64 = new Sha256Hash(oldpassword, salt, 1024).toBase64();
+        Sys_user olduser = sysUserService.fetch(userid);
 		boolean relogin = false;
 		if (Lang.digest("MD5", Strings.sNull(oldpassword).getBytes(), Strings.sNull(olduser.getSalt()).getBytes(), 3).equals(olduser.getPassword())) {
 			if (!"".equals(pass)) {
 				relogin = true;
-				String salt = "";//DecodeUtil.getSalt(6);
 				olduser.setPassword(Lang.digest("MD5", Strings.sNull(pass).getBytes(), salt.getBytes(), 3));
 				olduser.setSalt(salt);
 			}

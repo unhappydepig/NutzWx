@@ -6,6 +6,7 @@ var Index = {
         this.handleIndex();
     },
     handleIndex: function () {
+        //设置Loading样式
         var opts = {
             lines: 12, // The number of lines to draw
             length: 7, // The length of each line
@@ -26,6 +27,7 @@ var Index = {
         };
         var spinContainer = $("#spin-container").get(0);
         var spinner = new Spinner(opts);
+        //实现菜单URL内容的AJAX加载
         $("#page_menu").find("a").each(function () {
             $(this).click(function () {
                 var url = $(this).attr("href");
@@ -38,6 +40,52 @@ var Index = {
                 }
 
             });
+        });
+        //修改个人资料
+        $("#user-info").click(function(){
+            var form = $("<form class='form-inline'><label>个人资料 &nbsp;</label></form>");
+            form.load("/private/sys/user/info");
+            var div = bootbox.dialog({
+                message: form,
+                title:"个人资料",
+                buttons: {
+                    "cancel" : {
+                        "label" : "关闭",
+                        "className" : "btn btn-default"
+                    },
+                    "confirm" : {
+                        "label" : "确定",
+                        "className" : "btn btn-primary",
+                        "callback": function() {
+
+                            spinner.spin(spinContainer);
+                            $.ajax({
+                                type: "POST",
+                                url: APP_BASE+"/private/sys/user/updateInfo",
+                                data: form.serialize(),
+                                dataType: "text",
+                                success: function(data){
+                                    spinner.spin();
+                                    if("true"==data){
+                                        div.modal("hide");
+                                        bootbox.alert("修改成功");
+                                    }else if("false"==data){
+                                        bootbox.alert("修改失败");
+                                    }else if("relogin"==data){
+                                        window.location=APP_BASE+"/private/logout";
+                                    }else{
+                                        bootbox.alert("原密码不正确");
+                                    }
+                                    return false;
+                                }
+                            });
+                            return false;
+                        }
+                    }
+                }
+
+            });
+
         });
     }
 };

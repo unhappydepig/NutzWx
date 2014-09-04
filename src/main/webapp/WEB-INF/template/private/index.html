@@ -28,6 +28,9 @@
     <script src="${base}/themes/ace/assets/js/html5shiv.js"></script>
     <script src="${base}/themes/ace/assets/js/respond.min.js"></script>
     <![endif]-->
+    <script language="JavaScript">
+        var APP_BASE="${base}";
+    </script>
 </head>
 
 <body>
@@ -233,8 +236,8 @@
         <i class="icon-caret-down"></i>
     </a>
     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-        <li><a href="#"><i class="icon-cog"></i>设置 </a> </li>
-        <li><a href="#"><i class="icon-user"></i>个人资料</a></li>
+        <li><a id="user-set" href="javascript:;"><i class="icon-cog"></i>设置 </a> </li>
+        <li><a id="user-info" href="javascript:;"><i class="icon-user"></i>个人资料</a></li>
         <li class="divider"></li>
         <li><a href="${base}/private/logout"><i class="icon-off"></i> 退出</a></li>
     </ul>
