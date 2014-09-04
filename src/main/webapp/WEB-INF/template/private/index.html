@@ -229,8 +229,8 @@
 <li class="light-blue">
 	#if($shiro.isUser())
     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-        <img class="nav-user-photo" src="${base}/themes/ace/assets/avatars/user.jpg" alt="Jason's Photo" />
-		<span class="user-info"><small>欢迎光临,</small>$shiro.getPrincipal().getLoginname()</span>
+        <img class="nav-user-photo" src="${base}/themes/ace/assets/avatars/user.jpg" alt="$shiro.getPrincipal().getRealname()" />
+		<span class="user-info"><small>欢迎光临,</small>$shiro.getPrincipal().getLoginname() </span>
         <i class="icon-caret-down"></i>
     </a>
 	#end
@@ -416,22 +416,31 @@
 </a>
 </div><!-- /.main-container -->
 <!-- basic scripts -->
+
 <!--[if !IE]> -->
+
 <script src="${base}/themes/ace/assets/js/jquery-2.0.3.min.js"></script>
+
 <!-- <![endif]-->
+
 <!--[if IE]>
 <script src="${base}/themes/ace/assets/js/jquery-1.10.2.min.js"></script>
 <![endif]-->
+
 <!--[if !IE]> -->
+
 <script type="text/javascript">
-    window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>"+"<"+"script>");
+    window.jQuery || document.write("<script src='${base}/themes/ace/assets/js/jquery-2.0.3.min.js'>"+"<"+"script>");
 </script>
+
 <!-- <![endif]-->
+
 <!--[if IE]>
 <script type="text/javascript">
     window.jQuery || document.write("<script src='${base}/themes/ace/assets/js/jquery-1.10.2.min.js'>"+"<"+"script>");
 </script>
 <![endif]-->
+
 <script type="text/javascript">
     if("ontouchend" in document) document.write("<script src='${base}/themes/ace/assets/js/jquery.mobile.custom.min.js'>"+"<"+"script>");
 </script>
@@ -454,10 +463,10 @@
 <script src="${base}/themes/ace/assets/js/flot/jquery.flot.resize.min.js"></script>
 
 <!-- ace scripts -->
+
 <script src="${base}/themes/ace/assets/js/ace-elements.min.js"></script>
 <script src="${base}/themes/ace/assets/js/ace.min.js"></script>
 <script type="text/javascript" src="${base}/themes/ace/assets/js/spin.min.js"></script>
-<script type="text/javascript" src="${base}/themes/ace/assets/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${base}/themes/ace/assets/js/bootbox.min.js"></script>
 <script type="text/javascript" src="${base}/themes/ace/assets/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="${base}/themes/ace/assets/scripts/index.js"></script>
