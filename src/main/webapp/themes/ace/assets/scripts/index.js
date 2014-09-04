@@ -27,6 +27,7 @@ var Index = {
         };
         var spinContainer = $("#spin-container").get(0);
         var spinner = new Spinner(opts);
+        var last_gritter;
         //实现菜单URL内容的AJAX加载
         $("#page_menu").find("a").each(function () {
             $(this).click(function () {
@@ -90,6 +91,7 @@ var Index = {
                         "className" : "btn btn-primary",
                         "callback": function() {
                                 form.submit();
+//                            if(last_gritter) $.gritter.remove(last_gritter);
 //                            spinner.spin(spinContainer);
 //                            $.ajax({
 //                                type: "POST",
@@ -100,9 +102,19 @@ var Index = {
 //                                    spinner.spin();
 //                                    if(data.type=="success"){
 //                                        div.modal("hide");
-//                                        bootbox.alert("修改成功");
+//                            last_gritter = $.gritter.add({
+//                                title: '操作结果',
+//                                text: '修改成功',
+//                                class_name: 'gritter-error gritter-center',
+//                                   time:600
+//                            });
 //                                    }else{
-//                                        bootbox.alert(data.content);
+//                            last_gritter = $.gritter.add({
+//                                title: '操作结果',
+//                                text: data.content,
+//                                class_name: 'gritter-error gritter-center',
+//                                   time:600
+//                            });
 //                                    }
 //                                }
 //                            });
