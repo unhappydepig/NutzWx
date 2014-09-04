@@ -45,9 +45,41 @@ var Index = {
         $("#user-info").click(function(){
             var form = $("<form class='form-inline'><label>个人资料 &nbsp;</label></form>");
             form.load(APP_BASE+"/private/sys/user/info");
+            form.validate({
+                errorElement : 'span',
+                errorClass : 'help-block',
+                focusInvalid : false,
+                rules : {
+                    realname : {
+                        required : true
+                    },
+                    oldpassword:{
+                        required : true
+                    },
+                    password : {
+                        required : true
+                    },
+                    password2 : {
+                        required : true
+                    }
+                },
+                messages : {
+                    realname : {
+                        required : "请输入姓名"
+                    },
+                    oldpassword : {
+                        required : "请输入原密码"
+                    },
+                    password : {
+                        required : "请输入新密码"
+                    },
+                    password2 : {
+                        required : "请再输一次密码"
+                    }
+                }
+            });
             var div = bootbox.dialog({
                 message: form,
-                title:"个人资料",
                 buttons: {
                     "cancel" : {
                         "label" : "关闭",
@@ -57,28 +89,23 @@ var Index = {
                         "label" : "确定",
                         "className" : "btn btn-primary",
                         "callback": function() {
-
-                            spinner.spin(spinContainer);
-                            $.ajax({
-                                type: "POST",
-                                url: APP_BASE+"/private/sys/user/updateInfo",
-                                data: form.serialize(),
-                                dataType: "text",
-                                success: function(data){
-                                    spinner.spin();
-                                    if("true"==data){
-                                        div.modal("hide");
-                                        bootbox.alert("修改成功");
-                                    }else if("false"==data){
-                                        bootbox.alert("修改失败");
-                                    }else if("relogin"==data){
-                                        window.location=APP_BASE+"/private/logout";
-                                    }else{
-                                        bootbox.alert("原密码不正确");
-                                    }
-                                    return false;
-                                }
-                            });
+                                form.submit();
+//                            spinner.spin(spinContainer);
+//                            $.ajax({
+//                                type: "POST",
+//                                url: APP_BASE+"/private/sys/user/updateInfo",
+//                                data: form.serialize(),
+//                                dataType: "json",
+//                                success: function(data){
+//                                    spinner.spin();
+//                                    if(data.type=="success"){
+//                                        div.modal("hide");
+//                                        bootbox.alert("修改成功");
+//                                    }else{
+//                                        bootbox.alert(data.content);
+//                                    }
+//                                }
+//                            });
                             return false;
                         }
                     }
