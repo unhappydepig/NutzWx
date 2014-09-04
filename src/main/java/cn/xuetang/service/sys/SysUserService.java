@@ -3,6 +3,8 @@ package cn.xuetang.service.sys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -34,6 +36,7 @@ public class SysUserService extends BaseService<Sys_user> {
 		}
 		return user;
 	}
+
 	public List<String> getRoleNameList(Sys_user user) {
 		dao().fetchLinks(user, "roles");
 		List<String> roleNameList = new ArrayList<String>();
@@ -41,5 +44,16 @@ public class SysUserService extends BaseService<Sys_user> {
 			roleNameList.add(role.getName());
 		}
 		return roleNameList;
+	}
+
+	public boolean checkPwd(Sys_user user, String newPwd) {
+		if (StringUtils.isBlank(newPwd)) {
+			return false;
+		}
+		String hashedPasswordBase64 = new Sha256Hash(newPwd, user.getSalt(), 1024).toBase64();
+		if (Lang.equals(user.getPassword(), hashedPasswordBase64)) {
+			return true;
+		}
+		return false;
 	}
 }
