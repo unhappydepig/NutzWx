@@ -470,7 +470,7 @@ public class UserAction {
 	 */
 	@At
 	@Ok("json")
-	public Message updateInfo(@Attr(Webs.ME) Sys_user olduser, @Attr("..") Sys_user user, @Param("userid") String userid, @Param("password2") String pass, @Param("oldpassword") String oldpassword, HttpServletRequest req) {
+	public Message updateInfo(@Attr(Webs.ME) Sys_user olduser, @Param("..") Sys_user user, @Param("userid") String userid, @Param("password2") String pass, @Param("oldpassword") String oldpassword, HttpServletRequest req) {
 		if (StringUtils.isBlank(pass) || StringUtils.isBlank(oldpassword)) {
 			return Message.error("common.error.change.pwd.null", req);
 		}
