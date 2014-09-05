@@ -191,7 +191,7 @@ public class DictAction {
 	@At
 	@Ok("raw")
 	public String treelist(@Param("id") String id) {
-		List<Object> array = new ArrayList<>();
+		List<Object> array = new ArrayList<Object>();
 		List<Sys_dict> list = sysDictService.listByLikeId(id, array);
 		for (int i = 0; i < list.size(); i++) {
 			Sys_dict ch = list.get(i);

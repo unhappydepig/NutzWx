@@ -36,7 +36,7 @@ public class AppInfoService extends BaseService<App_info> {
 		// 应用中文名
 		private String APP_NAME = "";
 		// 系统配置
-		private Map<String, String> SYS_CONFIG = new HashMap<>();
+		private Map<String, String> SYS_CONFIG = new HashMap<String, String>();
 		// 数据字典，根据ID分别初始化
 		private Map<String, Object> DATA_DICT = new HashMap<String, Object>();
 		// 应用信息，用于通过mykey验证来源，放在内存里为了提高响应速度

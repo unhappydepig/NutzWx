@@ -58,7 +58,7 @@ public class UnitAction {
 	public String tree(@Param("id") String id, HttpSession session) throws Exception {
 		Sys_user user = (Sys_user) session.getAttribute("userSession");
 		id = Strings.sNull(id);
-		List<Map<String, Object>> array = new ArrayList<>();
+		List<Map<String, Object>> array = new ArrayList<Map<String, Object>>();
 		if ("".equals(id)) {
 			Map<String, Object> jsonroot = new HashMap<String, Object>();
 			jsonroot.put("id", "");

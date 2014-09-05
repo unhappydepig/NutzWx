@@ -81,7 +81,7 @@ public class StartSetup implements Setup {
 				 * 
 				 * 权限管理 sys:permission 权限分类 sys:permissionCategory
 				 */
-				List<Permission> pers = new ArrayList<>();
+				List<Permission> pers = new ArrayList<Permission>();
 				PermissionCategory perCategory = new PermissionCategory();
 				perCategory.setStyle("icon-cog");
 				perCategory.setLocked(true);
@@ -224,7 +224,7 @@ public class StartSetup implements Setup {
 	}
 
 	private void app(Dao dao) {
-		List<Permission> pers = new ArrayList<>();
+		List<Permission> pers = new ArrayList<Permission>();
 		PermissionCategory perCategory = new PermissionCategory();
 		perCategory.setListIndex(2);
 		perCategory.setLocked(true);
@@ -254,7 +254,7 @@ public class StartSetup implements Setup {
 
 	private void memberCenter(Dao dao) {
 
-		List<Permission> pers = new ArrayList<>();
+		List<Permission> pers = new ArrayList<Permission>();
 		PermissionCategory perCategory = new PermissionCategory();
 		perCategory.setListIndex(3);
 		perCategory.setLocked(true);
@@ -293,7 +293,7 @@ public class StartSetup implements Setup {
 	}
 
 	private void article(Dao dao) {
-		List<Permission> pers = new ArrayList<>();
+		List<Permission> pers = new ArrayList<Permission>();
 		PermissionCategory perCategory = new PermissionCategory();
 		perCategory.setStyle("icon-text-width");
 		perCategory.setListIndex(4);
@@ -323,7 +323,7 @@ public class StartSetup implements Setup {
 	}
 
 	private void wxManager(Dao dao) {
-		List<Permission> pers = new ArrayList<>();
+		List<Permission> pers = new ArrayList<Permission>();
 		PermissionCategory perCategory = new PermissionCategory();
 		perCategory.setStyle("icon-desktop");
 		perCategory.setListIndex(5);

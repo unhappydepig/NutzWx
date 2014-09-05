@@ -35,7 +35,7 @@ public class PermissionCategory {
 	private PermissionCategory parent;
 
 	@Readonly
-	private Set<PermissionCategory> children = new HashSet<>();
+	private Set<PermissionCategory> children = new HashSet<PermissionCategory>();
 
 	@Column
 	private String name;
