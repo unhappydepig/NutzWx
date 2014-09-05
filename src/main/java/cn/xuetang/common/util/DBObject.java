@@ -3,8 +3,13 @@ package cn.xuetang.common.util;
 import java.io.BufferedReader;
 import java.sql.ResultSet;
 
+import org.nutz.dao.Cnd;
+import org.nutz.dao.Dao;
+import org.nutz.ioc.Ioc;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
+
+import cn.xuetang.modules.user.bean.PermissionCategory;
  
 
 /**
@@ -39,6 +44,13 @@ public class DBObject {
 			log.debug(e.getMessage());
 		}
 		return result;
+	}
+	public static void main(String[] args) {
+		IocProvider.init();
+		Ioc ioc = IocProvider.ioc();
+		Dao dao = ioc.get(Dao.class);
+		PermissionCategory pc = dao.fetch(PermissionCategory.class, Cnd.where("id", "=", "d9bd8fa13be8421e9dc038d61b0a2803"));
+		dao.fetchLinks(pc, "parent");
 	}
 }
 

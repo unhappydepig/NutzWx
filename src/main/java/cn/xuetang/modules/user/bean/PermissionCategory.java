@@ -1,6 +1,8 @@
 package cn.xuetang.modules.user.bean;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.nutz.dao.entity.annotation.ColDefine;
 import org.nutz.dao.entity.annotation.ColType;
@@ -9,7 +11,9 @@ import org.nutz.dao.entity.annotation.EL;
 import org.nutz.dao.entity.annotation.Index;
 import org.nutz.dao.entity.annotation.Many;
 import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.One;
 import org.nutz.dao.entity.annotation.Prev;
+import org.nutz.dao.entity.annotation.Readonly;
 import org.nutz.dao.entity.annotation.Table;
 import org.nutz.dao.entity.annotation.TableIndexes;
 
@@ -23,18 +27,67 @@ public class PermissionCategory {
 	@Name
 	@Prev(els = { @EL("uuid()") })
 	private String id;
+
+	@Column("parent")
+	private String parentId;
+
+	@One(target = PermissionCategory.class, field = "parentId")
+	private PermissionCategory parent;
+
+	@Readonly
+	private Set<PermissionCategory> children = new HashSet<>();
+
 	@Column
 	private String name;
+
 	@Many(target = Permission.class, field = "permissionCategoryId")
 	private List<Permission> permissions;
+
 	@Column("is_locked")
 	@ColDefine(type = ColType.BOOLEAN)
 	private boolean locked;
+
 	@Column("page_style")
 	private String style;
+
 	@Column("action_url")
 	private String url;
-	
+
+	@Column("tree_path")
+	@ColDefine(type = ColType.TEXT)
+	private String treePath;
+
+	@Column("list_index")
+	private int listIndex;
+
+	public void setTreePath(String treePath) {
+		this.treePath = treePath;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public PermissionCategory getParent() {
+		return parent;
+	}
+
+	public void setParent(PermissionCategory parent) {
+		this.parent = parent;
+	}
+
+	public Set<PermissionCategory> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Set<PermissionCategory> children) {
+		this.children = children;
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -50,9 +103,6 @@ public class PermissionCategory {
 	public void setStyle(String style) {
 		this.style = style;
 	}
-
-	@Column("list_index")
-	private int listIndex;
 
 	public int getListIndex() {
 		return listIndex;
@@ -92,5 +142,9 @@ public class PermissionCategory {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
+	}
+
+	public String getTreePath() {
+		return treePath;
 	}
 }
